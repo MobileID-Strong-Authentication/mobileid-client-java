@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This is a manually expanded version of the partial WSDL in
+     ETSI TS 102 204, v 1.1.2, section 10.5, WSDL Description and
+     section 7 in the same document.
+
+     This has been updated towards full SOAP1.2 compliance,
+     because the original ETSI WSDL is in fact SOAP1.1, even
+     though it claims to be SOAP1.2.
+-->
+<definitions name="KIURU"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+             xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
+             xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl"
+             targetNamespace="http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl">
+
+    <types>
+        <xs:schema targetNamespace="http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl"
+                   xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
+                   xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="http://uri.etsi.org/TS102204/v1.1.2#"
+                       schemaLocation="schema/methics/MSS-plus-Mobile-Ink.xsd"/>
+            <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       schemaLocation="schema/oasis/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+        </xs:schema>
+    </types>
+
+    <!-- Messages -->
+
+    <message name="MSS_SignatureInput">
+        <part name="MSS_SignatureReq" type="mss:MSS_SignatureReqType"/>
+    </message>
+    <message name="MSS_SignatureOutput">
+        <part name="MSS_SignatureResp" type="mss:MSS_SignatureRespType"/>
+    </message>
+
+    <message name="MSS_StatusQueryInput">
+        <part name="MSS_StatusReq" type="mss:MSS_StatusReqType"/>
+    </message>
+    <message name="MSS_StatusQueryOutput">
+        <part name="MSS_StatusResp" type="mss:MSS_StatusRespType"/>
+    </message>
+
+    <message name="MSS_ReceiptInput">
+        <part name="MSS_ReceiptReq" type="mss:MSS_ReceiptReqType"/>
+    </message>
+    <message name="MSS_ReceiptOutput">
+        <part name="MSS_ReceiptResp" type="mss:MSS_ReceiptRespType"/>
+    </message>
+
+    <message name="MSS_RegistrationInput">
+        <part name="SecurityHeader" element="wsse:Security"/>
+        <part name="MSS_RegistrationReq" type="mss:MSS_RegistrationReqType"/>
+    </message>
+    <message name="MSS_RegistrationOutput">
+        <part name="MSS_RegistrationResp" type="mss:MSS_RegistrationRespType"/>
+    </message>
+
+    <message name="MSS_ProfileQueryInput">
+        <part name="MSS_ProfileReq" type="mss:MSS_ProfileReqType"/>
+    </message>
+    <message name="MSS_ProfileQueryOutput">
+        <part name="MSS_ProfileResp" type="mss:MSS_ProfileRespType"/>
+    </message>
+
+    <message name="MSS_NotificationInput">
+        <part name="MSS_StatusResp" type="mss:MSS_StatusRespType"/>
+    </message>
+    <message name="MSS_NotificationOutput">
+        <part name="MSS_ReceiptReq" type="mss:MSS_ReceiptReqType"/>
+    </message>
+
+    <message name="MSS_HandshakeInput">
+        <part name="MSS_HandshakeReq" type="mss:MSS_HandshakeReqType"/>
+    </message>
+    <message name="MSS_HandshakeOutput">
+        <part name="MSS_HandshakeResp" type="mss:MSS_HandshakeRespType"/>
+    </message>
+
+    <!-- PortTypes -->
+    <!-- Note the inconsistent naming (PortType or Type). This is directly specified in 204/Section 7. -->
+
+    <portType name="MSS_SignaturePortType">
+        <operation name="MSS_Signature">
+            <input message="tns:MSS_SignatureInput"/>
+            <output message="tns:MSS_SignatureOutput"/>
+        </operation>
+    </portType>
+
+    <portType name="MSS_StatusQueryType">
+        <operation name="MSS_StatusQuery">
+            <input message="tns:MSS_StatusQueryInput"/>
+            <output message="tns:MSS_StatusQueryOutput"/>
+        </operation>
+    </portType>
+
+    <portType name="MSS_ReceiptType">
+        <operation name="MSS_Receipt">
+            <input message="tns:MSS_ReceiptInput"/>
+            <output message="tns:MSS_ReceiptOutput"/>
+        </operation>
+    </portType>
+
+    <portType name="MSS_RegistrationType">
+        <operation name="MSS_Registration">
+            <input message="tns:MSS_RegistrationInput"/>
+            <output message="tns:MSS_RegistrationOutput"/>
+        </operation>
+    </portType>
+
+    <portType name="MSS_ProfileQueryType">
+        <operation name="MSS_ProfileQuery">
+            <input message="tns:MSS_ProfileQueryInput"/>
+            <output message="tns:MSS_ProfileQueryOutput"/>
+        </operation>
+    </portType>
+
+    <portType name="MSS_NotificationPortType">
+        <operation name="MSS_Notification">
+            <input message="tns:MSS_NotificationInput"/>
+            <output message="tns:MSS_NotificationOutput"/>
+        </operation>
+    </portType>
+
+    <portType name="MSS_HandshakePortType">
+        <operation name="MSS_Handshake">
+            <input message="tns:MSS_HandshakeInput"/>
+            <output message="tns:MSS_HandshakeOutput"/>
+        </operation>
+    </portType>
+
+    <!-- Bindings -->
+
+    <binding name="MSS_SignatureBinding" type="tns:MSS_SignaturePortType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_Signature">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:body parts="MSS_SignatureReq" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_SignatureResp" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="MSS_StatusQueryBinding" type="tns:MSS_StatusQueryType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_StatusQuery">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:body parts="MSS_StatusReq" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_StatusResp" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="MSS_ReceiptBinding" type="tns:MSS_ReceiptType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_Receipt">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:body parts="MSS_ReceiptReq" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_ReceiptResp" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="MSS_NotificationBinding" type="tns:MSS_NotificationPortType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_Notification">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:body parts="MSS_StatusResp" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_ReceiptReq" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="MSS_ProfileQueryBinding" type="tns:MSS_ProfileQueryType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_ProfileQuery">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:body parts="MSS_ProfileReq" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_ProfileResp" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="MSS_HandshakeBinding" type="tns:MSS_HandshakePortType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_Handshake">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:body parts="MSS_HandshakeReq" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_HandshakeResp" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="MSS_RegistrationBinding" type="tns:MSS_RegistrationType">
+        <wsoap12:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="MSS_Registration">
+            <wsoap12:operation soapActionRequired="false" style="rpc"/>
+            <input>
+                <wsoap12:header message="tns:MSS_RegistrationInput" part="SecurityHeader" use="literal"/>
+                <wsoap12:body parts="MSS_RegistrationReq" use="literal"/>
+            </input>
+            <output>
+                <wsoap12:body parts="MSS_RegistrationResp" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Service -->
+
+    <service name="MSS_SignatureService">
+        <port name="MSS_SignaturePort" binding="tns:MSS_SignatureBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+        <port name="MSS_StatusQueryPort" binding="tns:MSS_StatusQueryBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+        <port name="MSS_ReceiptPort" binding="tns:MSS_ReceiptBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+        <port name="MSS_NotificationPort" binding="tns:MSS_NotificationBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+        <port name="MSS_ProfileQueryPort" binding="tns:MSS_ProfileQueryBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+        <port name="MSS_HandshakePort" binding="tns:MSS_HandshakeBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+        <port name="MSS_ReqistrationPort" binding="tns:MSS_RegistrationBinding">
+            <wsoap12:address location="http://127.0.0.1:8080/this-is-replaced-at-runtime"/>
+        </port>
+    </service>
+
+</definitions> 

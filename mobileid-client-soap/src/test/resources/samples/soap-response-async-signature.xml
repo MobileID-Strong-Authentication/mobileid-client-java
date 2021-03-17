@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+    <env:Header/>
+    <soapenv:Body>
+        <MSS_SignatureResponse xmlns="http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl">
+            <MSS_SignatureResp xmlns="" MSSP_TransID="CAFE_BABE" MajorVersion="1" MinorVersion="2">
+                <mss:AP_Info xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#" AP_ID="mid://test.swisscom.ch" AP_PWD="not-needed"
+                             AP_TransID="ID-963f5d14-9ba4-426f-8ead-358f0866083c" Instant="2021-03-04T09:04:40.616+01:00"/>
+                <mss:MSSP_Info xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#" Instant="2021-03-04T09:04:44.037+01:00">
+                    <mss:MSSP_ID>
+                        <mss:URI>http://mid.swisscom.ch/</mss:URI>
+                    </mss:MSSP_ID>
+                </mss:MSSP_Info>
+                <mss:MobileUser xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#">
+                    <mss:MSISDN>418888888888</mss:MSISDN>
+                </mss:MobileUser>
+                <mss:SignatureProfile xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#">
+                    <mss:mssURI>http://mid.swisscom.ch/My-Custom-Profile</mss:mssURI>
+                </mss:SignatureProfile>
+                <mss:Status xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#">
+                    <mss:StatusCode Value="100"/>
+                    <mss:StatusMessage>REQUEST_OK</mss:StatusMessage>
+                </mss:Status>
+            </MSS_SignatureResp>
+        </MSS_SignatureResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

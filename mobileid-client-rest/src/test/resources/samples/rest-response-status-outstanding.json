@@ -1,0 +1,26 @@
+{
+    "MSS_StatusResp": {
+        "AP_Info": {
+            "AP_ID": "mid://test.swisscom.ch",
+            "AP_TransID": "ID-6020b88b-03c5-4d7d-850f-62b0ddcb42a5",
+            "Instant": "2020-12-02T15:19:19.463Z"
+        },
+        "MSSP_Info": {
+            "Instant": "2020-12-02T15:19:19.867Z",
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MajorVersion": "1",
+        "MinorVersion": "1",
+        "MobileUser": {
+            "MSISDN": "41000092102"
+        },
+        "Status": {
+            "StatusCode": {
+                "Value": "504"
+            },
+            "StatusMessage": "OUTSTANDING_TRANSACTION"
+        }
+    }
+}

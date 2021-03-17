@@ -1,0 +1,61 @@
+--------------------------------------------------------------------------------
+Swisscom Mobile ID Java client ${versionInfo}
+--------------------------------------------------------------------------------
+Usage: ./bin/mid-client.sh [ARGUMENTS]
+
+Arguments:
+    -init                                               - Create sample configuration files in the current folder
+
+    -config=my-config.properties                        - The properties file that provides the extra configuration parameters.
+                                                          Use -init to create a sample file. If you don't specify a file,
+                                                          by default config.properties is looked for in the start directory
+
+    -profile-query                                      - Run a profile query on the target MSISDN. Cannot be used together with -sign
+
+    -sign                                               - Request a digital signature to the target MSISDN. Arguments such as -lang, -dtbs
+                                                          can customize what is displayed to the user and what is the signed content.
+                                                          Cannot be used together with -profile-query
+
+    -sync                                               - For sign operation. Run the signature in synchronous mode (default is async)
+
+    -async                                              - For sign operation. Run the signature in asynchronous (polling) mode (this is the default)
+
+    -receipt                                            - For sign operation. Send a receipt after the signature is acquired successfully
+
+    -msisdn=41790000000                                 - The target MSISDN for the chosen operation
+
+    -lang=en|de|it|fr                                   - The language to use during the talk with the mobile user. Choose from "en", "de", "it", "fr"
+
+    -dtbs="Please sign this document"                   - The data to be signed (text). Make sure to use quotes around the entire argument,
+                                                          since this text will usually contain spaces.
+                                                          By default this argument is "Test: Please sign this document"
+
+    -rest                                               - Use the REST interface. Cannot be used together with -soap. This is the default interface
+
+    -soap                                               - Use the SOAP interface. Cannot be used together with -rest (default is REST)
+
+    -help                                               - This help text
+
+    -v                                                  - Be verbose about what is going on (sets Logback config to info)
+
+    -vv                                                 - Be EXTRA verbose about what is going on (sets Logback config to debug, without HTTP and TLS traffic)
+
+    -vvv                                                - Be EXTRA-EXTRA verbose about what is going on (sets Logback config to debug, with HTTP and TLS traffic)
+
+Notes:
+    - for the arguments that take values, you can either use the form [-param=value] or [-param value].
+      E.g.: ./bin/mid-client.sh -sign -msisdn=41790000000 ...... OR
+            ./bin/mid-client.sh -sign -msisdn 41790000000 ......
+
+Use cases:
+    - ./bin/mid-client.sh -init                        => Have the config files generated for you in the current folder (optional step)
+    - ./bin/mid-client.sh -profile-query -msisdn=41790000000
+    - ./bin/mid-client.sh -profile-query -msisdn=41790000000 -soap
+    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Please sign this document"
+    - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Please sign this document" -soap -vv
+    - ./bin/mid-client.sh \
+           -config=my-config.properties \
+           -sign -sync -receipt \
+           -msisdn=41790000000 \
+           -lang=en -dtbs="Please sign this document" \
+           -soap -vv

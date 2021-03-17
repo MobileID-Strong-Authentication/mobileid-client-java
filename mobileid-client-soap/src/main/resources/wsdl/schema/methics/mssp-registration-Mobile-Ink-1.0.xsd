@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<!DOCTYPE schema  PUBLIC "-//W3C//DTD XMLSchema 200102//EN"
+                         "import/XMLSchema.dtd"
+ [
+   <!ATTLIST schema
+     xmlns:mreg CDATA #FIXED 'http://www.methics.fi/MSSPRegistration/v1.0.0#'
+     xmlns:mss CDATA #FIXED 'http://uri.etsi.org/TS102204/v1.1.2#'
+     xmlns:xenc CDATA #FIXED 'http://www.w3.org/2001/04/xmlenc#'
+     xmlns:xs CDATA #FIXED 'http://www.w3.org/2001/XMLSchema'
+     xmlns:saml CDATA #FIXED 'urn:oasis:names:tc:SAML:2.0:assertion'
+     xmlns:samlp CDATA #FIXED 'urn:oasis:names:tc:SAML:2.0:protocol'
+     xmlns:spml CDATA #FIXED 'urn:oasis:names:tc:SPML:2:0'
+     xmlns:xkms CDATA #FIXED 'http://www.w3.org/2002/03/xkms#'>
+   <!ENTITY ds    'http://www.w3.org/2000/09/xmldsig#'>
+   <!ENTITY mreg  'http://www.methics.fi/MSSPRegistration/v1.0.0#'>
+   <!ENTITY mss   'http://uri.etsi.org/TS102204/v1.1.2#'>
+   <!ENTITY xenc  'http://www.w3.org/2001/04/xmlenc#'>
+   <!ENTITY xs    'http://www.w3.org/2001/XMLSchema'>
+   <!ENTITY saml  'urn:oasis:names:tc:SAML:2.0:assertion'>
+   <!ENTITY samlp 'urn:oasis:names:tc:SAML:2.0:protocol'>
+   <!ENTITY spml  'urn:oasis:names:tc:SPML:2:0'>
+   <!ENTITY xkms  'http://www.w3.org/2002/03/xkms#'>
+   <!ENTITY % p ''>
+   <!ENTITY % s ''>
+  ]> 
+-->
+<!--
+     This file includes temporary workarounds. 
+     1) SPML2 stuff does not work correctly with our Castor tool. It's commented out.
+     2) The reference to MSS.xsd points to MSS-plus-Mobile-Ink.xsd, our custom version of MSS.xsd.
+     3) Lots of things commented out to only use stuff needed by Mobile-Ink.
+-->
+
+<xs:schema targetNamespace="http://www.methics.fi/MSSPRegistration/v1.0.0#"
+	   xmlns:mreg="http://www.methics.fi/MSSPRegistration/v1.0.0#"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
+           xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+           xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+           xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+           xmlns:spml="urn:oasis:names:tc:SPML:2.0"
+           xmlns:xkms="http://www.w3.org/2002/03/xkms#"
+           elementFormDefault="qualified">
+
+  <xs:annotation>
+    <xs:documentation>
+      This is a simplified version for Mobile-Ink.
+
+      Document identifier: MSSP-registration-Mobile-Ink-1.0.xsd
+      Location: etc/xmlschemas/mssp-registration-Mobile-Ink-1.0.xsd
+      Revision history:
+      V1.0.0 (November 2011)
+      EntityUser revision (May 2012)
+
+      mss:MSS_RegistrationReq
+      - mreg:RegistrationInput (*)
+       - mreg:(Mreg)Request (*)
+        - (actual payload here)
+      
+      mss:MSS_RegistrationResp
+      - mreg:RegistrationOutput (*)
+       - mreg:(Mreg)Response (*)
+        - (actual payload here)
+	  
+	  Original reference:
+	  
+      Document identifier: MSSP-registration-1.0.xsd
+      Location: etc/xmlschemas/mssp-registration-1.0.xsd
+      Revision history:
+      V1.0.0 (August 2009)
+      
+      This file describes the "mreg" schema, which is designed to supplement 
+      mss:MSS_RegistrationReq. This schema wraps the SAML2, XKMS2, (SPML2) protocols
+      inside MSS_RegistrationReqs for the purpose of 207 roaming. Additionally, this
+      schema introduces a number of useful operations for MSS mobileuser, sim card
+      certificate and entityuser lifecycle management. 
+      
+      An mreg:RegistrationInput travels inside an mss:MSS_RegistrationReq message and
+      a corresponding mreg:RegistrationOutput comes back in an mss:MSS_RegistrationResp
+      message. Inside a RegistrationInput are a number of mreg "requests", each 
+      wrapping an actual operation. The responses to each operation come in an mreg
+      "response", inside the RegistrationOutput.
+      
+      mss:MSS_RegistrationReq
+      - mreg:RegistrationInput (*)
+       - mreg:(Mreg|Saml2|Spml2|Xkms2)Request (*)
+        - (actual payload here)
+      
+      mss:MSS_RegistrationResp
+      - mreg:RegistrationOutput (*)
+       - mreg:(Mreg|Saml2|Spml2|Xkms2)Response (*)
+        - (actual payload here)
+    </xs:documentation>
+  </xs:annotation>
+  
+  <xs:import namespace="http://uri.etsi.org/TS102204/v1.1.2#" schemaLocation="ts-102-204.xsd" />
+  <!-- <xs:import namespace="http://uri.etsi.org/TS102204/v1.1.2#" schemaLocation="../../MSS-plus-Mobile-Ink.xsd"/> -->
+
+  <xs:import namespace="http://www.w3.org/2001/04/xmlenc#"  schemaLocation="../w3/xenc-schema.xsd"/>
+  
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:assertion" schemaLocation="../oasis/saml-schema-assertion-2.0.xsd" />
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:protocol" schemaLocation="../oasis/saml-schema-protocol-2.0.xsd" />
+  <!-- <xs:import namespace="urn:oasis:names:tc:SPML:2.0" schemaLocation="pstc_spmlv2_core.xsd" /> -->
+  <!-- <xs:import namespace="http://www.w3.org/2002/03/xkms#" schemaLocation="xkms.xsd" /> -->
+  
+  <xs:element name="EncryptedRegistrationInput"  type="mreg:EncryptedElementType"/>
+  <xs:element name="EncryptedRegistrationOutput" type="mreg:EncryptedElementType"/>
+  
+  <xs:complexType name="EncryptedElementType">
+      <xs:sequence>
+         <xs:element ref="xenc:EncryptedData"/>
+         <xs:element ref="xenc:EncryptedKey" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="EncryptionCertificates" type="mreg:CertificatesType"/>
+  <xs:complexType name="CertificatesType"> 
+    <xs:sequence> 
+      <xs:element name="Certificate" type="xs:base64Binary" minOccurs="0" maxOccurs="unbounded"/> 
+    </xs:sequence> 
+  </xs:complexType> 
+
+  <xs:element name="RegistrationInput">
+    <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="mreg:CaseId"                                  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Target"       type="mreg:TargetType" />
+      <xs:element name="MregRequest"  type="mreg:MregRequestType"    minOccurs="0" maxOccurs="unbounded" />
+<!--
+      <xs:element name="Saml2Request" type="mreg:Saml2RequestType"   minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Spml2Request" type="mreg:Spml2RequestType"   minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Xkms2Request" type="mreg:Xkms2RequestType"   minOccurs="0" maxOccurs="unbounded" />
+-->
+
+    </xs:sequence>
+    <xs:attribute name="InputId" type="xs:ID" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RegistrationOutput">
+    <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="mreg:CaseId"                                      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MregResponse"    type="mreg:MregResponseType"    minOccurs="0" maxOccurs="unbounded"/>
+<!--
+      <xs:element name="Saml2Response"   type="mreg:Saml2ResponseType"   minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Spml2Response"   type="mreg:Spml2ResponseType"   minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Xkms2Response"   type="mreg:Xkms2ResponseType"   minOccurs="0" maxOccurs="unbounded"/>
+-->
+    </xs:sequence>
+    <xs:attribute name="InputId" type="xs:ID" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="CaseId"         type="xs:string" />
+
+  <xs:complexType name="RequestBaseType" abstract="true">
+    <xs:attribute name="RequestId" type="xs:ID" use="optional"/>
+    <xs:attribute name="Step"      type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="OperationBaseType" abstract="true">
+    <xs:sequence>
+      <xs:element name="Parameter" type="mreg:NameValueType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="Name"      type="xs:string" use="required"/>
+    <xs:attribute name="ID"        type="xs:ID"     use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="OperationInputType">
+    <xs:complexContent>
+      <xs:extension base="mreg:OperationBaseType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OperationOutputType">
+    <xs:complexContent>
+      <xs:extension base="mreg:OperationBaseType">
+        <xs:sequence>
+          <xs:element name="Status" type="mreg:OperationStatusType" minOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OperationStatusType">
+    <xs:sequence>
+      <xs:element name="OperationStatusCode"    type="xs:integer"/>
+      <xs:element name="OperationStatusMessage" type="xs:string" minOccurs="0"/>
+      <xs:element name="OperationStatusDetail"  type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CertificationOperationType">
+    <xs:complexContent>
+      <xs:extension base="mreg:OperationInputType">
+        <xs:sequence>
+          <xs:element name="IdentityAssertion" type="saml:AssertionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+      
+  <xs:complexType name="ProvisioningOperationType">
+    <xs:complexContent>
+      <xs:extension base="mreg:OperationInputType">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NameValueType">
+    <xs:attribute name="Name"      type="xs:string" use="required"/>
+    <xs:attribute name="Value"     type="xs:string" use="optional"/>
+    <xs:attribute name="MimeType"  type="xs:string" use="optional"/>
+    <xs:attribute name="Encoding"  type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="TargetType">
+    <xs:sequence>
+      <xs:element   name="EndPointID" type="xs:string" minOccurs="0" />
+    <xs:choice>
+      <xs:element name="MobileUser" type="mss:MobileUserType"/>
+      <xs:element name="SimCard"    type="mreg:SimCardType"  />
+        <xs:element name="EntityUser" type="mreg:EntityUserType"  />
+    </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="SimCardType">
+    <xs:sequence>
+      <xs:element name="ICCID"  type="xs:string" minOccurs="0" />
+      <xs:element name="IMSI"   type="xs:string" minOccurs="0" />
+      <xs:element name="MSISDN" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+
+  <xs:complexType name="EntityUserType">
+    <xs:sequence>
+      <xs:choice minOccurs="0">
+        <xs:element name="ApID"        type="xs:anyURI" /> <!-- corresponds to kiuruspml:AP_ID -->
+        <xs:element name="CustomerID"  type="xs:string" /> <!-- corresponds to kiuruspml:Customer_ID -->
+        <xs:element name="MsspID"      type="mss:MeshMemberType"/> <!-- corresponds to kiuruspml:MSSP_ID  -->
+        <xs:element name="SpID"        type="xs:anyURI" /> <!-- corresponds to kiuruspml:SP_ID -->
+      </xs:choice>
+      <xs:element name="EntityUserID"  type="xs:string" minOccurs="0" /> <!-- spml2:PSO_ID -->
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="WirelessOperation"      type="mreg:OperationInputType"/>
+  <xs:element name="CertificationOperation" type="mreg:CertificationOperationType"/>
+  <xs:element name="ProvisioningOperation"  type="mreg:ProvisioningOperationType"/>
+  <xs:element name="EntityUserOperation"    type="mreg:OperationInputType"/>
+  <xs:element name="OperationOutput"        type="mreg:OperationOutputType"/>
+
+  <xs:complexType name="MregRequestType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="mreg:WirelessOperation"/>
+          <xs:element ref="mreg:CertificationOperation"/>
+          <xs:element ref="mreg:ProvisioningOperation"/>
+          <xs:element ref="mreg:EntityUserOperation"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="MregResponseType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="mreg:OperationOutput"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+<!--
+  <xs:complexType name="Saml2RequestType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="samlp:AssertionIDRequest"/>
+          <xs:element ref="samlp:SubjectQuery"/>
+          <xs:element ref="samlp:AuthnQuery"/>
+          <xs:element ref="samlp:AttributeQuery"/>
+          <xs:element ref="samlp:AuthzDecisionQuery"/>
+          <xs:element ref="samlp:AuthnRequest"/>
+          <xs:element ref="samlp:ArtifactResolve"/>
+          <xs:element ref="samlp:ManageNameIDRequest"/>
+          <xs:element ref="samlp:LogoutRequest"/>
+          <xs:element ref="samlp:NameIDMappingRequest"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Saml2ResponseType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="samlp:Response"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Spml2RequestType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="spml2:addRequest"/>
+          <xs:element ref="spml2:modifyRequest"/>
+          <xs:element ref="spml2:deleteRequest"/>
+          <xs:element ref="spml2:lookupRequest"/>
+          <xs:element ref="spml2:listTargetsRequest"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Spml2ResponseType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="spml2:addResponse"/>
+          <xs:element ref="spml2:modifyResponse"/>
+          <xs:element ref="spml2:deleteResponse"/>
+          <xs:element ref="spml2:lookupResponse"/>
+          <xs:element ref="spml2:listTargetsResponse"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Xkms2RequestType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="xkms:PendingRequest"/>
+          <xs:element ref="xkms:CompoundRequest"/>
+          <xs:element ref="xkms:LocateRequest"/>
+          <xs:element ref="xkms:ValidateRequest"/>
+          <xs:element ref="xkms:RegisterRequest"/>
+          <xs:element ref="xkms:ReissueRequest"/>
+          <xs:element ref="xkms:RevokeRequest"/> 
+          <xs:element ref="xkms:RecoverRequest"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Xkms2ResponseType">
+    <xs:complexContent>
+      <xs:extension base="mreg:RequestBaseType">
+        <xs:choice>
+          <xs:element ref="xkms:CompoundResult"/>
+          <xs:element ref="xkms:LocateResult"/>
+          <xs:element ref="xkms:ValidateResult"/>
+          <xs:element ref="xkms:RegisterResult"/>
+          <xs:element ref="xkms:ReissueResult"/>
+          <xs:element ref="xkms:RevokeResult"/> 
+          <xs:element ref="xkms:RecoverResult"/>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+-->
+
+</xs:schema>

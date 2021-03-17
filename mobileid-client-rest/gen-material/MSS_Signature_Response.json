@@ -1,0 +1,44 @@
+{
+    "MSS_SignatureResp": {
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_TransID": "REF0101120000",
+            "Instant": "2015-01-01T11:00:00.000Z"
+        },
+        "MSSP_Info": {
+            "Instant": "2015-01-01T11:00:00.100Z",
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MSSP_TransID": "h44okl",
+        "MSS_Signature": {
+            "Base64Signature": "MIIIdwYJKoZIhvc..."
+        },
+        "MajorVersion": "1",
+        "MinorVersion": "1",
+        "MobileUser": {
+            "MSISDN": "MOBILE_NUMBER"
+        },
+        "ServiceResponses": [
+            {
+                "Description": "http://mid.swisscom.ch/as#subscriberInfo",
+                "SubscriberInfo": {
+                    "Details": [
+                        {
+                            "id": "1101",
+                            "value": "22221"
+                        }
+                    ]
+                }
+            }
+        ],
+        "SignatureProfile": "SIGNATURE_PROFILE",
+        "Status": {
+            "StatusCode": {
+                "Value": "500"
+            },
+            "StatusMessage": "SIGNATURE"
+        }
+    }
+}

@@ -1,0 +1,92 @@
+{
+    "MSS_ProfileResp": {
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_TransID": "REF0101120000",
+            "Instant": "2015-01-01T11:00:00.000Z"
+        },
+        "MSSP_Info": {
+            "Instant": "2015-01-01T11:00:00.100Z",
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MajorVersion": "2",
+        "MinorVersion": "0",
+        "SignatureProfile": [
+            "http://mid.swisscom.ch/Any-LoA4",
+            "http://mid.swisscom.ch/Device-LoA4",
+            "http://mid.swisscom.ch/MID/v1/AuthProfile1"
+        ],
+        "Status": {
+            "StatusCode": {
+                "Value": "100"
+            },
+            "StatusDetail": {
+                "ProfileQueryExtension": {
+                    "MobileUser": {
+                        "AutoActivation": false,
+                        "RecoveryCodeCreated": true
+                    },
+                    "Sscds": {
+                        "App": [
+                            {
+                                "MobileUserCertificate": [
+                                    {
+                                        "Algorithm": "RSA",
+                                        "State": "ACTIVE",
+                                        "X509Certificate": [
+                                            "X509_BASE64_CERT_USER",
+                                            "X509_BASE64_CERT_CA"
+                                        ],
+                                        "X509SubjectName": [
+                                            "X509_BASE64_SUBJECT_USER",
+                                            "X509_BASE64_SUBJECT_CA"
+                                        ]
+                                    }
+                                ],
+                                "PinStatus": {
+                                    "Blocked": false
+                                },
+                                "State": "ACTIVE"
+                            }
+                        ],
+                        "Sim": {
+                            "MobileUserCertificate": [
+                                {
+                                    "Algorithm": "RSA",
+                                    "State": "INACTIVE",
+                                    "X509Certificate": [
+                                        "X509_BASE64_CERT_USER",
+                                        "X509_BASE64_CERT_CA"
+                                    ],
+                                    "X509SubjectName": [
+                                        "X509_BASE64_SUBJECT_USER",
+                                        "X509_BASE64_SUBJECT_CA"
+                                    ]
+                                },
+                                {
+                                    "Algorithm": "EC",
+                                    "State": "INACTIVE",
+                                    "X509Certificate": [
+                                        "X509_BASE64_CERT_USER",
+                                        "X509_BASE64_CERT_CA"
+                                    ],
+                                    "X509SubjectName": [
+                                        "X509_BASE64_SUBJECT_USER",
+                                        "X509_BASE64_SUBJECT_CA"
+                                    ]
+                                }
+                            ],
+                            "PinStatus": {
+                                "Blocked": false
+                            },
+                            "State": "INACTIVE"
+                        }
+                    }
+                }
+            },
+            "StatusMessage": "REQUEST_OK"
+        }
+    }
+}

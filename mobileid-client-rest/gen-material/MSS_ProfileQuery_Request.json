@@ -1,0 +1,21 @@
+{
+    "MSS_ProfileReq": {
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_PWD": "yourAP_PWD",
+            "AP_TransID": "REF0101120000",
+            "Instant": "2015-01-01T12:00:00.000+01:00"
+        },
+        "MSSP_Info": {
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MajorVersion": "2",
+        "MinorVersion": "0",
+        "MobileUser": {
+            "MSISDN": "MOBILE_NUMBER"
+        },
+        "Params": "sscds state certs pinstatus rcstatus aastatus"
+    }
+}

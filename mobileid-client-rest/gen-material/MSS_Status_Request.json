@@ -1,0 +1,18 @@
+{
+    "MSS_StatusReq": {
+        "MajorVersion": "1",
+        "MinorVersion": "1",
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_PWD": "yourAP_PWD",
+            "Instant":"2015-01-01T12:00:00.000+01:00",
+            "AP_TransID":"REF0101120000"
+        },
+        "MSSP_Info": {
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MSSP_TransID": "h4iof"
+    }
+}

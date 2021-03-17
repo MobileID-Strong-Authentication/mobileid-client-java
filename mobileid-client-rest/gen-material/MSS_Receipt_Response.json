@@ -1,0 +1,32 @@
+{
+    "MSS_ReceiptResp": {
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_TransID": "REF0101120000",
+            "Instant": "2015-01-01T11:00:00.000Z"
+        },
+        "MSSP_Info": {
+            "Instant": "2015-01-01T11:00:00.100Z",
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MajorVersion": "1",
+        "MinorVersion": "1",
+        "Status": {
+            "StatusCode": {
+                "Value": "100"
+            },
+            "StatusDetail": {
+                "ReceiptResponseExtension": {
+                    "ClientAck": "false",
+                    "NetworkAck": "false",
+                    "ReceiptMessagingMode": "synch",
+                    "UserAck": "true",
+                    "UserResponse": "{\"status\":\"OK\"}"
+                }
+            },
+            "StatusMessage": "REQUEST_OK"
+        }
+    }
+}

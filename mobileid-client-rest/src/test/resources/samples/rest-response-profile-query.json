@@ -1,0 +1,74 @@
+{
+    "MSS_ProfileResp": {
+        "AP_Info": {
+            "AP_ID": "mid://test.swisscom.ch",
+            "AP_TransID": "ID-5ec3ceb7-cabf-412b-aec8-67283f9dc18e",
+            "Instant": "2020-12-03T11:22:24.383Z"
+        },
+        "MSSP_Info": {
+            "Instant": "2020-12-03T11:22:24.813Z",
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MajorVersion": "2",
+        "MinorVersion": "0",
+        "SignatureProfile": [
+            "http://mid.swisscom.ch/Any-LoA4",
+            "http://mid.swisscom.ch/MID/v1/AuthProfile1",
+            "http://mid.swisscom.ch/STK-LoA4"
+        ],
+        "Status": {
+            "StatusCode": {
+                "Value": "100"
+            },
+            "StatusDetail": {
+                "ProfileQueryExtension": {
+                    "MobileUser": {
+                        "AutoActivation": false,
+                        "RecoveryCodeCreated": true
+                    },
+                    "Sscds": {
+                        "Sim": {
+                            "MobileUserCertificate": [
+                                {
+                                    "Algorithm": "RSA",
+                                    "State": "ACTIVE",
+                                    "X509Certificate": [
+                                        "MIIdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeU",
+                                        "MIIdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeU",
+                                        "MIIdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeU"
+                                    ],
+                                    "X509SubjectName": [
+                                        "cn=dEbexsWW9J4rVrgLTDeU:pn,serialnumber=dEbexsWW9J4rVrgLTDeU,pseudonym=dEbexsWW9J4rVrgLTDeU",
+                                        "c=ch,o=swisscom (schweiz) ag,organizationidentifier=dEbexsWW9J4rVrgLTDeU,ou=digital certificate services,cn=dEbexsWW9J4rVrgLTDeU",
+                                        "c=ch,o=swisscom (schweiz) ag,organizationidentifier=dEbexsWW9J4rVrgLTDeU,ou=digital certificate services,cn=dEbexsWW9J4rVrgLTDeU"
+                                    ]
+                                },
+                                {
+                                    "Algorithm": "EC",
+                                    "State": "ACTIVE",
+                                    "X509Certificate": [
+                                        "MIIdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeU",
+                                        "MIIdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeU",
+                                        "MIIdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeUdEbexsWW9J4rVrgLTDeU"
+                                    ],
+                                    "X509SubjectName": [
+                                        "cn=dEbexsWW9J4rVrgLTDeU:pn,serialnumber=dEbexsWW9J4rVrgLTDeU,pseudonym=dEbexsWW9J4rVrgLTDeU",
+                                        "c=ch,o=swisscom (schweiz) ag,organizationidentifier=dEbexsWW9J4rVrgLTDeU,ou=digital certificate services,cn=dEbexsWW9J4rVrgLTDeU",
+                                        "c=ch,o=swisscom (schweiz) ag,organizationidentifier=dEbexsWW9J4rVrgLTDeU,ou=digital certificate services,cn=dEbexsWW9J4rVrgLTDeU"
+                                    ]
+                                }
+                            ],
+                            "PinStatus": {
+                                "Blocked": false
+                            },
+                            "State": "ACTIVE"
+                        }
+                    }
+                }
+            },
+            "StatusMessage": "REQUEST_OK"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+    <env:Header/>
+    <soapenv:Body>
+        <MSS_StatusQueryResponse xmlns="http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl">
+            <MSS_StatusResp xmlns="" MajorVersion="1" MinorVersion="1">
+                <mss:AP_Info xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#" AP_ID="mid://test.swisscom.ch" AP_PWD="not-needed"
+                             AP_TransID="ID-ecb47953-efb6-434b-834d-4d37bc94ad39" Instant="2021-03-04T09:04:44.148+01:00"/>
+                <mss:MSSP_Info xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#" Instant="2021-03-04T09:04:44.604+01:00">
+                    <mss:MSSP_ID>
+                        <mss:URI>http://mid.swisscom.ch/</mss:URI>
+                    </mss:MSSP_ID>
+                </mss:MSSP_Info>
+                <mss:MobileUser xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#">
+                    <mss:MSISDN>418888888888</mss:MSISDN>
+                </mss:MobileUser>
+                <mss:Status xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#">
+                    <mss:StatusCode Value="504"/>
+                    <mss:StatusMessage>OUTSTANDING_TRANSACTION</mss:StatusMessage>
+                </mss:Status>
+            </MSS_StatusResp>
+        </MSS_StatusQueryResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

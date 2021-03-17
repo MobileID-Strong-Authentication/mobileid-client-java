@@ -1,0 +1,36 @@
+{ 
+    "MSS_SignatureReq": { 
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_PWD": "yourAP_PWD", 
+            "AP_TransID": "REF0101120000", 
+            "Instant": "2015-01-01T12:00:00.000+01:00" 
+        }, 
+        "AdditionalServices": [ 
+            { 
+                "Description": "http://mss.ficom.fi/TS102204/v1.0.0#userLang", 
+                "UserLang": { 
+                    "Value": "LANGUAGE" 
+                } 
+            } 
+        ], 
+        "DataToBeSigned": { 
+            "Data": "TEXT_TO_BE_SIGNED", 
+            "Encoding": "UTF-8", 
+            "MimeType": "text/plain" 
+        }, 
+        "MSSP_Info": {
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            } 
+        }, 
+        "MajorVersion": "1", 
+        "MessagingMode": "synch", 
+        "MinorVersion": "2", 
+        "MobileUser": {
+            "MSISDN": "MOBILE_NUMBER"
+        }, 
+        "SignatureProfile": "SIGNATURE_PROFILE", 
+        "TimeOut": "80" 
+    } 
+} 

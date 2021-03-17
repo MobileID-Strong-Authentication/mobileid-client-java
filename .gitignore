@@ -1,0 +1,20 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VSCode ###
+.project
+.settings
+.classpath
+
+target/
+build/
+mobileid-client-samples/src/main/java/ch/swisscom/mid/client/samples/TestSoap.java
+local-*.*
+
+# Local files that might be creating during testing
+/truststore.jks
+/keystore.jks
+/config.properties

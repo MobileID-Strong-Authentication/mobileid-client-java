@@ -1,0 +1,14 @@
+{
+    "Fault": {
+        "Code": {
+            "SubCode": {
+                "Value": "_101",
+                "ValueNs": "http://uri.etsi.org/TS102204/v1.1.2#"
+            },
+            "Value": "Sender",
+            "ValueNs": "http://www.w3.org/2003/05/soap-envelope"
+        },
+        "Detail": "Illegal msisdn",
+        "Reason": "WRONG_PARAM"
+    }
+}

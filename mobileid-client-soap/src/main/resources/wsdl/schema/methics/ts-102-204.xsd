@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://uri.etsi.org/TS102204/v1.1.2#"
+	xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:env="http://www.w3.org/2003/05/soap-envelope" elementFormDefault="qualified">
+
+	<xs:complexType name="MeshMemberType">
+		<xs:sequence>
+			<xs:element name="DNSName" type="xs:string" minOccurs="0" />
+			<xs:element name="IPAddress" type="xs:string" minOccurs="0" />
+			<xs:element name="URI" type="xs:anyURI" minOccurs="0" />
+			<xs:element name="IdentifierString" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="MobileUserType">
+		<xs:sequence>
+			<xs:element name="IdentityIssuer" type="mss:MeshMemberType" minOccurs="0" />
+			<xs:element name="UserIdentifier" type="xs:string" minOccurs="0" />
+			<xs:element name="HomeMSSP" type="mss:MeshMemberType" minOccurs="0" />
+			<xs:element name="MSISDN" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

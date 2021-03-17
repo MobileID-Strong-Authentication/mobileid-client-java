@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOGS" value="./logs"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{ISO8601} %-5level [%t] %C{1.}: %msg%n%throwable</pattern>
+        </encoder>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="Console"/>
+    </root>
+
+    <logger name="org.apache.hc" level="warn"/>
+    <logger name="org.eclipse.jetty" level="warn"/>
+    <logger name="ch.swisscom.mid.client" level="debug"/>
+    <logger name="ch.swisscom.mid.client.config" level="debug"/>
+    <logger name="ch.swisscom.mid.client.protocol" level="debug"/>
+    <logger name="ch.swisscom.mid.client.requestResponse" level="debug"/>
+
+</configuration>

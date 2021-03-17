@@ -1,0 +1,41 @@
+{
+    "MSS_ReceiptReq": {
+        "AP_Info": {
+            "AP_ID": "yourAP_ID",
+            "AP_PWD": "yourAP_PWD",
+            "AP_TransID": "REF0101120000",
+            "Instant": "2015-01-01T12:00:00.000+01:00"
+        },
+        "MSSP_Info": {
+            "MSSP_ID": {
+                "URI": "http://mid.swisscom.ch/"
+            }
+        },
+        "MSSP_TransID": "h4iof",
+        "MajorVersion": "1",
+        "Message": {
+            "Data": "RECEIPT_MESSAGE",
+            "Encoding": "UTF-8",
+            "MimeType": "text/plain"
+        },
+        "MinorVersion": "1",
+        "MobileUser": {
+            "MSISDN": "MOBILE_NUMBER"
+        },
+        "Status": {
+            "StatusCode": {
+                "Value": "100"
+            },
+            "StatusDetail": {
+                "ReceiptRequestExtension": {
+                    "ReceiptMessagingMode": "synch",
+                    "ReceiptProfile": {
+                        "Language": "LANGUAGE",
+                        "ReceiptProfileURI": "http://mss.swisscom.ch/synch"
+                    },
+                    "UserAck": "true"
+                }
+            }
+        }
+    }
+}
