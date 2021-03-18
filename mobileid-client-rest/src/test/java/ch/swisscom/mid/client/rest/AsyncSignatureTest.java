@@ -119,7 +119,7 @@ public class AsyncSignatureTest {
     private static SignatureRequest buildSignatureRequest() {
         SignatureRequest request = new SignatureRequest();
         request.setUserLanguage(UserLanguage.ENGLISH);
-        request.getDataToBeSigned().setData("test.com: Please sign this document");
+        request.getDataToBeSigned().setData("Test: Do you want to login?");
         request.getDataToBeSigned().setEncodingToUtf8();
         request.getDataToBeSigned().setMimeTypeToTextPlain();
         request.getMobileUser().setMsisdn(TrialNumbers.ONE_THAT_GIVES_MISSING_PARAM);

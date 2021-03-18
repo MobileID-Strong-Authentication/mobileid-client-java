@@ -118,7 +118,7 @@ To create a signature in synchronous mode (call and wait for the signature to fi
 ```java
 SignatureRequest request = new SignatureRequest();
 request.setUserLanguage(UserLanguage.ENGLISH);
-request.getDataToBeSigned().setData("ApplicationProvider.com: Please sign this document");
+request.getDataToBeSigned().setData("Test: Do you want to login?");
 request.getMobileUser().setMsisdn("41790000000");
 request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
 request.addAdditionalService(new SubscriberInfoAdditionalService());
@@ -131,7 +131,7 @@ To create a signature in asynchronous mode AND send a receipt to the mobile user
 ```java
 SignatureRequest request = new SignatureRequest();
 request.setUserLanguage(UserLanguage.ENGLISH);
-request.getDataToBeSigned().setData("ApplicationProvider.com: Please sign this document");
+request.getDataToBeSigned().setData("Test: Do you want to login?");
 request.getMobileUser().setMsisdn("41790000000");
 request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
 request.addAdditionalService(new SubscriberInfoAdditionalService());
@@ -151,7 +151,7 @@ System.out.println(response.toString());
 // send a receipt; do this only if the signature is finished successfully AND on your side the signature was correctly used 
 // (e.g. the document was signed, access was granted, etc)
 ReceiptRequest receiptRequest = new ReceiptRequest();
-receiptRequest.getMessageToBeDisplayed().setData("Document signed successfully");
+receiptRequest.getMessageToBeDisplayed().setData("Login completed successfully");
 receiptRequest.setStatusCode(StatusCode.REQUEST_OK);
 receiptRequest.addReceiptRequestExtension();
 

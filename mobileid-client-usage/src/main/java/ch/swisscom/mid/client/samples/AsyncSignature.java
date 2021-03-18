@@ -37,7 +37,7 @@ public class AsyncSignature {
         SignatureRequest request = new SignatureRequest();
         request.setUserLanguage(UserLanguage.ENGLISH);
         // edit this value accordingly
-        request.getDataToBeSigned().setData("ApplicationProvider.com: Please sign this document");
+        request.getDataToBeSigned().setData("Test: Do you want to login?");
         // edit this value accordingly
         request.getMobileUser().setMsisdn("41790000000");
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);

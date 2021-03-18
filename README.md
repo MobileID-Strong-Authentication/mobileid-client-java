@@ -55,12 +55,12 @@ Get the same profile information using a particular configuration file and the S
 
 Request a digital signature to a particular phone number (MSISDN), in sync mode:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Please sign this document" -sync  
+./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -sync  
 ```
 
 Request a digital signature to a particular phone number (MSISDN), in async mode (this is the default mode) and with signature receipt:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Please sign this document" -async -receipt  
+./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -async -receipt  
 ```
 
 You can also add the following parameters for extra help:
@@ -105,7 +105,7 @@ Finally, test the client with a sync signature:
 // on a PER USER level 
 SignatureRequest request = new SignatureRequest();
 request.setUserLanguage(UserLanguage.ENGLISH);
-request.getDataToBeSigned().setData("Testing: Please sign this document");
+request.getDataToBeSigned().setData("Test: Do you want to login?");
 request.getMobileUser().setMsisdn("41790000000");
 request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
 request.addAdditionalService(new SubscriberInfoAdditionalService());
@@ -118,7 +118,7 @@ or with an async one (you have to do the polling for the final status):
 ```java
 SignatureRequest request = new SignatureRequest();
 request.setUserLanguage(UserLanguage.ENGLISH);
-request.getDataToBeSigned().setData("Testing: Please sign this document");
+request.getDataToBeSigned().setData("Test: Do you want to login?");
 request.getMobileUser().setMsisdn("41790000000");
 request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
 request.addAdditionalService(new SubscriberInfoAdditionalService());

@@ -42,9 +42,9 @@ Arguments:
 
     -lang=en|de|it|fr                                   - The language to use during the talk with the mobile user. Choose from "en", "de", "it", "fr"
 
-    -dtbs="Please sign this document"                   - The data to be signed (text). Make sure to use quotes around the entire argument,
+    -dtbs="Do you want to login?"                       - The data to be signed (text). Make sure to use quotes around the entire argument,
                                                           since this text will usually contain spaces.
-                                                          By default this argument is "Test: Please sign this document"
+                                                          By default this argument is "Test: Do you want to login?"
 
     -rest                                               - Use the REST interface. Cannot be used together with -soap. This is the default interface
 
@@ -67,13 +67,13 @@ Use cases:
     - ./bin/mid-client.sh -init                        => Have the config files generated for you in the current folder (optional step)
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000 -soap
-    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Please sign this document"
-    - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Please sign this document" -soap -vv
+    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?"
+    - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
            -sign -sync -receipt \
            -msisdn=41790000000 \
-           -lang=en -dtbs="Please sign this document" \
+           -lang=en -dtbs="Do you want to login?" \
            -soap -vv
 ```
 
@@ -101,12 +101,12 @@ Get the same profile information using a particular configuration file and the S
 
 Request a digital signature to a particular phone number (MSISDN), in sync mode:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Please sign this document" -sync  
+./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -sync  
 ```
 
 Request a digital signature to a particular phone number (MSISDN), in async mode (this is the default mode) and with signature receipt:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Please sign this document" -receipt  
+./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -receipt  
 ```
 
 Note: when working with arguments that have values (such as _-msisdn_) you can pass the value either as the next argument:
@@ -120,6 +120,6 @@ or in the form _name=value_:
 Please note that the _-dtbs_ argument is a bit more special, as it will most likely contain spaces, so either the entire name=value
 construct is enclosed in double quotes or, if you use the name<space>value form, then the value is enclosed in double quotes:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -dtbs "Please sign this document"
-./bin/mid-client.sh -sign -msisdn=41790000000 "-dtbs=Please sign this document"
+./bin/mid-client.sh -sign -msisdn=41790000000 -dtbs "Do you want to login?"
+./bin/mid-client.sh -sign -msisdn=41790000000 "-dtbs=Do you want to login?"
 ```

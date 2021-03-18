@@ -32,9 +32,9 @@ import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
  * Examples:
  * ./mid-client.sh -help
  * ./mid-client.sh -profile-query -msisdn=4071111111111
- * ./mid-client.sh -sign -sync -msisdn=4071111111111 -lang=en "-dtbs=Please sign this document" -receipt
- * ./mid-client.sh -sign -async -msisdn=4071111111111 -lang=en "-dtbs=Please sign this document" -receipt
- * ./mid-client.sh -sign -async -msisdn 4071111111111 -lang en -dtbs "Please sign this document" -receipt
+ * ./mid-client.sh -sign -sync -msisdn=4071111111111 -lang=en "-dtbs=Do you want to login?" -receipt
+ * ./mid-client.sh -sign -async -msisdn=4071111111111 -lang=en "-dtbs=Do you want to login?" -receipt
+ * ./mid-client.sh -sign -async -msisdn 4071111111111 -lang en -dtbs "Do you want to login?" -receipt
  */
 public class Cli {
 
@@ -76,8 +76,8 @@ public class Cli {
     private static String operation;
     private static String lang = "en";
     private static String msisdn;
-    private static String dtbs = "Test: Please sign this document";
-    private static final String receiptDtbd = "Document was signed successfully";
+    private static String dtbs = "Test: Do you want to login?";
+    private static final String receiptDtbd = "Login completed successfully";
     private static boolean syncSignature = false;
     private static boolean sendReceipt = false;
     private static String interfaceType;
