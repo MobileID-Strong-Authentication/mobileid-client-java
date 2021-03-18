@@ -20,7 +20,7 @@ You can download the Mobile ID client to either using via its CLI interface (i.e
 library binary to add it to your project:
 
 - the full Mobile ID package is available in the _Releases_ section of this repository
-- the Mobile ID library binary: [TODO add link](http://localhost)
+- [the Mobile ID library binaries](https://github.com/MobileID-Strong-Authentication/mobileid-client-java/tree/repository/repository/ch/swisscom/mid/client)
 
 ## Link it
 
@@ -38,7 +38,7 @@ For Maven projects, add the following in your _POM_ file:
         <repository>
             <id>swisscom-mobile-id-client</id>
             <name>Swisscom Mobile ID client repository</name>
-            <url>TODO add link</url>
+            <url>https://raw.githubusercontent.com/MobileID-Strong-Authentication/mobileid-client-java/repository/repository/</url>
         </repository>
     </repositories>
     
@@ -73,7 +73,7 @@ plugins {
 repositories {
     mavenCentral()
     maven {
-        url 'TODO add link'
+        url 'https://raw.githubusercontent.com/MobileID-Strong-Authentication/mobileid-client-java/repository/repository/'
     }
 }
 

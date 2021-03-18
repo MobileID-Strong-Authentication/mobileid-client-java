@@ -16,7 +16,7 @@ For Maven projects, add the following in your _POM_ file:
         <repository>
             <id>swisscom-mobile-id-client</id>
             <name>Swisscom Mobile ID client repository</name>
-            <url>TODO add link</url>
+            <url>https://raw.githubusercontent.com/MobileID-Strong-Authentication/mobileid-client-java/repository/repository/</url>
         </repository>
     </repositories>
     
@@ -51,7 +51,7 @@ plugins {
 repositories {
     mavenCentral()
     maven {
-        url 'TODO add link'
+        url 'https://raw.githubusercontent.com/MobileID-Strong-Authentication/mobileid-client-java/repository/repository/'
     }
 }
 
