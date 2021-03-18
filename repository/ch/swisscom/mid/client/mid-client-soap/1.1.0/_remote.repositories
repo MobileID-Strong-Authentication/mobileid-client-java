@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Mar 18 14:20:46 EET 2021
+mid-client-soap-1.1.0.jar>=
+mid-client-soap-1.1.0.pom>=
+mid-client-soap-1.1.0-sources.jar>=
