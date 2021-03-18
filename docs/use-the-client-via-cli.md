@@ -15,7 +15,7 @@ Running the client without any arguments or with the _-help_ argument outputs th
 
 ```text
 --------------------------------------------------------------------------------
-Swisscom Mobile ID Java client ${versionInfo}
+Swisscom Mobile ID Java client <versionInfo>
 --------------------------------------------------------------------------------
 Usage: ./bin/mid-client.sh [ARGUMENTS]
 
@@ -46,6 +46,8 @@ Arguments:
                                                           since this text will usually contain spaces.
                                                           By default this argument is "Test: Do you want to login?"
 
+    -req-timeout                                        - Set the signature request timeout, in seconds. The default value for this parameter is 80.
+
     -rest                                               - Use the REST interface. Cannot be used together with -soap. This is the default interface
 
     -soap                                               - Use the SOAP interface. Cannot be used together with -rest (default is REST)
@@ -67,7 +69,7 @@ Use cases:
     - ./bin/mid-client.sh -init                        => Have the config files generated for you in the current folder (optional step)
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000 -soap
-    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?"
+    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -req-timeout=120
     - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
@@ -106,7 +108,7 @@ Request a digital signature to a particular phone number (MSISDN), in sync mode:
 
 Request a digital signature to a particular phone number (MSISDN), in async mode (this is the default mode) and with signature receipt:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -receipt  
+./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -receipt -req-timeout 120  
 ```
 
 Note: when working with arguments that have values (such as _-msisdn_) you can pass the value either as the next argument:

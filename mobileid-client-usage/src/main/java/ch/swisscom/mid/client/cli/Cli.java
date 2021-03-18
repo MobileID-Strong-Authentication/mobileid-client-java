@@ -15,6 +15,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.MIDClientException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
+import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.HttpConfiguration;
 import ch.swisscom.mid.client.config.TlsConfiguration;
 import ch.swisscom.mid.client.config.UrlsConfiguration;
@@ -50,6 +51,7 @@ public class Cli {
     private static final String PARAM_LANG = "lang";
     private static final String PARAM_MSISDN = "msisdn";
     private static final String PARAM_DTBS = "dtbs";
+    private static final String PARAM_REQUEST_TIMEOUT = "req-timeout";
     private static final String PARAM_REST = "rest";
     private static final String PARAM_SOAP = "soap";
     private static final String PARAM_HELP = "help";
@@ -76,6 +78,7 @@ public class Cli {
     private static String lang = "en";
     private static String msisdn;
     private static String dtbs = "Test: Do you want to login?";
+    private static int requestTimeout = DefaultConfiguration.SIGNATURE_DEFAULT_TIME_OUT_IN_SECONDS;
     private static final String receiptDtbd = "Login completed successfully";
     private static boolean syncSignature = false;
     private static boolean sendReceipt = false;
@@ -147,6 +150,7 @@ public class Cli {
                 request.setSignatureProfile(SignatureProfiles.ANY_LOA4);
                 request.addAdditionalService(new GeofencingAdditionalService());
                 request.setTrafficObserver(prettyPrinterTrafficObserver);
+                request.setUserResponseTimeOutInSeconds(requestTimeout);
 
                 SignatureResponse response;
                 if (syncSignature) {
@@ -247,6 +251,23 @@ public class Cli {
                         }
                     } else {
                         configFile = argValue;
+                    }
+                    break;
+                }
+                case PARAM_REQUEST_TIMEOUT: {
+                    String strValue = null;
+                    if (argValue == null) {
+                        if (argIndex + 1 < args.length) {
+                            strValue = args[argIndex + 1];
+                            argIndex++;
+                        } else {
+                            showHelp("Request timeout value (in seconds) is missing");
+                        }
+                    } else {
+                        strValue = argValue;
+                    }
+                    if (strValue != null) {
+                        requestTimeout = Integer.parseInt(strValue);
                     }
                     break;
                 }

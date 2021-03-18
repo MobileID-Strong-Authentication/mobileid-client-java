@@ -30,6 +30,8 @@ Arguments:
                                                           since this text will usually contain spaces.
                                                           By default this argument is "Test: Do you want to login?"
 
+    -req-timeout                                        - Set the signature request timeout, in seconds. The default value for this parameter is 80.
+
     -rest                                               - Use the REST interface. Cannot be used together with -soap. This is the default interface
 
     -soap                                               - Use the SOAP interface. Cannot be used together with -rest (default is REST)
@@ -51,7 +53,7 @@ Use cases:
     - ./bin/mid-client.sh -init                        => Have the config files generated for you in the current folder (optional step)
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000 -soap
-    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?"
+    - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -req-timeout=120
     - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
