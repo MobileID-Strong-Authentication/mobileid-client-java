@@ -26,7 +26,7 @@ For Maven projects, add the following in your _POM_ file:
         <dependency>
             <groupId>ch.swisscom.mid.client</groupId>
             <artifactId>mid-client-rest</artifactId>
-            <version>1.0.0</version> <!-- or any later version - see README.md in the repository's root -->
+            <version>1.1.0</version> <!-- or any later version - see README.md in the repository's root -->
         </dependency>
     </dependencies>
     <!-- Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense -->
@@ -34,7 +34,7 @@ For Maven projects, add the following in your _POM_ file:
         <dependency>
             <groupId>ch.swisscom.mid.client</groupId>
             <artifactId>mid-client-soap</artifactId>
-            <version>1.0.0</version> <!-- or any later version - see README.md in the repository's root -->
+            <version>1.1.0</version> <!-- or any later version - see README.md in the repository's root -->
         </dependency>
     </dependencies>
 </project>
@@ -56,9 +56,9 @@ repositories {
 }
 
 dependencies {
-    compile 'ch.swisscom.mid.client:mid-client-rest:1.0.0' // or any later version - see README.md in the repository's root
+    compile 'ch.swisscom.mid.client:mid-client-rest:1.1.0' // or any later version - see README.md in the repository's root
     // Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense
-    compile 'ch.swisscom.mid.client:mid-client-soap:1.0.0' // or any later version - see README.md in the repository's root
+    compile 'ch.swisscom.mid.client:mid-client-soap:1.1.0' // or any later version - see README.md in the repository's root
     // ...
 }
 ```
