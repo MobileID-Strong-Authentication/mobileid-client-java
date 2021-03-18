@@ -28,11 +28,14 @@
                         <fi:ServiceResponses>
                             <fi:ServiceResponse>
                                 <fi:Description>
-                                    <mss:mssURI>http://mid.swisscom.ch/as#subscriberInfo</mss:mssURI>
+                                    <mss:mssURI>http://mid.swisscom.ch/as#geofencing</mss:mssURI>
                                 </fi:Description>
-                                <ns1:SubscriberInfo xmlns:ns1="http://mid.swisscom.ch/TS102204/as/v1.0">
-                                    <ns1:Detail id="1901" value="unknown"/>
-                                </ns1:SubscriberInfo>
+                                <ns1:GeoFencing country="RO"
+                                                accuracy="10"
+                                                timestamp="2021-01-01T11:00:00.000+01:00"
+                                                deviceconfidence="0.5"
+                                                locationconfidence="1.0"
+                                                xmlns:ns1="http://mid.swisscom.ch/TS102204/as/v1.0"/>
                             </fi:ServiceResponse>
                         </fi:ServiceResponses>
                     </mss:StatusDetail>

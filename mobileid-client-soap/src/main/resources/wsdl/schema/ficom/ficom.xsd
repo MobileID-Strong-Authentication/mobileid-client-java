@@ -63,7 +63,8 @@
 	      <xs:element name="Status" type="mss:StatusType" minOccurs="0"/> 
               <xs:element ref="samlp:Response" minOccurs="0"/> 
               <xs:element ref="asc:SubscriberInfo" minOccurs="0"/>
-              <!-- <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/> --> 
+              <xs:element ref="asc:GeoFencing" minOccurs="0"/>
+              <!-- <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/> -->
             </xs:sequence>
           </xs:complexType> 
         </xs:element> 

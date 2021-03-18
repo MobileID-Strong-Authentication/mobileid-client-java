@@ -133,7 +133,7 @@ public class SyncSignatureTest {
         request.getDataToBeSigned().setMimeTypeToTextPlain();
         request.getMobileUser().setMsisdn(TrialNumbers.ONE_THAT_GIVES_MISSING_PARAM);
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-        request.addAdditionalService(new SubscriberInfoAdditionalService());
+        request.addAdditionalService(new GeofencingAdditionalService());
         return request;
     }
 

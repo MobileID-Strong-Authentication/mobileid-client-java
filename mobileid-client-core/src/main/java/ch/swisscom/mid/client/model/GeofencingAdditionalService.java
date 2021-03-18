@@ -17,10 +17,15 @@ package ch.swisscom.mid.client.model;
 
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 
-public class SubscriberInfoAdditionalService extends AdditionalService {
+/**
+ * Specific class to use when requesting the Geofencing additional service to Mobile ID. Please also see the
+ * {@link GeofencingAdditionalServiceResponse} class for the content that is returned from Mobile ID when this additional service
+ * is requested.
+ */
+public class GeofencingAdditionalService extends AdditionalService {
 
-    public SubscriberInfoAdditionalService() {
-        super(DefaultConfiguration.ADDITIONAL_SERVICE_SUBSCRIBER_INFO_URI);
+    public GeofencingAdditionalService() {
+        super(DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING);
     }
 
 }

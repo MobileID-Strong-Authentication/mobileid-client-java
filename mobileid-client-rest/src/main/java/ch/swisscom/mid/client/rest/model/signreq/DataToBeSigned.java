@@ -1,18 +1,4 @@
-/*
- * Copyright 2021 Swisscom (Schweiz) AG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package ch.swisscom.mid.client.rest.model.signreq;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "Data",
-        "Encoding",
-        "MimeType"
+    "Data",
+    "Encoding",
+    "MimeType"
 })
 public class DataToBeSigned {
 
@@ -81,22 +67,22 @@ public class DataToBeSigned {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(100);
+        StringBuilder sb = new StringBuilder();
         sb.append(DataToBeSigned.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("data");
         sb.append('=');
-        sb.append(((this.data == null) ? "<null>" : this.data));
+        sb.append(((this.data == null)?"<null>":this.data));
         sb.append(',');
         sb.append("encoding");
         sb.append('=');
-        sb.append(((this.encoding == null) ? "<null>" : this.encoding));
+        sb.append(((this.encoding == null)?"<null>":this.encoding));
         sb.append(',');
         sb.append("mimeType");
         sb.append('=');
-        sb.append(((this.mimeType == null) ? "<null>" : this.mimeType));
+        sb.append(((this.mimeType == null)?"<null>":this.mimeType));
         sb.append(',');
-        if (sb.charAt((sb.length() - 1)) == ',') {
-            sb.setCharAt((sb.length() - 1), ']');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
         } else {
             sb.append(']');
         }

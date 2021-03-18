@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
         xmlns:tns="http://mid.swisscom.ch/TS102204/as/v1.0"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified"
         targetNamespace="http://mid.swisscom.ch/TS102204/as/v1.0">
@@ -28,5 +29,17 @@
         <attribute name="id" type="string"/>
         <attribute name="value" type="string"/>
     </complexType>
+
+    <element name="GeoFencing">
+        <complexType>
+            <attribute name="country" type="string"/>
+            <attribute name="accuracy" type="string"/>
+            <attribute name="timestamp" type="xs:dateTime"/>
+            <attribute name="deviceconfidence" type="string"/>
+            <attribute name="locationconfidence" type="string"/>
+            <attribute name="errorcode" type="integer"/>
+            <attribute name="errormessage" type="string"/>
+        </complexType>
+    </element>
 
 </schema>

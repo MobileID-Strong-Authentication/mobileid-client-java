@@ -20,7 +20,6 @@ import ch.swisscom.mid.client.model.SignatureProfiles;
 public class DefaultConfiguration {
 
     public static final String DEFAULT_INTERNET_BASE_URL = "https://mobileid.swisscom.com";
-    public static final String DEFAULT_LAN_I_BASE_URL = "https://195.65.233.218/";
 
     public static final String REST_ENDPOINT_SUB_URL = "/rest/service";
     public static final String SOAP_SIGNATURE_PORT_SUB_URL = "/soap/services/MSS_SignaturePort";
@@ -31,8 +30,8 @@ public class DefaultConfiguration {
     public static final String DEFAULT_MSSP_ID = "http://mid.swisscom.ch/";
 
     public static final String ADDITIONAL_SERVICE_USER_LANG_URI = "http://mss.ficom.fi/TS102204/v1.0.0#userLang";
-    public static final String ADDITIONAL_SERVICE_SUBSCRIBER_INFO_URI = "http://mid.swisscom.ch/as#subscriberInfo";
     public static final String ADDITIONAL_SERVICE_SIGNATURE_VALIDATION_URI = "http://uri.etsi.org/TS102204/v1.1.2#validate";
+    public static final String ADDITIONAL_SERVICE_GEOFENCING = "http://mid.swisscom.ch/as#geofencing";
 
     public static final String SIGNATURE_REQUEST_MAJOR_VERSION = "1";
     public static final String SIGNATURE_REQUEST_MINOR_VERSION = "2";
@@ -55,7 +54,7 @@ public class DefaultConfiguration {
     public static final String RECEIPT_PROFILE_URI = "http://mss.swisscom.ch/synch";
 
     public static final int HTTP_CLIENT_MAX_TOTAL_CONNECTIONS = 20;
-    public static final int HTTP_CLIENT_DEFAULT_CONNECTIONS_PER_ROUTE = 15;
+    public static final int HTTP_CLIENT_DEFAULT_CONNECTIONS_PER_ROUTE = 10;
     public static final int HTTP_CLIENT_DEFAULT_CONNECTION_TIMEOUT_IN_MS = 15 * 1000;
     public static final int HTTP_CLIENT_DEFAULT_SOCKET_READ_TIMEOUT_IN_MS = 120 * 1000;
 

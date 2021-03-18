@@ -1,6 +1,5 @@
 package ch.swisscom.mid.client.cli;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -146,7 +145,7 @@ public class Cli {
                 request.getDataToBeSigned().setData(dtbs);
                 request.getMobileUser().setMsisdn(msisdn);
                 request.setSignatureProfile(SignatureProfiles.ANY_LOA4);
-                request.addAdditionalService(new SubscriberInfoAdditionalService());
+                request.addAdditionalService(new GeofencingAdditionalService());
                 request.setTrafficObserver(prettyPrinterTrafficObserver);
 
                 SignatureResponse response;

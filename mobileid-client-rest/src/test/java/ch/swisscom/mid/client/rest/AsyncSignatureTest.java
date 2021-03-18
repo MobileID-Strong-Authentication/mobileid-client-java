@@ -37,6 +37,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 public class AsyncSignatureTest {
 
@@ -112,6 +113,17 @@ public class AsyncSignatureTest {
         assertThat(response.getStatus().getStatusCodeString(), is("500"));
         assertThat(response.getBase64Signature(), is(notNullValue()));
         assertThat(response.getBase64Signature().length(), is(TestData.BASE64_SIGNATURE_LENGTH));
+        assertThat(response.getAdditionalServiceResponses().size(), is(1));
+
+        GeofencingAdditionalServiceResponse geofencingResponse =
+            (GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0);
+        assertThat(geofencingResponse.getCountry(), is("RO"));
+        assertThat(geofencingResponse.getAccuracy(), is(10));
+        assertThat(geofencingResponse.getDeviceConfidence(), is("0.5"));
+        assertThat(geofencingResponse.getLocationConfidence(), is("1.0"));
+        assertThat(geofencingResponse.getTimestamp(), is("2021-01-01T11:00:00.000+01:00"));
+        assertThat(geofencingResponse.getErrorCode(), is(nullValue()));
+        assertThat(geofencingResponse.getErrorMessage(), is(nullValue()));
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -124,7 +136,7 @@ public class AsyncSignatureTest {
         request.getDataToBeSigned().setMimeTypeToTextPlain();
         request.getMobileUser().setMsisdn(TrialNumbers.ONE_THAT_GIVES_MISSING_PARAM);
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-        request.addAdditionalService(new SubscriberInfoAdditionalService());
+        request.addAdditionalService(new GeofencingAdditionalService());
         return request;
     }
 

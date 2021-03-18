@@ -27,11 +27,11 @@ import ch.swisscom.mid.client.rest.model.signreq.AdditionalService;
 import ch.swisscom.mid.client.rest.model.signreq.DataToBeSigned;
 import ch.swisscom.mid.client.rest.model.signreq.MobileUser;
 import ch.swisscom.mid.client.rest.model.signreq.*;
+import ch.swisscom.mid.client.rest.model.signresp.Geofencing;
 import ch.swisscom.mid.client.rest.model.signresp.MSSSignature;
 import ch.swisscom.mid.client.rest.model.signresp.MSSSignatureResp;
 import ch.swisscom.mid.client.rest.model.signresp.MSSSignatureResponse;
 import ch.swisscom.mid.client.rest.model.signresp.ServiceResponse;
-import ch.swisscom.mid.client.rest.model.signresp.SubscriberInfoDetail;
 
 import static ch.swisscom.mid.client.utils.Utils.generateInstantAsString;
 import static ch.swisscom.mid.client.utils.Utils.generateTransId;
@@ -149,16 +149,22 @@ public class SignatureRequestModelUtils {
         List<ServiceResponse> serviceResponseList = response.getServiceResponses();
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
-                if (DefaultConfiguration.ADDITIONAL_SERVICE_SUBSCRIBER_INFO_URI.equals(serviceResponse.getDescription())
-                    && serviceResponse.getSubscriberInfo() != null
-                    && serviceResponse.getSubscriberInfo().getDetails() != null
-                    && serviceResponse.getSubscriberInfo().getDetails().size() > 0) {
+                if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
+                    && serviceResponse.getGeofencing() != null) {
 
-                    SubscriberInfoDetail subscriberInfoDetail = serviceResponse.getSubscriberInfo().getDetails().get(0);
-                    SubscriberInfoAdditionalServiceResponse asResponse = new SubscriberInfoAdditionalServiceResponse();
-                    asResponse.setResponseId(subscriberInfoDetail.getId());
-                    asResponse.setResponseValue(subscriberInfoDetail.getValue());
-                    resultList.add(asResponse);
+                    Geofencing geofencing = serviceResponse.getGeofencing();
+                    GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
+                    if (geofencing.getErrorCode() == null) {
+                        geoResponse.setCountry(geofencing.getCountry());
+                        geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
+                        geoResponse.setTimestamp(geofencing.getTimestamp());
+                        geoResponse.setDeviceConfidence(geofencing.getDeviceConfidence());
+                        geoResponse.setLocationConfidence(geofencing.getLocationConfidence());
+                    } else {
+                        geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(geofencing.getErrorCode()));
+                        geoResponse.setErrorMessage(geofencing.getErrorMessage());
+                    }
+                    resultList.add(geoResponse);
                 }
             }
         }

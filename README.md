@@ -108,7 +108,7 @@ request.setUserLanguage(UserLanguage.ENGLISH);
 request.getDataToBeSigned().setData("Test: Do you want to login?");
 request.getMobileUser().setMsisdn("41790000000");
 request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-request.addAdditionalService(new SubscriberInfoAdditionalService());
+request.addAdditionalService(new GeofencingAdditionalService());
 
 SignatureResponse response = client.requestSyncSignature(request);
 System.out.println(response.toString());
@@ -121,7 +121,7 @@ request.setUserLanguage(UserLanguage.ENGLISH);
 request.getDataToBeSigned().setData("Test: Do you want to login?");
 request.getMobileUser().setMsisdn("41790000000");
 request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-request.addAdditionalService(new SubscriberInfoAdditionalService());
+request.addAdditionalService(new GeofencingAdditionalService());
 
 try {
     SignatureResponse response = client.requestAsyncSignature(request);

@@ -16,7 +16,6 @@
 package ch.swisscom.mid.client.soap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 
@@ -27,7 +26,12 @@ import org.junit.jupiter.api.Test;
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
-import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.GeofencingAdditionalService;
+import ch.swisscom.mid.client.model.SignatureProfiles;
+import ch.swisscom.mid.client.model.SignatureRequest;
+import ch.swisscom.mid.client.model.SignatureResponse;
+import ch.swisscom.mid.client.model.StatusCode;
+import ch.swisscom.mid.client.model.UserLanguage;
 
 import static ch.swisscom.mid.client.soap.TestData.CONTENT_TYPE_SOAP_XML;
 import static ch.swisscom.mid.client.soap.TestSupport.assertResponseTo;
@@ -128,7 +132,7 @@ public class AsyncSignatureTest {
         request.getDataToBeSigned().setMimeTypeToTextPlain();
         request.getMobileUser().setMsisdn(TestData.MSISDN);
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-        request.addAdditionalService(new SubscriberInfoAdditionalService());
+        request.addAdditionalService(new GeofencingAdditionalService());
         return request;
     }
 

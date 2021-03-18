@@ -15,6 +15,15 @@
  */
 package ch.swisscom.mid.client.model;
 
+/**
+ * Base class for requesting additional services via requests to the Mobile ID service. You can either make an instance of this class
+ * and set the URI by yourself, or use one of the provided subclasses. There is also a corresponding {@link AdditionalServiceResponse}
+ * that contains, as expected, the data that is returned as part of the requested additional service payload.
+ *
+ * @see UserLangAdditionalService
+ * @see SignatureValidationAdditionalService
+ * @see GeofencingAdditionalService
+ */
 public class AdditionalService {
 
     private final String uri;

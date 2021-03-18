@@ -80,10 +80,17 @@ public class TestSupport {
     public static void assertResponseTo(Object response, String expectedFileName) {
         try {
             String responseJson = jacksonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response);
-            assertThat(responseJson, is(fileToString(expectedFileName).replace("    ", "  ")));
+            assertThat(normalizeString(responseJson), is(normalizeString(fileToString(expectedFileName))));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String normalizeString(String input) {
+        String result = input;
+        result = result.replaceAll("\\s+", " ");
+        result = result.replaceAll("\\s+:\\s", ": ");
+        return result;
     }
 
 }

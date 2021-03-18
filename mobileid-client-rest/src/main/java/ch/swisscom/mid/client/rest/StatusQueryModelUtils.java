@@ -24,7 +24,7 @@ import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.rest.model.statusreq.MSSStatusReq;
 import ch.swisscom.mid.client.rest.model.statusreq.MSSStatusRequest;
-import ch.swisscom.mid.client.rest.model.statusresp.Detail;
+import ch.swisscom.mid.client.rest.model.statusresp.Geofencing;
 import ch.swisscom.mid.client.rest.model.statusresp.MSSStatusResp;
 import ch.swisscom.mid.client.rest.model.statusresp.MSSStatusResponse;
 import ch.swisscom.mid.client.rest.model.statusresp.ServiceResponse;
@@ -104,16 +104,22 @@ public class StatusQueryModelUtils {
         List<ServiceResponse> serviceResponseList = response.getServiceResponses();
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
-                if (DefaultConfiguration.ADDITIONAL_SERVICE_SUBSCRIBER_INFO_URI.equals(serviceResponse.getDescription())
-                    && serviceResponse.getSubscriberInfo() != null
-                    && serviceResponse.getSubscriberInfo().getDetails() != null
-                    && serviceResponse.getSubscriberInfo().getDetails().size() > 0) {
+                if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
+                    && serviceResponse.getGeofencing() != null) {
 
-                    Detail subscriberInfoDetail = serviceResponse.getSubscriberInfo().getDetails().get(0);
-                    SubscriberInfoAdditionalServiceResponse asResponse = new SubscriberInfoAdditionalServiceResponse();
-                    asResponse.setResponseId(subscriberInfoDetail.getId());
-                    asResponse.setResponseValue(subscriberInfoDetail.getValue());
-                    resultList.add(asResponse);
+                    Geofencing geofencing = serviceResponse.getGeofencing();
+                    GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
+                    if (geofencing.getErrorCode() == null) {
+                        geoResponse.setCountry(geofencing.getCountry());
+                        geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
+                        geoResponse.setTimestamp(geofencing.getTimestamp());
+                        geoResponse.setDeviceConfidence(geofencing.getDeviceConfidence());
+                        geoResponse.setLocationConfidence(geofencing.getLocationConfidence());
+                    } else {
+                        geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(geofencing.getErrorCode()));
+                        geoResponse.setErrorMessage(geofencing.getErrorMessage());
+                    }
+                    resultList.add(geoResponse);
                 }
             }
         }

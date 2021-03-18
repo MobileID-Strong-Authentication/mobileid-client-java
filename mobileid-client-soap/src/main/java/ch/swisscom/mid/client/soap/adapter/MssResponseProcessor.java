@@ -21,13 +21,16 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import ch.swisscom.mid.client.MIDFlowException;
@@ -35,7 +38,7 @@ import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.TrafficObserver;
 import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
-import ch.swisscom.mid.ts102204.as.v1.SubscriberInfoDetail;
+import ch.swisscom.mid.ts102204.as.v1.GeoFencing;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import fi.ficom.mss.ts102204.v1_0.ServiceResponses;
 import fi.methics.ts102204.ext.v1_0.CertificateType;
@@ -233,15 +236,24 @@ public class MssResponseProcessor {
                             if (mssServiceResponse.getDescription() != null &&
                                 mssServiceResponse.getDescription().getMssURI() != null) {
                                 String mssServiceUri = mssServiceResponse.getDescription().getMssURI();
-                                if (DefaultConfiguration.ADDITIONAL_SERVICE_SUBSCRIBER_INFO_URI.equals(mssServiceUri)
-                                    && mssServiceResponse.getSubscriberInfo() != null
-                                    && mssServiceResponse.getSubscriberInfo().getDetail() != null
-                                    && mssServiceResponse.getSubscriberInfo().getDetail().size() > 0) {
-                                    SubscriberInfoDetail mssSubInfoDetail = mssServiceResponse.getSubscriberInfo().getDetail().get(0);
-                                    SubscriberInfoAdditionalServiceResponse asResponse = new SubscriberInfoAdditionalServiceResponse();
-                                    asResponse.setResponseId(mssSubInfoDetail.getId());
-                                    asResponse.setResponseValue(mssSubInfoDetail.getValue());
-                                    resultList.add(asResponse);
+
+                                if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(mssServiceUri)
+                                    && mssServiceResponse.getGeoFencing() != null) {
+
+                                    GeoFencing geofencing = mssServiceResponse.getGeoFencing();
+                                    GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
+                                    if (geofencing.getErrorcode() == null) {
+                                        geoResponse.setCountry(geofencing.getCountry());
+                                        geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
+                                        geoResponse.setTimestamp(gregorianCalendarToString(geofencing.getTimestamp()));
+                                        geoResponse.setDeviceConfidence(geofencing.getDeviceconfidence());
+                                        geoResponse.setLocationConfidence(geofencing.getLocationconfidence());
+                                    } else {
+                                        geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(
+                                            geofencing.getErrorcode() == null ? null : geofencing.getErrorcode().toString()));
+                                        geoResponse.setErrorMessage(geofencing.getErrormessage());
+                                    }
+                                    resultList.add(geoResponse);
                                 }
                             }
                         }
@@ -317,6 +329,17 @@ public class MssResponseProcessor {
         extension.setUserResponse(mssReceiptExtension.getUserResponse());
 
         return extension;
+    }
+
+    private static String gregorianCalendarToString(XMLGregorianCalendar gregorianCalendar) {
+        if (gregorianCalendar == null) {
+            return null;
+        }
+        GregorianCalendar calendar = gregorianCalendar.toGregorianCalendar();
+        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
+        sdf.setTimeZone(calendar.getTimeZone());
+        return sdf.format(calendar.getTime());
     }
 
 }

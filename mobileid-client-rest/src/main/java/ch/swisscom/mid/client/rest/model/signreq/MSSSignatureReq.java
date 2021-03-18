@@ -1,39 +1,24 @@
-/*
- * Copyright 2021 Swisscom (Schweiz) AG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package ch.swisscom.mid.client.rest.model.signreq;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "AP_Info",
-        "AdditionalServices",
-        "DataToBeSigned",
-        "MSSP_Info",
-        "MajorVersion",
-        "MessagingMode",
-        "MinorVersion",
-        "MobileUser",
-        "SignatureProfile",
-        "TimeOut"
+    "AP_Info",
+    "AdditionalServices",
+    "DataToBeSigned",
+    "MSSP_Info",
+    "MajorVersion",
+    "MessagingMode",
+    "MinorVersion",
+    "MobileUser",
+    "SignatureProfile",
+    "TimeOut"
 })
 public class MSSSignatureReq {
 
@@ -210,50 +195,50 @@ public class MSSSignatureReq {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(200);
+        StringBuilder sb = new StringBuilder();
         sb.append(MSSSignatureReq.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("aPInfo");
         sb.append('=');
-        sb.append(((this.aPInfo == null) ? "<null>" : this.aPInfo));
+        sb.append(((this.aPInfo == null)?"<null>":this.aPInfo));
         sb.append(',');
         sb.append("additionalServices");
         sb.append('=');
-        sb.append(((this.additionalServices == null) ? "<null>" : this.additionalServices));
+        sb.append(((this.additionalServices == null)?"<null>":this.additionalServices));
         sb.append(',');
         sb.append("dataToBeSigned");
         sb.append('=');
-        sb.append(((this.dataToBeSigned == null) ? "<null>" : this.dataToBeSigned));
+        sb.append(((this.dataToBeSigned == null)?"<null>":this.dataToBeSigned));
         sb.append(',');
         sb.append("mSSPInfo");
         sb.append('=');
-        sb.append(((this.mSSPInfo == null) ? "<null>" : this.mSSPInfo));
+        sb.append(((this.mSSPInfo == null)?"<null>":this.mSSPInfo));
         sb.append(',');
         sb.append("majorVersion");
         sb.append('=');
-        sb.append(((this.majorVersion == null) ? "<null>" : this.majorVersion));
+        sb.append(((this.majorVersion == null)?"<null>":this.majorVersion));
         sb.append(',');
         sb.append("messagingMode");
         sb.append('=');
-        sb.append(((this.messagingMode == null) ? "<null>" : this.messagingMode));
+        sb.append(((this.messagingMode == null)?"<null>":this.messagingMode));
         sb.append(',');
         sb.append("minorVersion");
         sb.append('=');
-        sb.append(((this.minorVersion == null) ? "<null>" : this.minorVersion));
+        sb.append(((this.minorVersion == null)?"<null>":this.minorVersion));
         sb.append(',');
         sb.append("mobileUser");
         sb.append('=');
-        sb.append(((this.mobileUser == null) ? "<null>" : this.mobileUser));
+        sb.append(((this.mobileUser == null)?"<null>":this.mobileUser));
         sb.append(',');
         sb.append("signatureProfile");
         sb.append('=');
-        sb.append(((this.signatureProfile == null) ? "<null>" : this.signatureProfile));
+        sb.append(((this.signatureProfile == null)?"<null>":this.signatureProfile));
         sb.append(',');
         sb.append("timeOut");
         sb.append('=');
-        sb.append(((this.timeOut == null) ? "<null>" : this.timeOut));
+        sb.append(((this.timeOut == null)?"<null>":this.timeOut));
         sb.append(',');
-        if (sb.charAt((sb.length() - 1)) == ',') {
-            sb.setCharAt((sb.length() - 1), ']');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
         } else {
             sb.append(']');
         }

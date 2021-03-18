@@ -18,11 +18,11 @@ package ch.swisscom.mid.client.samples;
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
+import ch.swisscom.mid.client.model.GeofencingAdditionalService;
 import ch.swisscom.mid.client.model.SignatureProfiles;
 import ch.swisscom.mid.client.model.SignatureRequest;
 import ch.swisscom.mid.client.model.SignatureResponse;
 import ch.swisscom.mid.client.model.StatusCode;
-import ch.swisscom.mid.client.model.SubscriberInfoAdditionalService;
 import ch.swisscom.mid.client.model.UserLanguage;
 
 import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
@@ -41,7 +41,7 @@ public class AsyncSignature {
         // edit this value accordingly
         request.getMobileUser().setMsisdn("41790000000");
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-        request.addAdditionalService(new SubscriberInfoAdditionalService());
+        request.addAdditionalService(new GeofencingAdditionalService());
 
         try {
             SignatureResponse response = client.requestAsyncSignature(request);

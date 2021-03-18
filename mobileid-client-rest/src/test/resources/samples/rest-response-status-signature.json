@@ -21,14 +21,13 @@
         },
         "ServiceResponses": [
             {
-                "Description": "http://mid.swisscom.ch/as#subscriberInfo",
-                "SubscriberInfo": {
-                    "Details": [
-                        {
-                            "id": "1901",
-                            "value": "unknown"
-                        }
-                    ]
+                "Description": "http://mid.swisscom.ch/as#geofencing",
+                "Geofencing": {
+                    "Accuracy": "10",
+                    "Country": "RO",
+                    "DeviceConfidence": "0.5",
+                    "LocationConfidence": "1.0",
+                    "Timestamp": "2021-01-01T11:00:00.000+01:00"
                 }
             }
         ],

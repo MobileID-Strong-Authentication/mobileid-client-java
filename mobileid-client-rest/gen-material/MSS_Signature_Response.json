@@ -22,14 +22,15 @@
         },
         "ServiceResponses": [
             {
-                "Description": "http://mid.swisscom.ch/as#subscriberInfo",
-                "SubscriberInfo": {
-                    "Details": [
-                        {
-                            "id": "1101",
-                            "value": "22221"
-                        }
-                    ]
+                "Description": "http://mid.swisscom.ch/as#geofencing",
+                "Geofencing": {
+                    "Accuracy": "16",
+                    "Country": "CH",
+                    "DeviceConfidence": "1.0",
+                    "LocationConfidence": "1.0",
+                    "Timestamp": "2021-01-01T11:00:00.000+01:00",
+                    "ErrorCode": "100",
+                    "ErrorMessage": "Geofencing feature disabled"
                 }
             }
         ],

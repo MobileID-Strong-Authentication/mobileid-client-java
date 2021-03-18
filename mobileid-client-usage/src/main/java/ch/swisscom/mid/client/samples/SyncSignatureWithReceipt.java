@@ -35,7 +35,7 @@ public class SyncSignatureWithReceipt {
         // edit this value accordingly
         request.getMobileUser().setMsisdn("41790000000");
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
-        request.addAdditionalService(new SubscriberInfoAdditionalService());
+        request.addAdditionalService(new GeofencingAdditionalService());
 
         try {
             SignatureResponse signatureResponse = client.requestSyncSignature(request);
