@@ -10,13 +10,15 @@ The authentication of the Mobile ID client happens over two separate channels:
   are using the production version of Mobile ID, then those CAs should be already trusted on your host. If otherwise, the CA certificates
   need to be added in a Java truststore that is configured on the Mobile ID client before first run.
 
-To start using the Mobile ID client, you need the client (and server) TLS certificates and the AP ID and password. 
+To start using the Mobile ID client, you need the client (and server) TLS certificates and the AP ID and password. Additionally, you
+need to ensure the IP's that your clients are using to access the Mobile ID service are configured and allowed on Mobile ID side
+(see side note #2 below).
 
 ## Using these details
 As an example, once you have the authentication data ready for the Mobile ID client, you can use it for configuring the 
 client. Please continue to [configure the client](configure-the-client.md).
 
-## Side-note - generating a test certificate
+## Side-note 1 - Generating a test certificate
 
 Should you need it, here is a quick guide on generating a test certificate to be enrolled on the Mobile ID service. For these steps,
 a local installation of [OpenSSL](https://www.openssl.org/) is needed (for Windows, the best option is to use the one that comes
@@ -48,3 +50,12 @@ openssl x509 -req -days 365 -in my-mid-client.csr -signkey my-mid-client.key -ou
 This is the last step. Now you have a self-signed certificate that can be enrolled on Mobile ID service's side in order to get a test
 account.
 
+## Side-note 2 - Mobile ID client IP filtering
+
+For security purposes, the client IPs that are allowed to access the Mobile ID main endpoint need to be added to a permission
+list before the client can connect and access the Mobile ID service. Please make sure during the setup process that the IPs that
+you and your internal clients are using to connect to the Mobile ID service are properly communicated and allowed on 
+Mobile ID side. 
+
+In some cases, using an SSH tunnel and editing the HOSTS file on client's machine are required in order to have all the clients 
+be able to access the Mobile ID service. 
