@@ -1,4 +1,4 @@
-# Troubleshooting the Mobile ID Java client
+# Troubleshooting the code (when using the Mobile ID Java client)
 
 Here you can find some hints on solving some of the common issues with the Mobile ID Java client.
 

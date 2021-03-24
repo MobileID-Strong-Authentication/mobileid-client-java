@@ -62,6 +62,8 @@ public enum StatusCode implements DocumentedEnum {
                                   + "The user must re-activate the account on the Mobile ID selfcare portal."),
     OUTSTANDING_TRANSACTION(504, false, "The MSS Signature transaction is outstanding. "
                                         + "The AP must try again later."),
+    CONNECTION_REFUSED(780, true, "The connection to the service was refused. "
+                                  + "The client did not present a valid TLS certificate"),
     INTERNAL_ERROR(900, true, "An internal error on MSSP has occurred. "
                               + "Please try again later or contact Swisscom Support, if the problem persists.");
 
