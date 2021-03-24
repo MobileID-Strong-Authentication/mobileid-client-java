@@ -8,8 +8,15 @@ a Java client that provides access to the main services provided by Mobile ID:
 * Signature receipt
 * Mobile user profile query
 
-The repository provides implementation for the REST and SOAP protocols. The user can choose the implementation during configuration phase.
-There is also a command-line interface that allows you to play with this client as a tool from your own terminal.
+The repository provides the main Java-based reference implementation for the Mobile ID REST and SOAP API client. The user can choose 
+the implementation during configuration phase. There is also a command-line interface that allows you to play with this client 
+as a tool from your own terminal.
+
+## Who is this for?
+
+The library provided by this repository is for all clients that are developing Java-based projects that need secure authentication
+and authorization services using the mobile phone. The library works with Java 8+ projects and can be added as a project dependency
+and used in any scenario that needs to access the Swisscom Mobile ID service. 
 
 ## Getting started
 
