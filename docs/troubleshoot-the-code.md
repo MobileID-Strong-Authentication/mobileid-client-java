@@ -23,7 +23,7 @@ java -Dhttp.proxyHost=proxy.host.com \
      -DsocksProxyHost=socks.host.com
 ```
 For code wise, you can define the same properties as above as soon as possible when the Java application starts (before any network
-connection is made) (again, define only the properties that are making sense in your case):
+connection is made) (again, define only the properties that are making sense for your case):
 ```java
 System.setProperty("http.proxyHost", "proxy.host.com");
 System.setProperty("http.proxyPort", "8080");
@@ -78,7 +78,7 @@ System.setProperty("javax.net.debug", "ssl:handshake:verbose:keymanager:trustman
 System.setProperty("java.security.debug", "certpath");
 ```
 
-See this [Oracle link](https://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/ReadDebug.html) 
+See this [Oracle link](https://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html#SSLOverview) 
 for details on _javax.net.debug_ 
 and this [Oracle link](https://docs.oracle.com/javase/8/docs/technotes/guides/security/troubleshooting-security.html) 
 for more details on _java.security.debug_. 
