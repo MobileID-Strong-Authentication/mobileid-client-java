@@ -26,7 +26,8 @@ To start using the Swisscom Mobile ID service and this client library, follow th
 3. [Configure the Mobile ID client for your specific use case](docs/configure-the-client.md)
 4. Use the Mobile ID client, either [programmatically](docs/use-the-client-programmatically.md) or 
    from the [command line](docs/use-the-client-via-cli.md)
-5. Learn about the code and the overall architecture of the client. See the [ARCHITECTURE.md](ARCHITECTURE.md) file.   
+5. Learn about the code and the overall architecture of the client. See the [ARCHITECTURE.md](ARCHITECTURE.md) file
+6. [Troubleshoot](/docs/troubleshooting.md) your code and solve the most common problems
 
 ## Quick examples
 
