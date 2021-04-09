@@ -13,6 +13,7 @@ target/
 build/
 mobileid-client-samples/src/main/java/ch/swisscom/mid/client/samples/TestSoap.java
 local-*.*
+api-docs
 
 # Local files that might be creating during testing
 /truststore.jks

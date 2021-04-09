@@ -6,10 +6,29 @@
 
     <groupId>ch.mobileid.mid-java-client</groupId>
     <artifactId>mid-java-client-parent</artifactId>
-    <version>1.2.0</version>
-    <name>mid-java-client-parent</name>
-    <description>MobileID Java Client - Parent</description>
+    <version>1.2.0-SNAPSHOT</version>
+    <name>Mobile ID Java client</name>
+    <description>Mobile ID client reference implementation in Java</description>
+    <url>https://github.com/MobileID-Strong-Authentication/mobileid-client-java</url>
     <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>phaupt</id>
+            <name>Philipp Haupt</name>
+        </developer>
+        <developer>
+            <id>bmocanu</id>
+            <name>Bogdan Mocanu</name>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -163,6 +182,11 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -178,13 +202,34 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>aggregate</id>
-                        <phase>site</phase>
+                        <id>attach-javadocs</id>
                         <goals>
-                            <goal>aggregate</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -195,5 +240,22 @@
         <module>mid-java-client-soap</module>
         <module>mid-java-client-usage</module>
     </modules>
+
+    <scm>
+        <connection>scm:git:git://github.com/MobileID-Strong-Authentication/mobileid-client-java.git</connection>
+        <developerConnection>${project.scm.connection}</developerConnection>
+        <url>https://github.com/MobileID-Strong-Authentication/mobileid-client-java/tree/main</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
 </project>
