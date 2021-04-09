@@ -4,11 +4,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.swisscom.mid.client</groupId>
-    <artifactId>mid-client-parent</artifactId>
-    <version>1.1.0</version>
-    <name>mid-client-parent</name>
-    <description>MobileID Client - Parent</description>
+    <groupId>ch.mobileid.mid-java-client</groupId>
+    <artifactId>mid-java-client-parent</artifactId>
+    <version>1.2.0</version>
+    <name>mid-java-client-parent</name>
+    <description>MobileID Java Client - Parent</description>
     <packaging>pom</packaging>
 
     <properties>
@@ -189,42 +189,11 @@
         </plugins>
     </build>
 
-    <!--    <reporting>-->
-    <!--        <plugins>-->
-    <!--            <plugin>-->
-    <!--                <groupId>org.apache.maven.plugins</groupId>-->
-    <!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-    <!--                <configuration>-->
-    <!--                    <reportOutputDirectory>${project.basedir}</reportOutputDirectory>-->
-    <!--                    <destDir>api-docs</destDir>-->
-    <!--                    <excludePackageNames>-->
-    <!--                        ch.swisscom.mid.ts102204.*:ch.swisscom.ts102204.*:fi.*:oasis.*:org.*-->
-    <!--                    </excludePackageNames>-->
-    <!--                </configuration>-->
-    <!--                <reportSets>-->
-    <!--                    <reportSet>-->
-    <!--                        <id>aggregate</id>-->
-    <!--                        <inherited>false</inherited>-->
-    <!--                        <reports>-->
-    <!--                            <report>aggregate</report>-->
-    <!--                        </reports>-->
-    <!--                    </reportSet>-->
-    <!--                    <reportSet>-->
-    <!--                        <id>default</id>-->
-    <!--                        <reports>-->
-    <!--                            <report>javadoc</report>-->
-    <!--                        </reports>-->
-    <!--                    </reportSet>-->
-    <!--                </reportSets>-->
-    <!--            </plugin>-->
-    <!--        </plugins>-->
-    <!--    </reporting>-->
-
     <modules>
-        <module>mobileid-client-core</module>
-        <module>mobileid-client-rest</module>
-        <module>mobileid-client-soap</module>
-        <module>mobileid-client-usage</module>
+        <module>mid-java-client-core</module>
+        <module>mid-java-client-rest</module>
+        <module>mid-java-client-soap</module>
+        <module>mid-java-client-usage</module>
     </modules>
 
 </project>

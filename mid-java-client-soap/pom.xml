@@ -4,22 +4,22 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>ch.swisscom.mid.client</groupId>
-        <artifactId>mid-client-parent</artifactId>
-        <version>1.1.0</version>
+        <groupId>ch.mobileid.mid-java-client</groupId>
+        <artifactId>mid-java-client-parent</artifactId>
+        <version>1.2.0</version>
     </parent>
 
-    <artifactId>mid-client-soap</artifactId>
-    <version>1.1.0</version>
-    <name>mid-client-soap</name>
-    <description>MobileID Client - SOAP Implementation</description>
+    <artifactId>mid-java-client-soap</artifactId>
+    <version>1.2.0</version>
+    <name>mid-java-client-soap</name>
+    <description>MobileID Java Client - SOAP Implementation</description>
     <packaging>jar</packaging>
 
     <dependencies>
         <!-- Internal dependencies -->
         <dependency>
-            <groupId>ch.swisscom.mid.client</groupId>
-            <artifactId>mid-client-core</artifactId>
+            <groupId>ch.mobileid.mid-java-client</groupId>
+            <artifactId>mid-java-client-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- External dependencies -->
