@@ -20,7 +20,7 @@ You can download the Mobile ID client to either using via its CLI interface (i.e
 library binary to add it to your project:
 
 - the full Mobile ID package is available in the _Releases_ section of this repository
-- [the Mobile ID library binaries](https://github.com/MobileID-Strong-Authentication/mobileid-client-java/tree/repository/repository/ch/swisscom/mid/client)
+- the Mobile ID library binaries available in the [Maven Central Repository](https://search.maven.org/search?q=ch.mobileid)
 
 ## Link it
 
@@ -33,30 +33,19 @@ For Maven projects, add the following in your _POM_ file:
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <!-- ... -->
-    
-    <repositories>
-        <repository>
-            <id>swisscom-mobile-id-client</id>
-            <name>Swisscom Mobile ID client repository</name>
-            <url>https://raw.githubusercontent.com/MobileID-Strong-Authentication/mobileid-client-java/repository/repository/</url>
-        </repository>
-    </repositories>
-    
-    <!-- ... -->
-
     <dependencies>
         <dependency>
-            <groupId>ch.swisscom.mid.client</groupId>
-            <artifactId>mid-client-rest</artifactId>
-            <version>1.1.0</version> <!-- or any later version - see README.md in the repository's root -->
+            <groupId>ch.mobileid.mid-java-client</groupId>
+            <artifactId>mid-java-client-rest</artifactId>
+            <version>1.2.0</version> <!-- or any later version - see README.md in the repository's root -->
         </dependency>
     </dependencies>
     <!-- Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense -->
     <dependencies>
         <dependency>
-            <groupId>ch.swisscom.mid.client</groupId>
-            <artifactId>mid-client-soap</artifactId>
-            <version>1.1.0</version> <!-- or any later version - see README.md in the repository's root -->
+            <groupId>ch.mobileid.mid-java-client</groupId>
+            <artifactId>mid-java-client-soap</artifactId>
+            <version>1.2.0</version> <!-- or any later version - see README.md in the repository's root -->
         </dependency>
     </dependencies>
 </project>
@@ -70,17 +59,10 @@ plugins {
 
 // ...
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://raw.githubusercontent.com/MobileID-Strong-Authentication/mobileid-client-java/repository/repository/'
-    }
-}
-
 dependencies {
-    compile 'ch.swisscom.mid.client:mid-client-rest:1.1.0' // or any later version - see README.md in the repository's root
+    compile 'ch.mobileid.mid-java-client:mid-java-client-rest:1.2.0' // or any later version - see README.md in the repository's root
     // Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense
-    compile 'ch.swisscom.mid.client:mid-client-soap:1.1.0' // or any later version - see README.md in the repository's root
+    compile 'ch.mobileid.mid-java-client:mid-java-client-soap:1.2.0' // or any later version - see README.md in the repository's root
     // ...
 }
 ```

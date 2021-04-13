@@ -6,7 +6,7 @@ Here you can find some hints on solving some of the common issues with the Mobil
 
 If the Mobile ID client needs to access the backend service via a proxy, you can configure this at Java VM level (for more details 
 see this [official documentation for Java 8](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html)). For the 
-current version of the Mobile ID client (v1.1.0), the only way to make the client go through a particular proxy host is to configure
+current version of the Mobile ID client, the only way to make the client go through a particular proxy host is to configure
 the proxy at Java VM level, which means that the entire Java process will go through that proxy for network connections.
 
 The proxy details can be configured either via command line options when starting the Java process, or in code.
