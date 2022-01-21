@@ -43,7 +43,7 @@ public class MssRequestBuilder {
         request.setMessagingMode(sync ? MessagingModeType.SYNCH : MessagingModeType.ASYNCH_CLIENT_SERVER);
         /* now set the elements */
         // Set the AP info
-        request.setAPInfo(createApInfo(config));
+        request.setAPInfo(createApInfo(config, signatureRequest.getOverrideApId(), signatureRequest.getOverrideApPassword()));
         // Set the MSSP info
         request.setMSSPInfo(createMsspInfo(config));
         // Set the MobileUser
@@ -62,7 +62,7 @@ public class MssRequestBuilder {
 
     public static MSSStatusReqType createStatusQueryReq(ClientConfiguration config, SignatureTracking signatureTracking) {
         MSSStatusReqType mssReq = new MSSStatusReqType();
-        mssReq.setAPInfo(createApInfo(config));
+        mssReq.setAPInfo(createApInfo(config, signatureTracking.getOverrideApId(), signatureTracking.getOverrideApPassword()));
         mssReq.setMSSPInfo(createMsspInfo(config));
         mssReq.setMajorVersion(longToBigInteger(signatureTracking.getMajorVersion()));
         mssReq.setMinorVersion(longToBigInteger(signatureTracking.getMinorVersion()));
@@ -86,7 +86,7 @@ public class MssRequestBuilder {
         MSSReceiptReqType mssReq = new MSSReceiptReqType();
         mssReq.setMajorVersion(longToBigInteger(clientRequest.getMajorVersion()));
         mssReq.setMinorVersion(longToBigInteger(clientRequest.getMinorVersion()));
-        mssReq.setAPInfo(createApInfo(config));
+        mssReq.setAPInfo(createApInfo(config, clientRequest.getOverrideApId(), clientRequest.getOverrideApPassword()));
         mssReq.setMSSPInfo(createMsspInfo(config));
         mssReq.setMobileUser(createMobileUser(signatureTracking.getMobileUserMsisdn()));
         mssReq.setMSSPTransID(signatureTracking.getTransactionId());
@@ -99,7 +99,7 @@ public class MssRequestBuilder {
     public static MSSProfileReqType createProfileReq(ClientConfiguration config,
                                                      ProfileRequest profileRequest) {
         MSSProfileReqType mssProfileReq = new MSSProfileReqType();
-        mssProfileReq.setAPInfo(createApInfo(config));
+        mssProfileReq.setAPInfo(createApInfo(config, profileRequest.getOverrideApId(), profileRequest.getOverrideApPassword()));
         mssProfileReq.setMajorVersion(longToBigInteger(profileRequest.getMajorVersion()));
         mssProfileReq.setMinorVersion(longToBigInteger(profileRequest.getMinorVersion()));
         mssProfileReq.setMSSPInfo(createMsspInfo(config));
@@ -118,10 +118,10 @@ public class MssRequestBuilder {
      * @throws ch.swisscom.mid.client.model.DataAssemblyException in case errors are encountered while constructing the
      *                                                            {@link MessageAbstractType.APInfo} instance
      */
-    private static MessageAbstractType.APInfo createApInfo(ClientConfiguration config) {
+    private static MessageAbstractType.APInfo createApInfo(ClientConfiguration config, String overrideApId, String overrideApPassword) {
         MessageAbstractType.APInfo apInfoType = new MessageAbstractType.APInfo();
-        apInfoType.setAPID(config.getApId());
-        apInfoType.setAPPWD(config.getApPassword());
+        apInfoType.setAPID(overrideApId != null ? overrideApId : config.getApId());
+        apInfoType.setAPPWD(overrideApPassword != null ? overrideApPassword : config.getApPassword());
         apInfoType.setAPTransID(Utils.generateTransId());
         apInfoType.setInstant(Utils.generateInstantAsXmlGregorianCalendar());
         return apInfoType;

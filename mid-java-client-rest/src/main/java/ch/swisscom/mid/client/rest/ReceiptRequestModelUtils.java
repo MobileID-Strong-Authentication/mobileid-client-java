@@ -46,7 +46,7 @@ public class ReceiptRequestModelUtils {
         MSSReceiptReq mssRequest = new MSSReceiptReq();
         mssRequest.setMajorVersion(clientRequest.getMajorVersion());
         mssRequest.setMinorVersion(clientRequest.getMinorVersion());
-        mssRequest.setAPInfo(createApInfo(config));
+        mssRequest.setAPInfo(createApInfo(config, signatureTracking.getOverrideApId(), signatureTracking.getOverrideApPassword()));
         mssRequest.setMSSPInfo(createMsspInfo(config));
         mssRequest.setMobileUser(createMobileUser(signatureTracking));
         mssRequest.setMSSPTransID(signatureTracking.getTransactionId());
@@ -73,10 +73,10 @@ public class ReceiptRequestModelUtils {
 
     // ----------------------------------------------------------------------------------------------------
 
-    private static APInfo createApInfo(ClientConfiguration config) {
+    private static APInfo createApInfo(ClientConfiguration config, String overrideApId, String overrideApPassword) {
         APInfo apInfo = new APInfo();
-        apInfo.setApId(config.getApId());
-        apInfo.setApPwd(config.getApPassword());
+        apInfo.setApId(overrideApId != null ? overrideApId : config.getApId());
+        apInfo.setApPwd(overrideApPassword != null ? overrideApPassword : config.getApPassword());
         apInfo.setAPTransID(generateTransId());
         apInfo.setInstant(generateInstantAsString());
         return apInfo;

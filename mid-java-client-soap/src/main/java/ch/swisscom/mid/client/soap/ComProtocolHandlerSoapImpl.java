@@ -109,7 +109,10 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             }
         }
         SignatureResponse signatureResponse = MssResponseProcessor.processMssSignatureResponse(mssSignatureResp);
-        signatureResponse.setTracking(MssResponseProcessor.createSignatureTracking(mssSignatureResp, request.getTrafficObserver()));
+        signatureResponse.setTracking(MssResponseProcessor.createSignatureTracking(mssSignatureResp,
+                                                                                   request.getTrafficObserver(),
+                                                                                   request.getOverrideApId(),
+                                                                                   request.getOverrideApPassword()));
         return signatureResponse;
     }
 
@@ -142,7 +145,10 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             }
         }
         SignatureResponse signatureResponse = MssResponseProcessor.processMssSignatureResponse(mssSignatureResp);
-        signatureResponse.setTracking(MssResponseProcessor.createSignatureTracking(mssSignatureResp, request.getTrafficObserver()));
+        signatureResponse.setTracking(MssResponseProcessor.createSignatureTracking(mssSignatureResp,
+                                                                                   request.getTrafficObserver(),
+                                                                                   request.getOverrideApId(),
+                                                                                   request.getOverrideApPassword()));
         return signatureResponse;
     }
 

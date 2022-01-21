@@ -14,7 +14,6 @@ import ch.swisscom.mid.client.impl.Loggers;
 public class PrettyPrintingTrafficObserver implements TrafficObserver {
 
     private static final Logger logClient = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
-
     private final ObjectMapper jacksonMapper = new ObjectMapper();
 
     @Override
@@ -24,24 +23,24 @@ public class PrettyPrintingTrafficObserver implements TrafficObserver {
 
     @Override
     public void notifyOfOutgoingRequest(RequestTrace trace, ComProtocol protocol) {
-        System.out.println(">>> " + Cli.SEPARATOR.substring(4));
+        String requestMessage;
         if (protocol == ComProtocol.REST) {
-            System.out.println(toPrettyJson(trace.getBody()));
+            requestMessage = toPrettyJson(trace.getBody());
         } else {
-            System.out.println(trace.getBody());
+            requestMessage = trace.getBody();
         }
-        System.out.println(Cli.SEPARATOR);
+        logClient.info("Outgoing request: [{}]", requestMessage);
     }
 
     @Override
     public void notifyOfIncomingResponse(ResponseTrace trace, ComProtocol protocol) {
-        System.out.println("<<< " + Cli.SEPARATOR.substring(4));
+        String responseMessage;
         if (protocol == ComProtocol.REST) {
-            System.out.println(toPrettyJson(trace.getBody()));
+            responseMessage = toPrettyJson(trace.getBody());
         } else {
-            System.out.println(trace.getBody());
+            responseMessage = trace.getBody();
         }
-        System.out.println(Cli.SEPARATOR);
+        logClient.info("Incoming response: [{}]", responseMessage);
     }
 
     // ----------------------------------------------------------------------------------------------------

@@ -28,8 +28,19 @@ import static ch.swisscom.mid.client.utils.Utils.dataTrue;
 public class SignatureRequest {
 
     private String majorVersion = DefaultConfiguration.SIGNATURE_REQUEST_MAJOR_VERSION;
-
     private String minorVersion = DefaultConfiguration.SIGNATURE_REQUEST_MINOR_VERSION;
+
+    /**
+     * Optional custom AP ID that will override the AP ID configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
+     * If this is not set then the ID from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
+     */
+    private String overrideApId;
+    
+    /**
+     * Optional custom AP password that will override the AP password configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
+     * If this is not set then the password from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
+     */
+    private String overrideApPassword;
 
     private final List<AdditionalService> additionalServices = new ArrayList<>();
 
@@ -119,6 +130,22 @@ public class SignatureRequest {
         this.trafficObserver = trafficObserver;
     }
 
+    public String getOverrideApId() {
+        return overrideApId;
+    }
+
+    public void setOverrideApId(String overrideApId) {
+        this.overrideApId = overrideApId;
+    }
+
+    public String getOverrideApPassword() {
+        return overrideApPassword;
+    }
+
+    public void setOverrideApPassword(String overrideApPassword) {
+        this.overrideApPassword = overrideApPassword;
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     public void validateYourself() {
@@ -144,6 +171,8 @@ public class SignatureRequest {
     }
 
     // ----------------------------------------------------------------------------------------------------
+
+    // do not print the AP ID and AP password
 
     @Override
     public String toString() {

@@ -36,9 +36,11 @@ public class StatusQueryModelUtils {
 
     public static MSSStatusRequest createStatusQueryRequest(ClientConfiguration config,
                                                             SignatureTracking signatureTracking) {
+        String overrideApId = signatureTracking.getOverrideApId();
+        String overrideApPassword = signatureTracking.getOverrideApPassword();
         ch.swisscom.mid.client.rest.model.statusreq.APInfo apInfo = new ch.swisscom.mid.client.rest.model.statusreq.APInfo();
-        apInfo.setApId(config.getApId());
-        apInfo.setApPwd(config.getApPassword());
+        apInfo.setApId(overrideApId != null ? overrideApId : config.getApId());
+        apInfo.setApPwd(overrideApPassword != null ? overrideApPassword : config.getApPassword());
         apInfo.setAPTransID(generateTransId());
         apInfo.setInstant(generateInstantAsString());
 

@@ -27,6 +27,18 @@ public class ReceiptRequest {
 
     private String minorVersion = DefaultConfiguration.RECEIPT_REQUEST_MINOR_VERSION;
 
+    /**
+     * Optional custom AP ID that will override the AP ID configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
+     * If this is not set then the ID from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
+     */
+    private String overrideApId;
+
+    /**
+     * Optional custom AP password that will override the AP password configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
+     * If this is not set then the password from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
+     */
+    private String overrideApPassword;
+
     private MessageToBeDisplayed messageToBeDisplayed;
 
     private StatusCode statusCode;
@@ -96,6 +108,22 @@ public class ReceiptRequest {
         this.trafficObserver = trafficObserver;
     }
 
+    public String getOverrideApId() {
+        return overrideApId;
+    }
+
+    public void setOverrideApId(String overrideApId) {
+        this.overrideApId = overrideApId;
+    }
+
+    public String getOverrideApPassword() {
+        return overrideApPassword;
+    }
+
+    public void setOverrideApPassword(String overrideApPassword) {
+        this.overrideApPassword = overrideApPassword;
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     public void validateYourself() {
@@ -108,6 +136,8 @@ public class ReceiptRequest {
             requestExtension.validateYourself();
         }
     }
+
+    // do not print the AP ID and AP password
 
     @Override
     public String toString() {

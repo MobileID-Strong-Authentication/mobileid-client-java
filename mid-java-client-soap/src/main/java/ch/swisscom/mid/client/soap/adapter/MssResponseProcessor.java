@@ -122,9 +122,12 @@ public class MssResponseProcessor {
         return response;
     }
 
-    public static SignatureTracking createSignatureTracking(MSSSignatureRespType mssResponse, TrafficObserver trafficObserver) {
+    public static SignatureTracking createSignatureTracking(MSSSignatureRespType mssResponse, TrafficObserver trafficObserver,
+                                                            String overrideApId, String overrideApPassword) {
         if (mssResponse != null) {
             SignatureTracking result = new SignatureTracking();
+            result.setOverrideApId(overrideApId);
+            result.setOverrideApPassword(overrideApPassword);
             result.setTrafficObserver(trafficObserver);
             result.setTransactionId(mssResponse.getMSSPTransID());
             result.setMobileUserMsisdn(mssResponse.getMobileUser().getMSISDN());

@@ -11,6 +11,8 @@
     "tracking": {
         "majorVersion": "1",
         "minorVersion": "1",
+        "overrideApId": null,
+        "overrideApPassword": null,
         "transactionId": "CAFE_BABE",
         "mobileUserMsisdn": "418888888888",
         "trafficObserver": null

@@ -42,7 +42,7 @@ public class SignatureRequestModelUtils {
                                                              SignatureRequest clientRequest,
                                                              boolean sync) {
         MSSSignatureReq signatureReq = new MSSSignatureReq();
-        signatureReq.setAPInfo(createApInfo(config));
+        signatureReq.setAPInfo(createApInfo(config, clientRequest.getOverrideApId(), clientRequest.getOverrideApPassword()));
         signatureReq.setAdditionalServices(createAdditionalServices(clientRequest));
         signatureReq.setDataToBeSigned(createDataToBeSigned(clientRequest));
         signatureReq.setMSSPInfo(createMsspInfo(config));
@@ -82,12 +82,15 @@ public class SignatureRequestModelUtils {
         return result;
     }
 
-    public static SignatureTracking createSignatureTracking(MSSSignatureResponse responseWrapper, TrafficObserver trafficObserver) {
+    public static SignatureTracking createSignatureTracking(MSSSignatureResponse responseWrapper, TrafficObserver trafficObserver,
+                                                            String overrideApId, String overrideApPassword) {
         MSSSignatureResp response = responseWrapper.getMSSSignatureResp();
         if (response != null) {
             SignatureTracking result = new SignatureTracking();
             result.setMajorVersion(response.getMajorVersion());
             result.setMinorVersion(response.getMinorVersion());
+            result.setOverrideApId(overrideApId);
+            result.setOverrideApPassword(overrideApPassword);
             result.setTrafficObserver(trafficObserver);
             result.setTransactionId(response.getMSSPTransID());
             result.setMobileUserMsisdn(response.getMobileUser().getMsisdn());
@@ -117,10 +120,10 @@ public class SignatureRequestModelUtils {
         return result;
     }
 
-    private static APInfo createApInfo(ClientConfiguration config) {
+    private static APInfo createApInfo(ClientConfiguration config, String overrideApId, String overrideApPassword) {
         APInfo apInfo = new APInfo();
-        apInfo.setApId(config.getApId());
-        apInfo.setApPwd(config.getApPassword());
+        apInfo.setApId(overrideApId != null ? overrideApId : config.getApId());
+        apInfo.setApPwd(overrideApPassword != null ? overrideApPassword : config.getApPassword());
         apInfo.setAPTransID(generateTransId());
         apInfo.setInstant(generateInstantAsString());
         return apInfo;

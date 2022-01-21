@@ -37,7 +37,7 @@ public class ProfileRequestModelUtils {
 
     public static MSSProfileQueryRequest createProfileQueryRequest(ProfileRequest request, ClientConfiguration config) {
         MSSProfileReq mssRequest = new MSSProfileReq();
-        mssRequest.setAPInfo(createApInfo(config));
+        mssRequest.setAPInfo(createApInfo(config, request.getOverrideApId(), request.getOverrideApPassword()));
         mssRequest.setMajorVersion(request.getMajorVersion());
         mssRequest.setMinorVersion(request.getMinorVersion());
         mssRequest.setMSSPInfo(createMsspInfo(config));
@@ -93,10 +93,10 @@ public class ProfileRequestModelUtils {
 
     // ----------------------------------------------------------------------------------------------------
 
-    private static APInfo createApInfo(ClientConfiguration config) {
+    private static APInfo createApInfo(ClientConfiguration config, String overrideApId, String overrideApPassword) {
         APInfo apInfo = new APInfo();
-        apInfo.setApId(config.getApId());
-        apInfo.setApPwd(config.getApPassword());
+        apInfo.setApId(overrideApId != null ? overrideApId : config.getApId());
+        apInfo.setApPwd(overrideApPassword != null ? overrideApPassword : config.getApPassword());
         apInfo.setAPTransID(generateTransId());
         apInfo.setInstant(generateInstantAsString());
         return apInfo;

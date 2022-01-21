@@ -142,7 +142,10 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
                                                               config.getUrls().getSignatureServiceUrl(),
                                                               requestWrapper, MSSSignatureResponse.class, request.getTrafficObserver());
         SignatureResponse signatureResponse = SignatureRequestModelUtils.processSignatureResponse(responseWrapper);
-        signatureResponse.setTracking(SignatureRequestModelUtils.createSignatureTracking(responseWrapper, request.getTrafficObserver()));
+        signatureResponse.setTracking(SignatureRequestModelUtils.createSignatureTracking(responseWrapper,
+                                                                                         request.getTrafficObserver(),
+                                                                                         request.getOverrideApId(),
+                                                                                         request.getOverrideApPassword()));
         return signatureResponse;
     }
 
@@ -154,7 +157,10 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
                                                               config.getUrls().getSignatureServiceUrl(),
                                                               requestWrapper, MSSSignatureResponse.class, request.getTrafficObserver());
         SignatureResponse signatureResponse = SignatureRequestModelUtils.processSignatureResponse(responseWrapper);
-        signatureResponse.setTracking(SignatureRequestModelUtils.createSignatureTracking(responseWrapper, request.getTrafficObserver()));
+        signatureResponse.setTracking(SignatureRequestModelUtils.createSignatureTracking(responseWrapper,
+                                                                                         request.getTrafficObserver(),
+                                                                                         request.getOverrideApId(),
+                                                                                         request.getOverrideApPassword()));
         return signatureResponse;
     }
 

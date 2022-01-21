@@ -26,6 +26,18 @@ public class SignatureTracking {
 
     private String minorVersion = DefaultConfiguration.STATUS_QUERY_REQUEST_MINOR_VERSION;
 
+    /**
+     * Optional custom AP ID that will override the AP ID configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
+     * If this is not set then the ID from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
+     */
+    private String overrideApId;
+
+    /**
+     * Optional custom AP password that will override the AP password configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
+     * If this is not set then the password from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
+     */
+    private String overrideApPassword;
+
     private String transactionId;
 
     private String mobileUserMsisdn;
@@ -74,6 +86,22 @@ public class SignatureTracking {
         this.trafficObserver = trafficObserver;
     }
 
+    public String getOverrideApId() {
+        return overrideApId;
+    }
+
+    public void setOverrideApId(String overrideApId) {
+        this.overrideApId = overrideApId;
+    }
+
+    public String getOverrideApPassword() {
+        return overrideApPassword;
+    }
+
+    public void setOverrideApPassword(String overrideApPassword) {
+        this.overrideApPassword = overrideApPassword;
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     public void validateYourself() {
@@ -83,6 +111,8 @@ public class SignatureTracking {
     }
 
     // ----------------------------------------------------------------------------------------------------
+
+    // do not print the AP ID and AP password
 
     @Override
     public String toString() {
