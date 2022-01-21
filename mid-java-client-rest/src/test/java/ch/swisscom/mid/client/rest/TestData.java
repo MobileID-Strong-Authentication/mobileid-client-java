@@ -20,6 +20,8 @@ public class TestData {
     public static final String CUSTOM_SIGNATURE_PROFILE = "http://mid.swisscom.ch/My-Custom-Profile";
 
     public static final String CUSTOM_TRANS_ID = "CAFE_BABE";
+    public static final String CUSTOM_AP_ID = "CUSTOM_AP_ID";
+    public static final String CUSTOM_AP_PASSWORD = "CUSTOM_AP_PASSWORD";
 
     public static final int BASE64_SIGNATURE_LENGTH = 768;
 

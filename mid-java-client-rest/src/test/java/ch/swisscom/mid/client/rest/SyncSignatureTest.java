@@ -28,9 +28,12 @@ import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.model.*;
 
+import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_ID;
+import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_PASSWORD;
 import static ch.swisscom.mid.client.rest.TestSupport.buildConfig;
 import static ch.swisscom.mid.client.rest.TestSupport.fileToString;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -77,6 +80,32 @@ public class SyncSignatureTest {
         assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
         assertThat(response.getBase64Signature(), is(notNullValue()));
         assertThat(response.getBase64Signature().length(), is(TestData.BASE64_SIGNATURE_LENGTH));
+    }
+
+    @Test
+    public void testSignature_success_overrideApIdAndApPassword() {
+        server.stubFor(
+            post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                .withRequestBody(containing("\"" + CUSTOM_AP_ID + "\""))
+                .withRequestBody(containing("\"" + CUSTOM_AP_PASSWORD + "\""))
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", MimeType.JSON.toString())
+                        .withBody(fileToString("/samples/rest-response-signature.json"))));
+
+        SignatureRequest signatureRequest = buildSignatureRequest();
+        signatureRequest.setOverrideApId(CUSTOM_AP_ID);
+        signatureRequest.setOverrideApPassword(CUSTOM_AP_PASSWORD);
+
+        SignatureResponse response = client.requestSyncSignature(signatureRequest);
+        assertThat(response.getStatus().getStatusCode(), is(StatusCode.SIGNATURE));
+        assertThat(response.getStatus().getStatusCodeString(), is("500"));
+        assertThat(response.getStatus().getStatusMessage(), is("SIGNATURE"));
+        assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
+        assertThat(response.getBase64Signature(), is(notNullValue()));
+        assertThat(response.getBase64Signature().length(), is(TestData.BASE64_SIGNATURE_LENGTH));
+        assertThat(response.getTracking().getOverrideApId(), is(CUSTOM_AP_ID));
+        assertThat(response.getTracking().getOverrideApPassword(), is(CUSTOM_AP_PASSWORD));
     }
 
     @Test

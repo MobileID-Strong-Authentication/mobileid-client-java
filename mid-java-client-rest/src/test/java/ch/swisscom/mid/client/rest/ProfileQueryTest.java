@@ -29,9 +29,12 @@ import ch.swisscom.mid.client.model.ProfileRequest;
 import ch.swisscom.mid.client.model.ProfileResponse;
 import ch.swisscom.mid.client.model.SignatureProfiles;
 
+import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_ID;
+import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_PASSWORD;
 import static ch.swisscom.mid.client.rest.TestSupport.buildConfig;
 import static ch.swisscom.mid.client.rest.TestSupport.fileToString;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -71,6 +74,28 @@ public class ProfileQueryTest {
         ProfileRequest request = new ProfileRequest();
         request.getMobileUser().setMsisdn("418888888888");
         request.setExtensionParamsToAllValues();
+
+        ProfileResponse response = client.requestProfile(request);
+        assertThat(response.getSignatureProfiles(),
+                   contains(SignatureProfiles.ANY_LOA4, SignatureProfiles.DEFAULT_PROFILE, SignatureProfiles.STK_LOA4));
+    }
+
+    @Test
+    public void testProfileQuery_success_customApIdAndPassword() {
+        server.stubFor(
+            post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                .withRequestBody(containing("\"" + CUSTOM_AP_ID + "\""))
+                .withRequestBody(containing("\"" + CUSTOM_AP_PASSWORD + "\""))
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", MimeType.JSON.toString())
+                        .withBody(fileToString("/samples/rest-response-profile-query.json"))));
+
+        ProfileRequest request = new ProfileRequest();
+        request.getMobileUser().setMsisdn("418888888888");
+        request.setExtensionParamsToAllValues();
+        request.setOverrideApId(CUSTOM_AP_ID);
+        request.setOverrideApId(CUSTOM_AP_PASSWORD);
 
         ProfileResponse response = client.requestProfile(request);
         assertThat(response.getSignatureProfiles(),
