@@ -15,7 +15,7 @@ For Maven projects, add the following in your _POM_ file:
         <dependency>
             <groupId>ch.mobileid.mid-java-client</groupId>
             <artifactId>mid-java-client-rest</artifactId>
-            <version>1.2.0</version> <!-- or any later version - see README.md in the repository's root -->
+            <version>1.3.0</version> <!-- or any later version - see README.md in the repository's root -->
         </dependency>
     </dependencies>
     <!-- Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense -->
@@ -23,7 +23,7 @@ For Maven projects, add the following in your _POM_ file:
         <dependency>
             <groupId>ch.mobileid.mid-java-client</groupId>
             <artifactId>mid-java-client-soap</artifactId>
-            <version>1.2.0</version> <!-- or any later version - see README.md in the repository's root -->
+            <version>1.3.0</version> <!-- or any later version - see README.md in the repository's root -->
         </dependency>
     </dependencies>
 </project>
@@ -38,9 +38,9 @@ plugins {
 // ...
 
 dependencies {
-    compile 'ch.mobileid.mid-java-client:mid-java-client-rest:1.2.0' // or any later version - see README.md in the repository's root
+    compile 'ch.mobileid.mid-java-client:mid-java-client-rest:1.3.0' // or any later version - see README.md in the repository's root
     // Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense
-    compile 'ch.mobileid.mid-java-client:mid-java-client-soap:1.2.0' // or any later version - see README.md in the repository's root
+    compile 'ch.mobileid.mid-java-client:mid-java-client-soap:1.3.0' // or any later version - see README.md in the repository's root
     // ...
 }
 ```
@@ -140,3 +140,23 @@ receiptRequest.addReceiptRequestExtension();
 ReceiptResponse receiptResponse = client.requestSyncReceipt(signatureResponse.getTracking(), receiptRequest);
 System.out.println(receiptResponse.toString());
 ```
+
+## Custom AP ID and AP password per request
+
+The _ClientConfiguration_ class provides a central place where the Application Provider (AP) ID and AP password credentials can be configured. 
+This information is used whenever a request (signature, status, profile, receipt) is sent to Mobile ID. 
+This information is used by Mobile ID to know which AP is the one that is sending the request.
+
+While this central configuration of AP credentials is very convenient, there are scenarios where one single Mobile ID client instance
+should serve multiple APs, each with its own AP ID and AP password. For this case, since v1.3.0, the Mobile ID client allows you to 
+override the AP ID and AP password per request:
+
+```java
+SignatureRequest request = new SignatureRequest();
+request.setOverrideApId("custom-ap-id");
+request.setOverrideApPassword("custom-ap-password")
+...
+```
+
+These methods are available for all operations and are also transferred in the tracking object that is used when an async signature
+operation is called and the client needs to poll for that signature's status.
