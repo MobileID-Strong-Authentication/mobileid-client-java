@@ -12,6 +12,8 @@ The repository provides the main Java-based reference implementation for the Mob
 the implementation during configuration phase. There is also a command-line interface that allows you to play with this client 
 as a tool from your own terminal.
 
+You can see the list of changes between versions on the [version history page](docs/version-history.md).
+
 ## Who is this for?
 
 The library provided by this repository is for all clients that are developing Java-based projects that need secure authentication
