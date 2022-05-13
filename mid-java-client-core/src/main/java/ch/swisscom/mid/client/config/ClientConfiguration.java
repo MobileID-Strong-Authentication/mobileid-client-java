@@ -23,6 +23,8 @@ public class ClientConfiguration {
     private HttpConfiguration http;
     private ComProtocol protocol;
     private UrlsConfiguration urls;
+    private ProxyConfiguration proxy;
+
     private String apId;
     private String apPassword;
     private String msspId = DefaultConfiguration.DEFAULT_MSSP_ID;
@@ -98,6 +100,17 @@ public class ClientConfiguration {
         return urls;
     }
 
+    public ProxyConfiguration getProxy() {
+        if (proxy == null) {
+            proxy = new ProxyConfiguration();
+        }
+        return proxy;
+    }
+
+    public void setProxy(ProxyConfiguration proxy) {
+        this.proxy = proxy;
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     @Override
@@ -109,6 +122,7 @@ public class ClientConfiguration {
                ", apId='" + apId + '\'' +
                ", msspId='" + msspId + '\'' +
                ", urls='" + urls + '\'' +
+               ", proxy='" + proxy + '\'' +
                '}';
     }
 
@@ -126,5 +140,9 @@ public class ClientConfiguration {
         http.validateYourself();
         configNotNull(urls, "The URLs configuration cannot be NULL");
         urls.validateYourself();
+        // proxy is optional, validate only if configured
+        if (proxy != null) {
+            proxy.validateYourself();
+        }
     }
 }
