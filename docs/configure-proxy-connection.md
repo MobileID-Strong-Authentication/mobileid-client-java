@@ -8,13 +8,13 @@ For the command line usage, configure these parameters in the _config.properties
 # Enable HTTP proxy connection
 client.proxy.enabled=false
 # The host of the proxy. 
-client.proxy.host=
+client.proxy.host=localhost
 # The port of the proxy.
-client.proxy.port=
+client.proxy.port=3128
 # The optional username to use during proxy authentication. Can be left empty in which case the client will not authenticate to the proxy.
-client.proxy.username=
+client.proxy.username=myuser
 # The optional password to use during proxy authentication
-client.proxy.password=
+client.proxy.password=mypass
 ```
 
 For programmatic usage, configure the client with these snippet of code:
