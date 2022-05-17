@@ -35,8 +35,8 @@ The username and password parameters are optional. Not setting them makes the cl
 
 Note 1: as of version v1.4.0, only the HTTP proxy type is supported, with an optional basic authentication.
 
-Note 2: if you want to check how the proxy is configured, for the REST protocol see the ComProtocolHandlerRestImpl class and for the SOAP
-protocol see the MssServiceFactory and ProxyAwareSSLSocketFactory classes.
+Note 2: if you want to check how the proxy is configured, for the REST protocol see the *ComProtocolHandlerRestImpl* class and for the SOAP
+protocol see the *MssServiceFactory* and *ProxyAwareSSLSocketFactory* classes.
 
 Note 3: both the REST and SOAP protocol implementations configure the proxy PER CLIENT, not per JVM. This means that using the Mobile ID client
 as a library in a larger application allows you to configure just the Mobile ID client to go through a particular proxy, not the entire JVM
@@ -45,6 +45,6 @@ process.
 Note 4: The classic approach with configuring the Java options "http(s).proxyHost" and "http(s).proxyPort" will not work for the Mobile ID 
 client, as for the REST implementation it is using the Apache HTTP Client 5, and for SOAP it is using the JAX-WS implementation.
 
-Note 5: Once a proxy configuration has been set for a Mobile ID client instance, it is not possible (or very difficult) to change it dynamically.
-For example, you cannot change the host, port or toggle the proxy usage while the Mobile ID client instance is in use. The best approach is to 
+Note 5: Once a proxy configuration has been set for a Mobile ID client instance, it is not possible (or very difficult, anyway) to change it dynamically.
+For example, you cannot change the host, port or enable/disable the proxy usage while the Mobile ID client instance is in use. The best approach is to 
 recreate the Mobile ID client object with the new proxy configuration. 
