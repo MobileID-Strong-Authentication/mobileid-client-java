@@ -31,8 +31,8 @@ To start using the Swisscom Mobile ID service and this client library, follow th
 5. Learn about the code and the overall architecture of the client. See the [ARCHITECTURE.md](ARCHITECTURE.md) file
    
 For extra help:
-- Check this page for [troubleshooting your code](/docs/troubleshoot-the-code.md), configuring a proxy and getting extra debug info 
-- Check this page for [solving the most common problems](/docs/troubleshoot-common-problems.md)
+- [How to use an HTTP proxy with or without authentication](/docs/configure-proxy-connection.md) 
+- [How to solve the most common problems](/docs/troubleshoot-common-problems.md)
 
 ## Quick examples
 

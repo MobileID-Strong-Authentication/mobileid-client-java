@@ -19,6 +19,7 @@ import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.HttpConfiguration;
+import ch.swisscom.mid.client.config.ProxyConfiguration;
 import ch.swisscom.mid.client.config.TlsConfiguration;
 import ch.swisscom.mid.client.config.UrlsConfiguration;
 import ch.swisscom.mid.client.model.Fault;
@@ -48,6 +49,12 @@ public class Utils {
         http.setResponseTimeoutInMs(100 * 1000);
         http.setMaxTotalConnections(20);
         http.setMaxConnectionsPerRoute(10);
+
+        ProxyConfiguration proxy = config.getProxy();
+        proxy.setHost("localhost");
+        proxy.setPort(3128);
+        proxy.setUsername("myuser");
+        proxy.setPassword("mypass");
 
         return config;
     }

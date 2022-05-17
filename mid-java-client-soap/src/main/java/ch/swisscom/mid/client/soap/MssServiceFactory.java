@@ -42,6 +42,7 @@ import javax.xml.ws.handler.Handler;
 import ch.swisscom.mid.client.MIDClientException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.ConfigurationException;
+import ch.swisscom.mid.client.config.ProxyConfiguration;
 import ch.swisscom.mid.client.config.TlsConfiguration;
 import ch.swisscom.mid.client.impl.Loggers;
 
@@ -139,6 +140,11 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
             bindingProvider.getRequestContext().put(JBOSS_CXF_REQUEST_TIMEOUT, clientConfiguration.getHttp().getResponseTimeoutInMs());
 
             SSLSocketFactory sslSocketFactory = produceAnSslSocketFactory(clientConfiguration);
+            ProxyConfiguration proxyConfig = clientConfiguration.getProxy();
+            if (proxyConfig.isEnabled()) {
+                sslSocketFactory = new ProxyAwareSSLSocketFactory(proxyConfig, sslSocketFactory);
+            }
+
             bindingProvider.getRequestContext().put(JAXWSProperties.SSL_SOCKET_FACTORY, sslSocketFactory);
             bindingProvider.getRequestContext().put(JAXWS_SSL_SOCKET_FACTORY, sslSocketFactory);
 

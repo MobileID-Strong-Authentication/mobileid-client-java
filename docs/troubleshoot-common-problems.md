@@ -6,6 +6,54 @@ thrown exception) so that debugging is made easier.
 
 This page contains some of the most common problems that might appear when using the Mobile ID service and the Java client.
 
+## Extra debugging and logging
+
+In many cases, when the code does not work as expected (or it doesn't work at all) you need extra debugging and logging. 
+This configuration can be done via command line or in code.
+
+For command line:
+```shell
+# Enable remote debugging (Java 8+)
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 ...
+# and for Java 9+ (specific host on which to bind)
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000 ...
+
+# Enable debug logging for SOAP communication (via com.sun.xml):
+java -Dcom.sun.xml.ws.transport.http.client.HttpTransportPipe.dump=true -Djaxb.debug=true ...
+
+# Enable debugging for TLS communication
+java -Djavax.net.debug=all -Djava.security.debug=certpath
+# or more filtering:
+java -Djavax.net.debug=ssl,handshake -Djava.security.debug=certpath
+# or even more filtering:
+java -Djavax.net.debug=ssl:handshake:verbose:keymanager:trustmanager -Djava.security.debug=certpath
+```
+and code wise (use only what you need):
+```java
+// Remote debugging cannot be enabled as the Java process runs; it must be done before starting the process
+
+// Enable debug logging for SOAP communication (via com.sun.xml):
+System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
+System.setProperty("jaxb.debug", "true");
+
+// Enable debugging for TLS communication
+System.setProperty("javax.net.debug", "all");
+System.setProperty("java.security.debug", "certpath");
+    
+// or more filtering:
+System.setProperty("javax.net.debug", "ssl,handshake");
+System.setProperty("java.security.debug", "certpath");
+
+// or even more filtering:
+System.setProperty("javax.net.debug", "ssl:handshake:verbose:keymanager:trustmanager");
+System.setProperty("java.security.debug", "certpath");
+```
+
+See this [Oracle link](https://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/JSSERefGuide.html#SSLOverview)
+for details on _javax.net.debug_
+and this [Oracle link](https://docs.oracle.com/javase/8/docs/technotes/guides/security/troubleshooting-security.html)
+for more details on _java.security.debug_.
+
 ## Keystore not found
 
 If the keystore, truststore or configuration file is not found, you get a very specific exception:
