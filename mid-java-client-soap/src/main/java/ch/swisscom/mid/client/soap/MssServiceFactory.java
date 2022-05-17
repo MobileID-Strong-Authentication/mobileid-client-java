@@ -142,6 +142,7 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
             SSLSocketFactory sslSocketFactory = produceAnSslSocketFactory(clientConfiguration);
             ProxyConfiguration proxyConfig = clientConfiguration.getProxy();
             if (proxyConfig.isEnabled()) {
+                logProxyConfiguration(proxyConfig);
                 sslSocketFactory = new ProxyAwareSSLSocketFactory(proxyConfig, sslSocketFactory);
             }
 
@@ -173,6 +174,12 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
                        config.getHttp().getResponseTimeoutInMs(),
                        config.getHttp().getMaxTotalConnections(),
                        config.getHttp().getMaxConnectionsPerRoute());
+    }
+
+    private void logProxyConfiguration(ProxyConfiguration config) {
+        logConfig.info("Configuring PROXY parameters: enabled [{}], host [{}], port [{}], username [{}], password [{}]",
+                       config.isEnabled(), config.getHost(), config.getPort(),
+                       config.getUsername(), config.getPassword() != null ? "(not-null)" : "null");
     }
 
     private SSLSocketFactory produceAnSslSocketFactory(ClientConfiguration config) {
