@@ -17,6 +17,7 @@ import ch.swisscom.mid.client.MIDClientException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.HttpConfiguration;
+import ch.swisscom.mid.client.config.ProxyConfiguration;
 import ch.swisscom.mid.client.config.TlsConfiguration;
 import ch.swisscom.mid.client.config.UrlsConfiguration;
 import ch.swisscom.mid.client.impl.Loggers;
@@ -130,6 +131,22 @@ public class Cli {
         HttpConfiguration http = clientConfig.getHttp();
         http.setConnectionTimeoutInMs(Integer.parseInt(properties.getProperty("client.http.connectionTimeoutInSeconds")) * 1000);
         http.setResponseTimeoutInMs(Integer.parseInt(properties.getProperty("client.http.responseTimeoutInSeconds")) * 1000);
+
+        boolean proxyEnabled = Boolean.parseBoolean(properties.getProperty("client.proxy.enabled", "false"));
+        if (proxyEnabled) {
+            ProxyConfiguration proxyConfig = clientConfig.getProxy();
+            proxyConfig.setEnabled(true);
+            proxyConfig.setHost(properties.getProperty("client.proxy.host", "").trim());
+            proxyConfig.setPort(Integer.parseInt(properties.getProperty("client.proxy.port", "0")));
+            String proxyUsername = properties.getProperty("client.proxy.username", null);
+            String proxyPassword = properties.getProperty("client.proxy.password", null);
+            if (proxyUsername != null && proxyUsername.trim().length() > 0) {
+                proxyConfig.setUsername(proxyUsername.trim());
+            }
+            if (proxyPassword != null && proxyPassword.trim().length() > 0) {
+                proxyConfig.setPassword(proxyPassword.trim());
+            }
+        }
 
         String finalResult = null;
 

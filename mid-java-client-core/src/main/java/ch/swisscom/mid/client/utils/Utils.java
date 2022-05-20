@@ -64,6 +64,12 @@ public class Utils {
         }
     }
 
+    public static <T> void dataGreaterThanZero(int value, String errorMessage) throws DataAssemblyException {
+        if (value <= 0) {
+            throw new DataAssemblyException(errorMessage);
+        }
+    }
+
     public static String generateTransId() {
         return "ID-" + UUID.randomUUID().toString();
     }

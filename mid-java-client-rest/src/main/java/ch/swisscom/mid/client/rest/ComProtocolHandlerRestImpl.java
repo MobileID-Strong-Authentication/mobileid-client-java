@@ -20,20 +20,30 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.codec.CharEncoding;
+import org.apache.hc.client5.http.auth.AuthCache;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.impl.routing.DefaultProxyRoutePlanner;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.ssl.PrivateKeyStrategy;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.apache.hc.core5.ssl.SSLContexts;
@@ -77,6 +87,7 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
     private ObjectMapper jacksonMapper;
 
     private CloseableHttpClient httpClient;
+    private RequestConfig httpRequestConfig;
 
     @Override
     public ComProtocol getImplementedComProtocol() {
@@ -110,6 +121,24 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
             throw new ConfigurationException("Failed to configure the TLS/SSL connection factory for the MID client", e);
         }
 
+        BasicCredentialsProvider credentialsProvider = null;
+        if (config.getProxy().isEnabled()) {
+            ProxyConfiguration proxyConfig = config.getProxy();
+            logProxyConfiguration(proxyConfig);
+            String proxyHost = proxyConfig.getHost();
+            int proxyPort = proxyConfig.getPort();
+
+            if (proxyConfig.getUsername() != null) {
+                credentialsProvider = new BasicCredentialsProvider();
+                credentialsProvider.setCredentials(new AuthScope(proxyHost, proxyPort),
+                                                   new UsernamePasswordCredentials(proxyConfig.getUsername().trim(),
+                                                                                   proxyConfig.getPassword().trim().toCharArray()));
+            }
+
+            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+            httpRequestConfig = RequestConfig.custom().setProxy(proxy).build();
+        }
+
         logHttpConnectionConfiguration(config);
         PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
             .setMaxConnTotal(config.getHttp().getMaxTotalConnections())
@@ -122,6 +151,7 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
             .build();
 
         httpClient = HttpClients.custom()
+            .setDefaultCredentialsProvider(credentialsProvider)
             .setConnectionManager(connectionManager)
             .setDefaultRequestConfig(httpClientRequestConfig)
             .build();
@@ -210,6 +240,12 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
                        config.getHttp().getResponseTimeoutInMs(),
                        config.getHttp().getMaxTotalConnections(),
                        config.getHttp().getMaxConnectionsPerRoute());
+    }
+
+    private void logProxyConfiguration(ProxyConfiguration config) {
+        logConfig.info("Configuring PROXY parameters: enabled [{}], host [{}], port [{}], username [{}], password [{}]",
+                       config.isEnabled(), config.getHost(), config.getPort(),
+                       config.getUsername(), config.getPassword() != null ? "(not-null)" : "null");
     }
 
     private PrivateKeyStrategy produceAPrivateKeyStrategy(TlsConfiguration tlsConfig) {
@@ -319,9 +355,12 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
         notifyTrafficObserverForRequest(trafficObserver, requestJson);
         HttpPost httpPost = new HttpPost(serviceUrl);
         httpPost.setEntity(new StringEntity(requestJson, ContentType.APPLICATION_JSON, CharEncoding.UTF_8, false));
+        httpPost.setConfig(httpRequestConfig);
+
         logProtocol.info("{}: Sending request to: [{}]", operationName, serviceUrl);
         logReqResp.info("{}: Sending JSON to: [{}], content: [{}]", operationName, serviceUrl, requestJson);
         logFullReqResp.info("{}: Sending JSON to: [{}], content: [{}]", operationName, serviceUrl, requestJson);
+
         TResp responseWrapper = null;
         MSSFault faultWrapper = null;
         try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
