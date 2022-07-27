@@ -1,5 +1,13 @@
 # Version history
 
+# v1.5.0
+Add support for signature validation, after a mobile signature is successfully created. Add a new component that can be configured separately 
+for validating the signing certificate, the certificate path, the actual signature and the DTBD/DTBS that was signed.
+
+# v1.4.0
+Add support for HTTP proxy configuration. With this version, the Mobile ID Java client can be configured to use an HTTP proxy, with or 
+without Basic authentication. This works both for command line and for programmatic mode. 
+
 # v1.3.0
 Add optional override of AP ID and AP Password for each request and for the tracking object of a signature operation. 
 This helps with sending requests on behalf of various APs, instead of relying only on the common AP ID + AP password 

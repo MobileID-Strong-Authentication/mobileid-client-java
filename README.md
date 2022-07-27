@@ -31,6 +31,7 @@ To start using the Swisscom Mobile ID service and this client library, follow th
 5. Learn about the code and the overall architecture of the client. See the [ARCHITECTURE.md](ARCHITECTURE.md) file
    
 For extra help:
+- [How to validate signatures](/docs/validate-signatures.md)
 - [How to use an HTTP proxy with or without authentication](/docs/configure-proxy-connection.md) 
 - [How to solve the most common problems](/docs/troubleshoot-common-problems.md)
 
