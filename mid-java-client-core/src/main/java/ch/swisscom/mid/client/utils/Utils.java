@@ -107,6 +107,13 @@ public class Utils {
         return String.join(separator, theList);
     }
 
+    public static String getThisOrNull(String value) {
+        if (value == null || value.trim().length() == 0) {
+            return null;
+        }
+        return value;
+    }
+
     public static void assertNotNull(Object object, String messageForException) {
         if (object == null) {
             throw new IllegalArgumentException(messageForException);

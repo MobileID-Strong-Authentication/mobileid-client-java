@@ -15,7 +15,7 @@ mobileid-client-samples/src/main/java/ch/swisscom/mid/client/samples/TestSoap.ja
 local-*.*
 api-docs
 
-# Local files that might be creating during testing
+# Local files that might be created during testing
 /truststore.jks
 /keystore.jks
 /config.properties

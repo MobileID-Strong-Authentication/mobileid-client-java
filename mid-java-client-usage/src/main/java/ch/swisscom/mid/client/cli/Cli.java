@@ -3,6 +3,7 @@ package ch.swisscom.mid.client.cli;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,17 +15,15 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.MIDClientException;
-import ch.swisscom.mid.client.config.ClientConfiguration;
-import ch.swisscom.mid.client.config.DefaultConfiguration;
-import ch.swisscom.mid.client.config.HttpConfiguration;
-import ch.swisscom.mid.client.config.ProxyConfiguration;
-import ch.swisscom.mid.client.config.TlsConfiguration;
-import ch.swisscom.mid.client.config.UrlsConfiguration;
+import ch.swisscom.mid.client.SignatureValidator;
+import ch.swisscom.mid.client.config.*;
 import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
+import ch.swisscom.mid.client.impl.SignatureValidatorImpl;
 import ch.swisscom.mid.client.model.*;
 
 import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
+import static ch.swisscom.mid.client.utils.Utils.getThisOrNull;
 
 /**
  * Command line interface for the Mobile ID client. Allows the running of the MID Client from the command line, with most of
@@ -55,6 +54,7 @@ public class Cli {
     private static final String PARAM_REQUEST_TIMEOUT = "req-timeout";
     private static final String PARAM_REST = "rest";
     private static final String PARAM_SOAP = "soap";
+    private static final String PARAM_VALIDATE_SIGNATURE = "validate";
     private static final String PARAM_HELP = "help";
 
     private static final String PARAM_VERBOSE1 = "v";
@@ -83,6 +83,7 @@ public class Cli {
     private static final String receiptDtbd = "Login completed successfully";
     private static boolean syncSignature = false;
     private static boolean sendReceipt = false;
+    private static boolean validateSignature = false;
     private static String interfaceType;
     private static int verboseLevel;
 
@@ -183,17 +184,48 @@ public class Cli {
                 }
                 System.out.println(response.toString());
 
-                if (sendReceipt && response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
-                    ReceiptRequest receiptRequest = new ReceiptRequest();
-                    receiptRequest.setStatusCode(StatusCode.REQUEST_OK);
-                    receiptRequest.getMessageToBeDisplayed().setData(receiptDtbd);
-                    receiptRequest.getRequestExtension().getReceiptProfile().setLanguage(lang);
-                    receiptRequest.setTrafficObserver(prettyPrinterTrafficObserver);
+                if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
+                    boolean signatureIsValid = false;
+                    if (validateSignature) {
+                        SignatureValidationConfiguration svConfig = new SignatureValidationConfiguration();
+                        svConfig.setTrustStoreFile(properties.getProperty("client.signatureValidation.trustStore.file"));
+                        svConfig.setTrustStoreType(properties.getProperty("client.signatureValidation.trustStore.type"));
+                        svConfig.setTrustStorePassword(getThisOrNull(properties.getProperty("client.signatureValidation.trustStore.password")));
 
-                    ReceiptResponse receiptResponse = midClient.requestSyncReceipt(response.getTracking(), receiptRequest);
-                    finalResult = "Receipt response:\n" + jacksonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(receiptResponse);
-                } else {
-                    finalResult = "Signature response:\n" + jacksonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response);
+                        SignatureValidator validator = new SignatureValidatorImpl(svConfig);
+                        SignatureValidationResult result =
+                            validator.validateSignature(response.getBase64Signature(), request.getDataToBeSigned().getData(), null);
+                        if (result.isValidationSuccessful()) {
+                            signatureIsValid = true;
+                            System.out.println("Signature is valid!");
+                            System.out.println("Mobile ID serial number = " + result.getMobileIdSerialNumber());
+                            System.out.println("Signed DTBS = " + result.getSignedDtbs());
+                        } else {
+                            // something failed
+                            System.out.println("Validation failure reason = " + result.getValidationFailureReason());
+                            System.out.println("Signing certificate path validation = " + result.isSignerCertificatePathValid());
+                            System.out.println("Signing certificate validation = " + result.isSignerCertificateValid());
+                            System.out.println("Signature validation = " + result.isSignatureValid());
+                            System.out.println("DTBS matching = " + result.isDtbsMatching());
+                            if (result.getValidationException() != null) {
+                                result.getValidationException().printStackTrace();
+                            }
+                        }
+                    }
+                    if (sendReceipt) {
+                        if (!validateSignature || signatureIsValid) {
+                            ReceiptRequest receiptRequest = new ReceiptRequest();
+                            receiptRequest.setStatusCode(StatusCode.REQUEST_OK);
+                            receiptRequest.getMessageToBeDisplayed().setData(receiptDtbd);
+                            receiptRequest.getRequestExtension().getReceiptProfile().setLanguage(lang);
+                            receiptRequest.setTrafficObserver(prettyPrinterTrafficObserver);
+
+                            ReceiptResponse receiptResponse = midClient.requestSyncReceipt(response.getTracking(), receiptRequest);
+                            finalResult = "Receipt response:\n" + jacksonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(receiptResponse);
+                        } else {
+                            System.out.println("Signature was NOT valid so sending receipt was skipped");
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -318,6 +350,10 @@ public class Cli {
                     sendReceipt = true;
                     break;
                 }
+                case PARAM_VALIDATE_SIGNATURE: {
+                    validateSignature = true;
+                    break;
+                }
                 case PARAM_MSISDN: {
                     if (argValue == null) {
                         if (argIndex + 1 < args.length) {
@@ -410,7 +446,8 @@ public class Cli {
         String[][] configPairs = new String[][]{
             new String[]{"/cli-files/config-sample.properties", "config.properties"},
             new String[]{"/cli-files/keystore.jks", "keystore.jks"},
-            new String[]{"/cli-files/truststore.jks", "truststore.jks"}
+            new String[]{"/cli-files/truststore.jks", "truststore.jks"},
+            new String[]{"/cli-files/signature-validation-truststore.jks", "signature-validation-truststore.jks"}
         };
         for (String[] configPair : configPairs) {
             String inputFile = configPair[0];

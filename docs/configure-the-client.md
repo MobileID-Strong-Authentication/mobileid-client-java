@@ -45,6 +45,14 @@ client.proxy.username=
 # The optional password to use during proxy authentication
 client.proxy.password=
 
+# ---
+# The Java truststore file with the CA certificates used for validating the signer's certificate path
+client.signatureValidation.trustStore.file=signature-validation-truststore.jks
+# The type of the truststore
+client.signatureValidation.trustStore.type=jks
+# The password that protects the truststore (optional)
+client.signatureValidation.trustStore.password=secret
+
 # --
 # The Java truststore file with the server certificates (e.g. CA certificates) to trust
 server.trustStore.file=truststore.jks

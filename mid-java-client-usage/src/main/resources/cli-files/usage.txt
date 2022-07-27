@@ -22,6 +22,8 @@ Arguments:
 
     -receipt                                            - For sign operation. Send a receipt after the signature is acquired successfully
 
+    -validate                                           - For sign operation. Validate the signature once it is successfully acquired
+
     -msisdn=41790000000                                 - The target MSISDN for the chosen operation
 
     -lang=en|de|it|fr                                   - The language to use during the talk with the mobile user. Choose from "en", "de", "it", "fr"
