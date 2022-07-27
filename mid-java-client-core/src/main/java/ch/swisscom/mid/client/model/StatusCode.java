@@ -67,7 +67,7 @@ public enum StatusCode implements DocumentedEnum {
     INTERNAL_ERROR(900, true, "An internal error on MSSP has occurred. "
                               + "Please try again later or contact Swisscom Support, if the problem persists.");
 
-    private static final Logger log = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
+    private static final Logger log = LoggerFactory.getLogger(Loggers.CLIENT);
 
     private final int code;
 

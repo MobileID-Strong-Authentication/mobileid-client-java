@@ -33,8 +33,8 @@ import static ch.swisscom.mid.client.utils.Utils.dataNotNull;
 
 public class MIDClientImpl implements MIDClient {
 
-    private static final Logger logClient = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
-    private static final Logger logConfig = LoggerFactory.getLogger(Loggers.LOGGER_CONFIG);
+    private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
+    private static final Logger logConfig = LoggerFactory.getLogger(Loggers.CONFIG);
 
     private final List<ComProtocolHandler> comProtocolHandlers;
     private final ComProtocolHandler selectedProtocolHandler;

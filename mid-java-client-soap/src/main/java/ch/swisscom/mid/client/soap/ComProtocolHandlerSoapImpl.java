@@ -40,9 +40,9 @@ import ch.swisscom.mid.client.soap.adapter.MssResponseProcessor;
 
 public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
 
-    private static final Logger logClient = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
-    private static final Logger logConfig = LoggerFactory.getLogger(Loggers.LOGGER_CONFIG);
-    private static final Logger logProtocol = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT_PROTOCOL);
+    private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
+    private static final Logger logConfig = LoggerFactory.getLogger(Loggers.CONFIG);
+    private static final Logger logProtocol = LoggerFactory.getLogger(Loggers.CLIENT_PROTOCOL);
 
     private ClientConfiguration config;
     private ObjectPool<MssService<MSSSignaturePortType>> mssSignatureServicePool;

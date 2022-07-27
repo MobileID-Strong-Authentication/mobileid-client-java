@@ -39,7 +39,7 @@ import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
  */
 public class Cli {
 
-    private static final Logger logClient = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
+    private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
 
     public static final String SEPARATOR = "--------------------------------------------------------------------------------";
     private static final String PARAM_CONFIG = "config";
@@ -431,31 +431,31 @@ public class Cli {
             case 0: {
                 setLoggerToLevel(Logger.ROOT_LOGGER_NAME, "warn", loggerContext);
                 setLoggerToLevel("org.apache.hc", "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CLIENT, "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CONFIG, "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CLIENT_PROTOCOL, "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_REQUEST_RESPONSE, "warn", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_FULL_REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.CLIENT, "info", loggerContext);
+                setLoggerToLevel(Loggers.CONFIG, "info", loggerContext);
+                setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "info", loggerContext);
+                setLoggerToLevel(Loggers.REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "warn", loggerContext);
                 break;
             }
             case 1: {
                 setLoggerToLevel(Logger.ROOT_LOGGER_NAME, "info", loggerContext);
                 setLoggerToLevel("org.apache.hc", "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CLIENT, "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CONFIG, "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CLIENT_PROTOCOL, "info", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_REQUEST_RESPONSE, "debug", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_FULL_REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.CLIENT, "info", loggerContext);
+                setLoggerToLevel(Loggers.CONFIG, "info", loggerContext);
+                setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "info", loggerContext);
+                setLoggerToLevel(Loggers.REQUEST_RESPONSE, "debug", loggerContext);
+                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "warn", loggerContext);
                 break;
             }
             case 2: // falls through
             case 3: {
                 setLoggerToLevel(Logger.ROOT_LOGGER_NAME, "debug", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CLIENT, "debug", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CONFIG, "debug", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_CLIENT_PROTOCOL, "debug", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_REQUEST_RESPONSE, "warn", loggerContext);
-                setLoggerToLevel(Loggers.LOGGER_FULL_REQUEST_RESPONSE, "debug", loggerContext);
+                setLoggerToLevel(Loggers.CLIENT, "debug", loggerContext);
+                setLoggerToLevel(Loggers.CONFIG, "debug", loggerContext);
+                setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "debug", loggerContext);
+                setLoggerToLevel(Loggers.REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "debug", loggerContext);
                 if (verboseLevel == 2) {
                     setLoggerToLevel("org.apache.hc", "info", loggerContext);
                 } else {

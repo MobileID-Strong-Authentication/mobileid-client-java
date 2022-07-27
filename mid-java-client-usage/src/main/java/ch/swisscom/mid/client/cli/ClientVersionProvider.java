@@ -10,7 +10,7 @@ import ch.swisscom.mid.client.impl.Loggers;
 
 public class ClientVersionProvider {
 
-    private static final Logger log = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
+    private static final Logger log = LoggerFactory.getLogger(Loggers.CLIENT);
     private boolean versionInfoAvailable = false;
     private String versionInfo;
 

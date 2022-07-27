@@ -25,7 +25,7 @@ public enum ReceiptMessagingMode implements DocumentedEnum {
     SYNC("synch",
          "The receipt is processed synchronously (on the thread of the calling client; the client has to wait).");
 
-    private static final Logger log = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
+    private static final Logger log = LoggerFactory.getLogger(Loggers.CLIENT);
 
     private final String value;
     private final String description;

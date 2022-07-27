@@ -50,7 +50,7 @@ import fi.methics.ts102204.ext.v1_0.SscdType;
 
 public class MssResponseProcessor {
 
-    private static final Logger logProtocol = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT_PROTOCOL);
+    private static final Logger logProtocol = LoggerFactory.getLogger(Loggers.CLIENT_PROTOCOL);
 
     public static SignatureResponse processMssSignatureResponse(MSSSignatureRespType mssResponse) {
         SignatureResponse signatureResponse = new SignatureResponse();

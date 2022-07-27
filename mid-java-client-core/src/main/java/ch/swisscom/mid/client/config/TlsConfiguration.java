@@ -156,7 +156,7 @@ public class TlsConfiguration {
             configTrue(false, "At least a key store material source (one of keyStoreFile, "
                               + "keyStoreClasspathFile or keyStoreBytes) must be provided");
         }
-        configNotNull(keyStoreType, "The TLS keystore type cannot be NULL (by default this is JKS)");
-        configNotNull(keyStoreCertificateAlias, "The TLS keystore certificate alias cannot be NULL");
+        configNotNull(keyStoreType, "The TLS key store type cannot be NULL (by default this is JKS)");
+        configNotNull(keyStoreCertificateAlias, "The TLS key store certificate alias cannot be NULL");
     }
 }

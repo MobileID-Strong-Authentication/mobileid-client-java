@@ -34,7 +34,7 @@ import ch.swisscom.mid.client.model.StatusCode;
 
 public class MssFaultProcessor {
 
-    private static final Logger log = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT_PROTOCOL);
+    private static final Logger log = LoggerFactory.getLogger(Loggers.CLIENT_PROTOCOL);
 
     public static Fault processFailure(FailureReason failureReason) {
         Fault result = new Fault();

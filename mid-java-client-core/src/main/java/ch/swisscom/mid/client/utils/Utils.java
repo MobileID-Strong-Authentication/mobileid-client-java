@@ -15,6 +15,8 @@
  */
 package ch.swisscom.mid.client.utils;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +27,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import ch.swisscom.mid.client.config.ConfigurationException;
 import ch.swisscom.mid.client.model.DataAssemblyException;
+import ch.swisscom.mid.client.model.Traceable;
 
 public class Utils {
 
@@ -102,6 +105,30 @@ public class Utils {
             return "";
         }
         return String.join(separator, theList);
+    }
+
+    public static void assertNotNull(Object object, String messageForException) {
+        if (object == null) {
+            throw new IllegalArgumentException(messageForException);
+        }
+    }
+
+    public static void assertNotEmpty(String value, String messageForException) {
+        if (value == null || value.trim().length() == 0) {
+            throw new IllegalArgumentException(messageForException);
+        }
+    }
+
+    public static String printTrace(Traceable trace) {
+        if (trace == null) {
+            return "";
+        } else {
+            return " - " + trace;
+        }
+    }
+
+    public static byte[] bytesFromBase64_viaUTF8(String input) {
+        return Base64.getDecoder().decode(input.getBytes(StandardCharsets.UTF_8));
     }
 
 }

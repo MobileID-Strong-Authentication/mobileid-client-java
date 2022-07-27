@@ -48,8 +48,8 @@ import ch.swisscom.mid.client.impl.Loggers;
 
 public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssService<PortType>> {
 
-    private static final Logger log = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT_PROTOCOL);
-    private static final Logger logConfig = LoggerFactory.getLogger(Loggers.LOGGER_CONFIG);
+    private static final Logger log = LoggerFactory.getLogger(Loggers.CLIENT_PROTOCOL);
+    private static final Logger logConfig = LoggerFactory.getLogger(Loggers.CONFIG);
 
     /**
      * JDK JAX-WS properties

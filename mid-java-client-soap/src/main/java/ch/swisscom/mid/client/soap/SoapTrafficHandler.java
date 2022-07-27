@@ -44,9 +44,9 @@ import ch.swisscom.mid.client.utils.Utils;
  */
 public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
 
-    private static final Logger logClient = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
-    private static final Logger logRequestResponse = LoggerFactory.getLogger(Loggers.LOGGER_REQUEST_RESPONSE);
-    private static final Logger logFullRequestResponse = LoggerFactory.getLogger(Loggers.LOGGER_FULL_REQUEST_RESPONSE);
+    private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
+    private static final Logger logRequestResponse = LoggerFactory.getLogger(Loggers.REQUEST_RESPONSE);
+    private static final Logger logFullRequestResponse = LoggerFactory.getLogger(Loggers.FULL_REQUEST_RESPONSE);
 
     private TrafficObserver trafficObserver;
 

@@ -23,11 +23,12 @@ import java.util.List;
 
 public class Loggers {
 
-    public static final String LOGGER_CLIENT = "ch.swisscom.mid.client";
-    public static final String LOGGER_CONFIG = "ch.swisscom.mid.client.config";
-    public static final String LOGGER_CLIENT_PROTOCOL = "ch.swisscom.mid.client.protocol";
-    public static final String LOGGER_REQUEST_RESPONSE = "ch.swisscom.mid.client.requestResponse";
-    public static final String LOGGER_FULL_REQUEST_RESPONSE = "ch.swisscom.mid.client.fullRequestResponse";
+    public static final String CLIENT = "ch.swisscom.mid.client";
+    public static final String CONFIG = "ch.swisscom.mid.client.config";
+    public static final String CLIENT_PROTOCOL = "ch.swisscom.mid.client.protocol";
+    public static final String REQUEST_RESPONSE = "ch.swisscom.mid.client.requestResponse";
+    public static final String FULL_REQUEST_RESPONSE = "ch.swisscom.mid.client.fullRequestResponse";
+    public static final String SIGNATURE_VALIDATOR = "ch.swisscom.mid.signatureValidator";
 
     // ----------------------------------------------------------------------------------------------------
 

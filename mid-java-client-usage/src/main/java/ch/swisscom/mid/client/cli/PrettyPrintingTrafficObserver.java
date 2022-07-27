@@ -13,7 +13,7 @@ import ch.swisscom.mid.client.impl.Loggers;
 
 public class PrettyPrintingTrafficObserver implements TrafficObserver {
 
-    private static final Logger logClient = LoggerFactory.getLogger(Loggers.LOGGER_CLIENT);
+    private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
     private final ObjectMapper jacksonMapper = new ObjectMapper();
 
     @Override
