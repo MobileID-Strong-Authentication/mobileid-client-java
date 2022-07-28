@@ -1,5 +1,8 @@
 # Version history
 
+# v1.5.1
+Update the jackson-databind and woodstox-core libraries to newer versions to overcome the vulnerabilities reported by Sonatype Lift.
+
 # v1.5.0
 Add support for signature validation, after a mobile signature is successfully created. Add a new component that can be configured separately 
 for validating the signing certificate, the certificate path, the actual signature and the DTBD/DTBS that was signed.
