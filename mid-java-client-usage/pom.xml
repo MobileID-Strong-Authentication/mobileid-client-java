@@ -6,11 +6,11 @@
     <parent>
         <groupId>ch.mobileid.mid-java-client</groupId>
         <artifactId>mid-java-client-parent</artifactId>
-        <version>1.5.2</version>
+        <version>1.5.1</version>
     </parent>
 
     <artifactId>mid-java-client-usage</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.1</version>
     <name>mid-java-client-usage</name>
     <description>MobileID Java Client - Usage samples</description>
     <packaging>jar</packaging>
