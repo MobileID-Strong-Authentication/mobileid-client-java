@@ -6,7 +6,7 @@
 
     <groupId>ch.mobileid.mid-java-client</groupId>
     <artifactId>mid-java-client-parent</artifactId>
-    <version>1.6.0</version>
+    <version>1.5.2</version>
     <name>Mobile ID Java client</name>
     <description>Mobile ID client reference implementation in Java</description>
     <url>https://github.com/MobileID-Strong-Authentication/mobileid-client-java</url>

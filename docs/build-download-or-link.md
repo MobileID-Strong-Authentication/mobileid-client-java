@@ -37,7 +37,7 @@ For Maven projects, add the following in your _POM_ file:
         <dependency>
             <groupId>ch.mobileid.mid-java-client</groupId>
             <artifactId>mid-java-client-rest</artifactId>
-            <version>1.5.1</version> <!-- or any later version - see README.md in the repository's root -->
+            <version>x.y.z</version> <!-- use here the latest version - see README.md in the repository's root or the Releases page of this repository -->
         </dependency>
     </dependencies>
     <!-- Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense -->
@@ -45,7 +45,7 @@ For Maven projects, add the following in your _POM_ file:
         <dependency>
             <groupId>ch.mobileid.mid-java-client</groupId>
             <artifactId>mid-java-client-soap</artifactId>
-            <version>1.5.1</version> <!-- or any later version - see README.md in the repository's root -->
+            <version>x.y.z</version> <!-- use here the latest version - see README.md in the repository's root or the Releases page of this repository -->
         </dependency>
     </dependencies>
 </project>
@@ -60,9 +60,9 @@ plugins {
 // ...
 
 dependencies {
-    compile 'ch.mobileid.mid-java-client:mid-java-client-rest:1.5.1' // or any later version - see README.md in the repository's root
+    compile 'ch.mobileid.mid-java-client:mid-java-client-rest:x.y.z' // use the latest version - see README.md in the repository's root or the Releases page of this repository
     // Alternatively, you can also reference the SOAP implementation of the client; adding both of them does not make much sense
-    compile 'ch.mobileid.mid-java-client:mid-java-client-soap:1.5.1' // or any later version - see README.md in the repository's root
+    compile 'ch.mobileid.mid-java-client:mid-java-client-soap:x.y.z' // use the latest version - see README.md in the repository's root or the Releases page of this repository
     // ...
 }
 ```

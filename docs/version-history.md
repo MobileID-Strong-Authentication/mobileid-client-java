@@ -1,5 +1,8 @@
 # Version history
 
+# v1.5.2
+Update most of the libraries to their latest versions. Fix two vulnerabilities reported by Dependabot for the Jackson Databind libraries. 
+
 # v1.5.1
 Update the jackson-databind and woodstox-core libraries to newer versions to overcome the vulnerabilities reported by Sonatype Lift.
 

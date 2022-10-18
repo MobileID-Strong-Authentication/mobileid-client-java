@@ -1,4 +1,4 @@
-# Mobile ID Java client (v1.5.1)
+# Mobile ID Java client (v1.5.2)
 
 Swisscom Mobile ID is a cost-efficient, managed authentication service from Swisscom. The customer-facing API is
 based on open standard ETSI 102 2041. The library from this repository is a reference implementation for 
