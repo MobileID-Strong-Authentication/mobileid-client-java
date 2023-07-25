@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>mid-java-client-usage</artifactId>
-    <version>1.5.3</version>
     <name>mid-java-client-usage</name>
     <description>MobileID Java Client - Usage samples</description>
     <packaging>jar</packaging>

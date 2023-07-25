@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>mid-java-client-soap</artifactId>
-    <version>1.5.3</version>
     <name>mid-java-client-soap</name>
     <description>MobileID Java Client - SOAP Implementation</description>
     <packaging>jar</packaging>

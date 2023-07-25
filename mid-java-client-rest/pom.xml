@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>mid-java-client-rest</artifactId>
-    <version>1.5.3</version>
     <name>mid-java-client-rest</name>
     <description>MobileID Java Client - REST Implementation</description>
     <packaging>jar</packaging>

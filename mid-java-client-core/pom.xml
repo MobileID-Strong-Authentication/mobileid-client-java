@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>mid-java-client-core</artifactId>
-    <version>1.5.3</version>
     <name>mid-java-client-core</name>
     <description>MobileID Java Client - Core Functionality</description>
     <packaging>jar</packaging>
@@ -26,11 +25,11 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
+            <artifactId>bcprov-jdk18on</artifactId>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
+            <artifactId>bcpkix-jdk18on</artifactId>
         </dependency>
     </dependencies>
 

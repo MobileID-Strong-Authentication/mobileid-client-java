@@ -48,4 +48,8 @@ public class ProfileQueryExtensions {
      */
     public static final String AUTO_ACTIVATION_STATUS = "aastatus";
 
+    /**
+     * Mobile ID SIM card details, for example the Mobile Network Operator
+     */
+    public static final String CARD_DETAILS = "carddetails";
 }
