@@ -1,5 +1,8 @@
 # Version history
 
+# v1.5.3
+Add support for sslContext configuration for mid-java-client-soap via sslContext property in TlsConfiguration instance. 
+
 # v1.5.2
 Update most of the libraries to their latest versions. Fix two vulnerabilities reported by Dependabot for the Jackson Databind libraries. 
 

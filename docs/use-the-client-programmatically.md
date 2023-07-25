@@ -70,6 +70,7 @@ tls.setKeyStoreKeyPassword("secret");
 tls.setKeyStoreCertificateAlias("mid-cert");
 tls.setTrustStoreFile("truststore.jks");
 tls.setTrustStorePassword("secret");
+tls.setSslContext("SSLv3");
 
 HttpConfiguration http = config.getHttp();
 http.setConnectionTimeoutInMs(20 * 1000);

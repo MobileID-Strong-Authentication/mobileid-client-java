@@ -53,7 +53,7 @@ public class TestSupport {
         tls.setTrustStoreBytes(fileToBytes("/empty-store.jks"));
         tls.setTrustStorePassword("secret");
         tls.setHostnameVerification(false);
-
+        tls.setSslContext("SSLv3");
         HttpConfiguration http = config.getHttp();
         http.setConnectionTimeoutInMs(2 * 1000);
         http.setResponseTimeoutInMs(2 * 1000);
