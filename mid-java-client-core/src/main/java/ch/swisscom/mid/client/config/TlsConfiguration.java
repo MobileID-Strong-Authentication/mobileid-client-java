@@ -42,6 +42,7 @@ public class TlsConfiguration {
 
     private boolean hostnameVerification = true;
 
+    private String sslContext;
     // ----------------------------------------------------------------------------------------------------
 
     public String getKeyStoreFile() {
@@ -146,6 +147,14 @@ public class TlsConfiguration {
 
     public void setHostnameVerification(boolean hostnameVerification) {
         this.hostnameVerification = hostnameVerification;
+    }
+
+    public String getSslContext() {
+        return sslContext;
+    }
+
+    public void setSslContext(String sslContext) {
+        this.sslContext = sslContext;
     }
 
     // ----------------------------------------------------------------------------------------------------

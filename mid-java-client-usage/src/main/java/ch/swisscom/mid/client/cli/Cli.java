@@ -125,6 +125,7 @@ public class Cli {
         tls.setKeyStorePassword(properties.getProperty("client.keyStore.password"));
         tls.setKeyStoreKeyPassword(properties.getProperty("client.keyStore.keyPassword"));
         tls.setKeyStoreCertificateAlias(properties.getProperty("client.keyStore.certAlias"));
+        tls.setSslContext(properties.getProperty("client.tls.sslContext"));
         tls.setTrustStoreFile(properties.getProperty("server.trustStore.file"));
         tls.setTrustStorePassword(properties.getProperty("server.trustStore.password"));
         tls.setHostnameVerification(Boolean.parseBoolean(properties.getProperty("server.hostnameVerification")));
