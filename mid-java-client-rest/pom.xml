@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.mobileid.mid-java-client</groupId>
         <artifactId>mid-java-client-parent</artifactId>
-        <version>1.5.3</version>
+        <version>1.5.4</version>
     </parent>
 
     <artifactId>mid-java-client-rest</artifactId>
@@ -63,10 +63,15 @@
             <artifactId>hamcrest-library</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
 </project>
