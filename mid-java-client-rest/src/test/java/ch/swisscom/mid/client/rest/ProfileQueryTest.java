@@ -15,28 +15,22 @@
  */
 package ch.swisscom.mid.client.rest;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.http.MimeType;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.model.ProfileRequest;
 import ch.swisscom.mid.client.model.ProfileResponse;
 import ch.swisscom.mid.client.model.SignatureProfiles;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.http.MimeType;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_ID;
 import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_PASSWORD;
-import static ch.swisscom.mid.client.rest.TestSupport.buildConfig;
-import static ch.swisscom.mid.client.rest.TestSupport.fileToString;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static ch.swisscom.mid.client.rest.TestSupport.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -51,7 +45,7 @@ public class ProfileQueryTest {
         server = new WireMockServer(options().port(8089));
         server.start();
 
-        client = new MIDClientImpl(buildConfig());
+        client = new MIDClientImpl(buildConfig(buildTlsConfig("TLSv1.1")));
     }
 
     @AfterAll
@@ -65,11 +59,11 @@ public class ProfileQueryTest {
     @Test
     public void testProfileQuery_success() {
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", MimeType.JSON.toString())
-                        .withBody(fileToString("/samples/rest-response-profile-query.json"))));
+                post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-profile-query.json"))));
 
         ProfileRequest request = new ProfileRequest();
         request.getMobileUser().setMsisdn("418888888888");
@@ -77,19 +71,19 @@ public class ProfileQueryTest {
 
         ProfileResponse response = client.requestProfile(request);
         assertThat(response.getSignatureProfiles(),
-                   contains(SignatureProfiles.ANY_LOA4, SignatureProfiles.DEFAULT_PROFILE, SignatureProfiles.STK_LOA4));
+                contains(SignatureProfiles.ANY_LOA4, SignatureProfiles.DEFAULT_PROFILE, SignatureProfiles.STK_LOA4));
     }
 
     @Test
     public void testProfileQuery_success_customApIdAndPassword() {
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
-                .withRequestBody(containing("\"" + CUSTOM_AP_ID + "\""))
-                .withRequestBody(containing("\"" + CUSTOM_AP_PASSWORD + "\""))
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", MimeType.JSON.toString())
-                        .withBody(fileToString("/samples/rest-response-profile-query.json"))));
+                post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                        .withRequestBody(containing("\"" + CUSTOM_AP_ID + "\""))
+                        .withRequestBody(containing("\"" + CUSTOM_AP_PASSWORD + "\""))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-profile-query.json"))));
 
         ProfileRequest request = new ProfileRequest();
         request.getMobileUser().setMsisdn("418888888888");
@@ -99,7 +93,6 @@ public class ProfileQueryTest {
 
         ProfileResponse response = client.requestProfile(request);
         assertThat(response.getSignatureProfiles(),
-                   contains(SignatureProfiles.ANY_LOA4, SignatureProfiles.DEFAULT_PROFILE, SignatureProfiles.STK_LOA4));
+                contains(SignatureProfiles.ANY_LOA4, SignatureProfiles.DEFAULT_PROFILE, SignatureProfiles.STK_LOA4));
     }
-
 }

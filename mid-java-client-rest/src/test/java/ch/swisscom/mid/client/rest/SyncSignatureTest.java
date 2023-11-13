@@ -15,6 +15,7 @@
  */
 package ch.swisscom.mid.client.rest;
 
+import ch.swisscom.mid.client.config.TlsConfiguration;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.MimeType;
 
@@ -30,8 +31,8 @@ import ch.swisscom.mid.client.model.*;
 
 import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_ID;
 import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_PASSWORD;
-import static ch.swisscom.mid.client.rest.TestSupport.buildConfig;
-import static ch.swisscom.mid.client.rest.TestSupport.fileToString;
+import static ch.swisscom.mid.client.rest.TestSupport.*;
+import static ch.swisscom.mid.client.rest.TestSupport.fileToBytes;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -52,7 +53,8 @@ public class SyncSignatureTest {
         server = new WireMockServer(options().port(8089));
         server.start();
 
-        client = new MIDClientImpl(buildConfig());
+        // client = new MIDClientImpl(buildConfig(buildTlsConfig("TLSv1.1")));
+        client = new MIDClientImpl(buildConfig(buildTlsConfig(null)));
     }
 
     @AfterAll
@@ -165,5 +167,4 @@ public class SyncSignatureTest {
         request.addAdditionalService(new GeofencingAdditionalService());
         return request;
     }
-
 }
