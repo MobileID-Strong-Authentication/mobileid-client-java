@@ -22,6 +22,8 @@ Arguments:
 
     -receipt                                            - For sign operation. Send a receipt after the signature is acquired successfully
 
+    -geofencing                                         - For sign operation. Request additional geofencing data
+
     -validate                                           - For sign operation. Validate the signature once it is successfully acquired
 
     -msisdn=41790000000                                 - The target MSISDN for the chosen operation
@@ -59,7 +61,7 @@ Use cases:
     - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
-           -sign -sync -receipt \
+           -sign -sync -receipt -geofencing \
            -msisdn=41790000000 \
            -lang=en -dtbs="Do you want to login?" \
            -soap -vv
