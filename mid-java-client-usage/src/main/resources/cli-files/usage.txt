@@ -16,6 +16,9 @@ Arguments:
                                                           can customize what is displayed to the user and what is the signed content.
                                                           Cannot be used together with -profile-query
 
+    -get-mid-sn                                         - Request to receive Mobile ID serial number for specified MSISDN from digital signature
+                                                          Cannot be used together with -profile-query or -sign
+
     -sync                                               - For sign operation. Run the signature in synchronous mode (default is async)
 
     -async                                              - For sign operation. Run the signature in asynchronous (polling) mode (this is the default)
@@ -65,3 +68,4 @@ Use cases:
            -msisdn=41790000000 \
            -lang=en -dtbs="Do you want to login?" \
            -soap -vv
+    - ./bin/mid-client.sh -get-mid-sn -msisdn=41790000000 -rest
