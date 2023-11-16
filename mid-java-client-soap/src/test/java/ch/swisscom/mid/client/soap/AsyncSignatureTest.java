@@ -15,31 +15,20 @@
  */
 package ch.swisscom.mid.client.soap;
 
+import ch.swisscom.mid.client.MIDClient;
+import ch.swisscom.mid.client.config.DefaultConfiguration;
+import ch.swisscom.mid.client.impl.MIDClientImpl;
+import ch.swisscom.mid.client.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import ch.swisscom.mid.client.MIDClient;
-import ch.swisscom.mid.client.config.DefaultConfiguration;
-import ch.swisscom.mid.client.impl.MIDClientImpl;
-import ch.swisscom.mid.client.model.GeofencingAdditionalService;
-import ch.swisscom.mid.client.model.SignatureProfiles;
-import ch.swisscom.mid.client.model.SignatureRequest;
-import ch.swisscom.mid.client.model.SignatureResponse;
-import ch.swisscom.mid.client.model.StatusCode;
-import ch.swisscom.mid.client.model.UserLanguage;
-
 import static ch.swisscom.mid.client.soap.TestData.CONTENT_TYPE_SOAP_XML;
-import static ch.swisscom.mid.client.soap.TestSupport.assertResponseTo;
-import static ch.swisscom.mid.client.soap.TestSupport.buildConfig;
-import static ch.swisscom.mid.client.soap.TestSupport.fileToString;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static ch.swisscom.mid.client.soap.TestSupport.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -55,7 +44,7 @@ public class AsyncSignatureTest {
         server = new WireMockServer(options().port(8089));
         server.start();
 
-        client = new MIDClientImpl(buildConfig());
+        client = new MIDClientImpl(buildConfig(buildTlsConfig("TLSv1.2")));
     }
 
     @AfterAll
@@ -69,35 +58,35 @@ public class AsyncSignatureTest {
     @Test
     public void testSignature_success() throws JsonProcessingException {
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.SOAP_SIGNATURE_PORT_SUB_URL))
-                .inScenario("Async signature")
-                .whenScenarioStateIs(Scenario.STARTED)
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                        .withBody(fileToString("/samples/soap-response-async-signature.xml")))
-                .willSetStateTo("Signature running - poll 0"));
+                post(urlEqualTo(DefaultConfiguration.SOAP_SIGNATURE_PORT_SUB_URL))
+                        .inScenario("Async signature")
+                        .whenScenarioStateIs(Scenario.STARTED)
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
+                                        .withBody(fileToString("/samples/soap-response-async-signature.xml")))
+                        .willSetStateTo("Signature running - poll 0"));
 
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
-                .inScenario("Async signature")
-                .whenScenarioStateIs("Signature running - poll 0")
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                        .withBody(fileToString("/samples/soap-response-status-outstanding.xml")))
-                .willSetStateTo("Signature running - poll 1")
+                post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
+                        .inScenario("Async signature")
+                        .whenScenarioStateIs("Signature running - poll 0")
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
+                                        .withBody(fileToString("/samples/soap-response-status-outstanding.xml")))
+                        .willSetStateTo("Signature running - poll 1")
         );
 
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
-                .inScenario("Async signature")
-                .whenScenarioStateIs("Signature running - poll 1")
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                        .withBody(fileToString("/samples/soap-response-status-signature.xml")))
-                .willSetStateTo("Signature finished")
+                post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
+                        .inScenario("Async signature")
+                        .whenScenarioStateIs("Signature running - poll 1")
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
+                                        .withBody(fileToString("/samples/soap-response-status-signature.xml")))
+                        .willSetStateTo("Signature finished")
         );
 
         SignatureRequest signatureRequest = buildSignatureRequest();
@@ -135,5 +124,4 @@ public class AsyncSignatureTest {
         request.addAdditionalService(new GeofencingAdditionalService());
         return request;
     }
-
 }

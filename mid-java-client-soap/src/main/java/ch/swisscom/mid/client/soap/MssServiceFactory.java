@@ -237,9 +237,10 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
                        "key store type: [{}], " +
                        "key store alias: [{}], " +
                        "trust store source: [{}], " +
-                       "trust store type: [{}]",
+                       "trust store type: [{}], " +
+                       "tls ssl context: [{}]",
                        keyStoreSource, tlsConfig.getKeyStoreType(), tlsConfig.getKeyStoreCertificateAlias(),
-                       trustStoreSource, tlsConfig.getTrustStoreType());
+                       trustStoreSource, tlsConfig.getTrustStoreType(), tlsConfig.getSslContext());
     }
 
 

@@ -29,7 +29,7 @@ import ch.swisscom.mid.client.config.UrlsConfiguration;
 
 public class TestSupport {
 
-    public static ClientConfiguration buildConfig() {
+    public static ClientConfiguration buildConfig(TlsConfiguration customTlsCfg) {
         ClientConfiguration config = new ClientConfiguration();
         config.setProtocolToRest();
         config.setApId("mid://test.swisscom.ch");
@@ -38,14 +38,18 @@ public class TestSupport {
         UrlsConfiguration urls = config.getUrls();
         urls.setAllServiceUrlsTo("http://localhost:8089" + DefaultConfiguration.REST_ENDPOINT_SUB_URL);
 
-        TlsConfiguration tls = config.getTls();
-        tls.setKeyStoreBytes(fileToBytes("/empty-store.jks"));
-        tls.setKeyStorePassword("secret");
-        tls.setKeyStoreKeyPassword("secret");
-        tls.setKeyStoreCertificateAlias("alias");
-        tls.setTrustStoreBytes(fileToBytes("/empty-store.jks"));
-        tls.setTrustStorePassword("secret");
-        tls.setHostnameVerification(false);
+        if (customTlsCfg != null) {
+            config.setTls(customTlsCfg);
+        } else {
+            TlsConfiguration tls = config.getTls();
+            tls.setKeyStoreBytes(fileToBytes("/empty-store.jks"));
+            tls.setKeyStorePassword("secret");
+            tls.setKeyStoreKeyPassword("secret");
+            tls.setKeyStoreCertificateAlias("alias");
+            tls.setTrustStoreBytes(fileToBytes("/empty-store.jks"));
+            tls.setTrustStorePassword("secret");
+            tls.setHostnameVerification(false);
+        }
 
         HttpConfiguration http = config.getHttp();
         http.setConnectionTimeoutInMs(2 * 1000);
@@ -70,5 +74,19 @@ public class TestSupport {
         }
     }
 
+    public static TlsConfiguration buildTlsConfig(String sslContext) {
+        TlsConfiguration tls = new TlsConfiguration();
+        tls.setKeyStoreBytes(fileToBytes("/empty-store.jks"));
+        tls.setKeyStorePassword("secret");
+        tls.setKeyStoreKeyPassword("secret");
+        tls.setKeyStoreCertificateAlias("alias");
+        tls.setTrustStoreBytes(fileToBytes("/empty-store.jks"));
+        tls.setTrustStorePassword("secret");
+        tls.setHostnameVerification(false);
+        if (sslContext != null) {
+            tls.setSslContext(sslContext);
+        }
+        return tls;
+    }
 
 }

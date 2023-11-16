@@ -54,6 +54,7 @@ public class Cli {
     private static final String PARAM_REQUEST_TIMEOUT = "req-timeout";
     private static final String PARAM_REST = "rest";
     private static final String PARAM_SOAP = "soap";
+    private static final String PARAM_GEO = "geofencing";
     private static final String PARAM_VALIDATE_SIGNATURE = "validate";
     private static final String PARAM_HELP = "help";
 
@@ -86,6 +87,7 @@ public class Cli {
     private static boolean validateSignature = false;
     private static String interfaceType;
     private static int verboseLevel;
+    private static boolean addGeofencingSrv = false;
 
     public static void main(String[] args) {
         versionProvider = new ClientVersionProvider();
@@ -167,7 +169,11 @@ public class Cli {
                 request.getDataToBeSigned().setData(dtbs);
                 request.getMobileUser().setMsisdn(msisdn);
                 request.setSignatureProfile(SignatureProfiles.ANY_LOA4);
-                request.addAdditionalService(new GeofencingAdditionalService());
+
+                if (addGeofencingSrv) {
+                    request.addAdditionalService(new GeofencingAdditionalService());
+                }
+
                 request.setTrafficObserver(prettyPrinterTrafficObserver);
                 request.setUserResponseTimeOutInSeconds(requestTimeout);
 
@@ -353,6 +359,10 @@ public class Cli {
                 }
                 case PARAM_VALIDATE_SIGNATURE: {
                     validateSignature = true;
+                    break;
+                }
+                case PARAM_GEO: {
+                    addGeofencingSrv = true;
                     break;
                 }
                 case PARAM_MSISDN: {
