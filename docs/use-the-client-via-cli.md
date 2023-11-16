@@ -31,12 +31,17 @@ Arguments:
     -sign                                               - Request a digital signature to the target MSISDN. Arguments such as -lang, -dtbs
                                                           can customize what is displayed to the user and what is the signed content.
                                                           Cannot be used together with -profile-query
+                                                          
+    -get-mid-sn                                         - Request to receive Mobile ID serial number for specified MSISDN from digital signature
+                                                          Cannot be used together with -profile-query or -sign
 
     -sync                                               - For sign operation. Run the signature in synchronous mode (default is async)
 
     -async                                              - For sign operation. Run the signature in asynchronous (polling) mode (this is the default)
 
     -receipt                                            - For sign operation. Send a receipt after the signature is acquired successfully
+    
+    -geofencing                                         - For sign operation. Request additional geofencing data
 
     -validate                                           - For sign operation. Validate the signature once it is successfully acquired
 
@@ -75,10 +80,12 @@ Use cases:
     - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
-           -sign -sync -receipt \
+           -sign -sync -receipt -geofencing \
            -msisdn=41790000000 \
            -lang=en -dtbs="Do you want to login?" \
            -soap -vv
+    - ./bin/mid-client.sh -get-mid-sn -msisdn=41790000000 -rest
+
 ```
 
 Use the _-init_ parameter to create a set of initial configuration files in the local directory. This files can then be customized/replaced
@@ -105,12 +112,17 @@ Get the same profile information using a particular configuration file and the S
 
 Request a digital signature to a particular phone number (MSISDN), in sync mode:
 ```shell
-./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -sync  
+./bin/mid-client.sh -sign -msisdn=41790000000 -geofencing -lang=en -dtbs "Do you want to login?" -sync  
 ```
 
 Request a digital signature to a particular phone number (MSISDN), in async mode (this is the default mode) and with signature receipt:
 ```shell
 ./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -receipt -req-timeout 120  
+```
+
+Request a Mobile ID Serial number based on particular phone number (MSISDN), in async mode:
+```shell
+./bin/mid-client.sh -get-mid-sn -msisdn=41790000000 -rest
 ```
 
 Note: when working with arguments that have values (such as _-msisdn_) you can pass the value either as the next argument:

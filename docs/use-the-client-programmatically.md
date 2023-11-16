@@ -141,6 +141,38 @@ receiptRequest.addReceiptRequestExtension();
 ReceiptResponse receiptResponse = client.requestSyncReceipt(signatureResponse.getTracking(), receiptRequest);
 System.out.println(receiptResponse.toString());
 ```
+In order to obtain Mobile ID serial number for particular MSISDN one could do as it follows:
+```java
+SignatureRequest request = new SignatureRequest();
+request.setUserLanguage(UserLanguage.ENGLISH);
+request.getDataToBeSigned().setData("Test: Do you want to login?");
+request.getMobileUser().setMsisdn("41790000000");
+request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
+
+SignatureResponse response = client.requestAsyncSignature(request);
+
+// poll for signature status
+while (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
+    response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) {
+    Thread.sleep(5000);
+    System.out.println("Pending: " + response);
+    response = client.pollForSignatureStatus(response.getTracking());
+}
+System.out.println(response.toString());
+
+if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
+    // create validation configuration
+    SignatureValidationConfiguration svConfig = new SignatureValidationConfiguration();
+    svConfig.setTrustStoreFile(properties.getProperty("client.signatureValidation.trustStore.file"));
+    svConfig.setTrustStoreType(properties.getProperty("client.signatureValidation.trustStore.type"));
+    svConfig.setTrustStorePassword(getThisOrNull(properties.getProperty("client.signatureValidation.trustStore.password")));
+    
+    SignatureValidator validator = new SignatureValidatorImpl(svConfig);
+    // invoke getMIDSerialNumber method
+    String midSN = validator.getMIDSerialNumber(response.getBase64Signature(), null);
+    System.out.println("Received Mobile ID serial number=[" + midSN + "]");
+}
+```
 
 ## Custom AP ID and AP password per request
 

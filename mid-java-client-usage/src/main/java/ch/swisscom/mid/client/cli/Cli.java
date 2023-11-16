@@ -1,16 +1,5 @@
 package ch.swisscom.mid.client.cli;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
-import org.apache.commons.codec.binary.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Properties;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.swisscom.mid.client.MIDClient;
@@ -21,6 +10,14 @@ import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.impl.SignatureValidatorImpl;
 import ch.swisscom.mid.client.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
 import static ch.swisscom.mid.client.utils.Utils.getThisOrNull;
@@ -35,6 +32,7 @@ import static ch.swisscom.mid.client.utils.Utils.getThisOrNull;
  * ./mid-client.sh -sign -sync -msisdn=4071111111111 -lang=en "-dtbs=Do you want to login?" -receipt
  * ./mid-client.sh -sign -async -msisdn=4071111111111 -lang=en "-dtbs=Do you want to login?" -receipt
  * ./mid-client.sh -sign -async -msisdn 4071111111111 -lang en -dtbs "Do you want to login?" -receipt
+ * ./mid-client.sh -get-mid-sn -msisdn 4071111111111 -lang en
  */
 public class Cli {
 
@@ -45,6 +43,7 @@ public class Cli {
     private static final String PARAM_INIT = "init";
     private static final String PARAM_PROFILE_QUERY = "profile-query";
     private static final String PARAM_SIGN = "sign";
+    private static final String PARAM_GET_MID_SN = "get-mid-sn";
     private static final String PARAM_SYNC = "sync";
     private static final String PARAM_ASYNC = "async";
     private static final String PARAM_RECEIPT = "receipt";
@@ -65,6 +64,7 @@ public class Cli {
 
     private static final String OPERATION_SIGN = "sign";
     private static final String OPERATION_PROFILE_QUERY = "profile-query";
+    private static final String OPERATION_GET_MID_SN = "get-mid-sn";
 
     private static final String INTERFACE_REST = "rest";
     private static final String INTERFACE_SOAP = "soap";
@@ -163,6 +163,39 @@ public class Cli {
 
                 ProfileResponse response = midClient.requestProfile(profileRequest);
                 finalResult = "Profile response:\n" + jacksonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response);
+            } else if (operation.equals(OPERATION_GET_MID_SN)) {
+                SignatureRequest request = new SignatureRequest();
+                request.setUserLanguage(UserLanguage.getByValue(lang));
+                request.getDataToBeSigned().setData(dtbs);
+                request.getMobileUser().setMsisdn(msisdn);
+                request.setSignatureProfile(SignatureProfiles.ANY_LOA4);
+                request.setTrafficObserver(prettyPrinterTrafficObserver);
+                request.setUserResponseTimeOutInSeconds(requestTimeout);
+
+                SignatureResponse response;
+                if (syncSignature) {
+                    response = midClient.requestSyncSignature(request);
+                } else {
+                    response = midClient.requestAsyncSignature(request);
+                    while (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
+                            response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) {
+                        //noinspection BusyWait
+                        Thread.sleep(5000);
+                        response = midClient.pollForSignatureStatus(response.getTracking());
+                    }
+                }
+                
+                System.out.println(response.toString());
+                if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
+                    SignatureValidationConfiguration svConfig = new SignatureValidationConfiguration();
+                    svConfig.setTrustStoreFile(properties.getProperty("client.signatureValidation.trustStore.file"));
+                    svConfig.setTrustStoreType(properties.getProperty("client.signatureValidation.trustStore.type"));
+                    svConfig.setTrustStorePassword(getThisOrNull(properties.getProperty("client.signatureValidation.trustStore.password")));
+
+                    SignatureValidator validator = new SignatureValidatorImpl(svConfig);
+                    String midSN = validator.getMIDSerialNumber(response.getBase64Signature(), null);
+                    System.out.println("Received Mobile ID serial number=[" + midSN + "]");
+                }
             } else {
                 SignatureRequest request = new SignatureRequest();
                 request.setUserLanguage(UserLanguage.getByValue(lang));
@@ -202,21 +235,13 @@ public class Cli {
                         SignatureValidator validator = new SignatureValidatorImpl(svConfig);
                         SignatureValidationResult result =
                             validator.validateSignature(response.getBase64Signature(), request.getDataToBeSigned().getData(), null);
+
+                        // 4 points validation: signerCertificate, signerCertificatePath, signature, dtbsMatching
                         if (result.isValidationSuccessful()) {
                             signatureIsValid = true;
-                            System.out.println("Signature is valid!");
-                            System.out.println("Mobile ID serial number = " + result.getMobileIdSerialNumber());
-                            System.out.println("Signed DTBS = " + result.getSignedDtbs());
+                            printValidationResult(true, result);
                         } else {
-                            // something failed
-                            System.out.println("Validation failure reason = " + result.getValidationFailureReason());
-                            System.out.println("Signing certificate path validation = " + result.isSignerCertificatePathValid());
-                            System.out.println("Signing certificate validation = " + result.isSignerCertificateValid());
-                            System.out.println("Signature validation = " + result.isSignatureValid());
-                            System.out.println("DTBS matching = " + result.isDtbsMatching());
-                            if (result.getValidationException() != null) {
-                                result.getValidationException().printStackTrace();
-                            }
+                            printValidationResult(false, result);
                         }
                     }
                     if (sendReceipt) {
@@ -249,7 +274,24 @@ public class Cli {
     }
 
     // ----------------------------------------------------------------------------------------------------
+    private static void printValidationResult(boolean isValid, SignatureValidationResult result) {
+        if (isValid) {
+            System.out.println("Signature is valid!");
+            System.out.println("Mobile ID serial number = " + result.getMobileIdSerialNumber());
+            System.out.println("Signed DTBS = " + result.getSignedDtbs());
+        } else {
+            // something failed
+            System.out.println("Validation failure reason = " + result.getValidationFailureReason());
+            System.out.println("Signing certificate path validation = " + result.isSignerCertificatePathValid());
+            System.out.println("Signing certificate validation = " + result.isSignerCertificateValid());
+            System.out.println("Signature validation = " + result.isSignatureValid());
+            System.out.println("DTBS matching = " + result.isDtbsMatching());
 
+            if (result.getValidationException() != null) {
+                result.getValidationException().printStackTrace();
+            }
+        }
+    }
     private static void parseArguments(String[] args) {
         if (args.length == 0) {
             showHelp(null);
@@ -330,7 +372,7 @@ public class Cli {
                 case PARAM_SIGN: {
                     if (operation != null) {
                         showHelp("More than one operation selector was found in the calling arguments. "
-                                 + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY);
+                                 + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY+ " or -" + PARAM_GET_MID_SN);
                         return;
                     }
                     operation = OPERATION_SIGN;
@@ -339,10 +381,19 @@ public class Cli {
                 case PARAM_PROFILE_QUERY: {
                     if (operation != null) {
                         showHelp("More than one operation selector was found in the calling arguments. "
-                                 + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY);
+                                 + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY+ " or -" + PARAM_GET_MID_SN);
                         return;
                     }
                     operation = OPERATION_PROFILE_QUERY;
+                    break;
+                }
+                case PARAM_GET_MID_SN: {
+                    if (operation != null) {
+                        showHelp("More than one operation selector was found in the calling arguments. "
+                                + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY + " or -" + PARAM_GET_MID_SN);
+                        return;
+                    }
+                    operation = OPERATION_GET_MID_SN;
                     break;
                 }
                 case PARAM_SYNC: {
@@ -570,7 +621,7 @@ public class Cli {
             try {
                 closeable.close();
             } catch (IOException ignored) {
-                logClient.warn("Failed to close stream of type " + closeable.getClass().getName());
+                logClient.warn("Failed to close stream of type {}", closeable.getClass().getName());
             }
         }
     }

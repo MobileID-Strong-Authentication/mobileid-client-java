@@ -1,5 +1,11 @@
 package ch.swisscom.mid.client.impl;
 
+import ch.swisscom.mid.client.SignatureValidator;
+import ch.swisscom.mid.client.config.ConfigurationException;
+import ch.swisscom.mid.client.config.SignatureValidationConfiguration;
+import ch.swisscom.mid.client.model.SignatureValidationFailureReason;
+import ch.swisscom.mid.client.model.SignatureValidationResult;
+import ch.swisscom.mid.client.model.Traceable;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.CMSException;
@@ -18,27 +24,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.Security;
-import java.security.cert.CertPathValidator;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.PKIXParameters;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.swisscom.mid.client.SignatureValidator;
-import ch.swisscom.mid.client.config.ConfigurationException;
-import ch.swisscom.mid.client.config.SignatureValidationConfiguration;
-import ch.swisscom.mid.client.model.SignatureValidationFailureReason;
-import ch.swisscom.mid.client.model.SignatureValidationResult;
-import ch.swisscom.mid.client.model.Traceable;
-
-import static ch.swisscom.mid.client.utils.Utils.assertNotEmpty;
-import static ch.swisscom.mid.client.utils.Utils.printTrace;
+import static ch.swisscom.mid.client.utils.Utils.*;
 
 /**
  * Default implementation of {@link SignatureValidator}.
@@ -67,6 +60,7 @@ public class SignatureValidatorImpl implements SignatureValidator {
         assertNotEmpty(requestedDtbs, "The requestedDtbs parameter cannot be NULL" + printTrace(trace));
 
         SignatureValidationResult result = new SignatureValidationResult();
+        // 4 criteria to be met in parallel to mark digital signature as valid
         result.setSignatureValid(false);
         result.setSignerCertificateValid(false);
         result.setSignerCertificatePathValid(false);
@@ -107,7 +101,7 @@ public class SignatureValidatorImpl implements SignatureValidator {
         }
 
         // extract data from the signature
-        result.setMobileIdSerialNumber(getMIDSerialNumber(signerCert));
+        result.setMobileIdSerialNumber(extractMIDSerialNumber(signerCert));
         result.setSignedDtbs(getSignedDtbs(cmsSignedData));
 
         // check that the certificate is valid. It is if the current date and time are within the validity period
@@ -166,16 +160,48 @@ public class SignatureValidatorImpl implements SignatureValidator {
         return result;
     }
 
+    @Override
+    public String getMIDSerialNumber(String base64SignatureContent, Traceable trace) {
+        assertNotEmpty(base64SignatureContent, "The base64SignatureContent parameter cannot be NULL" + printTrace(trace));
+        CMSSignedData cmsSignedData;
+        X509Certificate signerCert = null;
+        List<X509Certificate> signerCertChain;
+        SignerInformation signerInfo;
+        try {
+            final JcaX509CertificateConverter x509CertificateConverter = new JcaX509CertificateConverter();
+            cmsSignedData = new CMSSignedData(Base64.getDecoder().decode(base64SignatureContent));
+
+            // Find the signer certificate and the entire certificate chain from the CMS content
+            final SignerInformationStore signerInfoStore = cmsSignedData.getSignerInfos();
+            signerInfo = signerInfoStore.getSigners().iterator().next();
+            signerCertChain = new LinkedList<>();
+
+            for (final X509CertificateHolder currentCertHolder : cmsSignedData.getCertificates().getMatches(null)) {
+                X509Certificate currentCert = x509CertificateConverter.getCertificate(currentCertHolder);
+                signerCertChain.add(currentCert);
+                if (signerInfo.getSID().match(currentCertHolder)) {
+                    signerCert = currentCert;
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Failed to extract the signing certificate from the Base64 CMS content{}", printTrace(trace), e);
+            return null;
+        }
+        return extractMIDSerialNumber(signerCert);
+
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     private static final Pattern SERIAL_NUMBER_PATTERN = Pattern.compile(".*SERIALNUMBER=(.{16}).*");
 
     /**
-     * Get the user's unique Mobile ID SerialNumber from the signer certificate's SubjectDN
+     * Get the user's unique Mobile ID serial number from the signer certificate's SubjectDN
      *
      * @return the user's unique Mobile ID serial number.
      */
-    private String getMIDSerialNumber(X509Certificate signerCert) {
+    private String extractMIDSerialNumber(X509Certificate signerCert) {
+        assertNotNull(signerCert, "The signerCert param for Mobile ID serial number extraction cannot be NULL");
         Matcher matcher = SERIAL_NUMBER_PATTERN.matcher(signerCert.getSubjectX500Principal().toString().toUpperCase());
         if (matcher.find()) {
             return matcher.group(1);
