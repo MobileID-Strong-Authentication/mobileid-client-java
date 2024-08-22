@@ -133,12 +133,30 @@ public class SignatureRequestModelUtils {
         List<AdditionalService> processedAdditionalServices = new ArrayList<>();
         List<ch.swisscom.mid.client.model.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
         for (ch.swisscom.mid.client.model.AdditionalService currentAS : requestedAdditionalService) {
-            AdditionalService additionalService = new AdditionalService();
+            AdditionalService additionalService = null;
             if (currentAS instanceof UserLangAdditionalService) {
+                AdditionalServiceLanguage additionalServiceLang = new AdditionalServiceLanguage();
                 UserLang userLang = new UserLang();
                 userLang.setValue((((UserLangAdditionalService) currentAS).getUserLanguage().getValue()));
-                additionalService.setDescription(currentAS.getUri());
-                additionalService.setUserLang(userLang);
+                additionalServiceLang.setDescription(currentAS.getUri());
+                additionalServiceLang.setUserLang(userLang);
+            } if (currentAS instanceof GeofencingAdditionalService) {
+                GeofencingAdditionalService gfc = (GeofencingAdditionalService) currentAS;
+                AdditionalServiceGeofencing asg = new AdditionalServiceGeofencing();
+                asg.setDescription(currentAS.getUri());
+                if(gfc.getCountryWhiteList() != null || gfc.getCountryBlackList() != null || gfc.getMaxTimestampMinutes() != 0 ||
+                   gfc.getMinDeviceConfidence() > 0 || gfc.getMinLocationConfidence() > 0 || gfc.getMaxAccuracyMeters() != 0) {
+                    // If any geo-fencing parameter is set, then we need to create a GeoFencingRequest object
+                    asg.setGeoFencingReqeust(GeoFencingRequest.builder()
+                            .countryWhiteList(gfc.getCountryWhiteList())
+                            .countryBlackList(gfc.getCountryBlackList())
+                            .maxTimestampMinutes(gfc.getMaxTimestampMinutes())
+                            .minDeviceConfidence(gfc.getMinDeviceConfidence())
+                            .minLocationConfidence(gfc.getMinLocationConfidence())
+                            .maxAccuracyMeters(gfc.getMaxAccuracyMeters())
+                            .build());
+                }
+                additionalService = asg;
             } else {
                 additionalService.setDescription(currentAS.getUri());
             }
