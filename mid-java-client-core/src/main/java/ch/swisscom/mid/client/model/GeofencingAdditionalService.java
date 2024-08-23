@@ -17,7 +17,9 @@ package ch.swisscom.mid.client.model;
 
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Specific class to use when requesting the Geofencing additional service to Mobile ID. Please also see the
@@ -30,8 +32,8 @@ public class GeofencingAdditionalService extends AdditionalService {
         super(DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING);
     }
 
-    private List<String> countryWhiteList;
-    private List<String> countryBlackList;
+    private List<String> countryWhiteList = new ArrayList<>();
+    private List<String> countryBlackList = new ArrayList<>();
     private float minDeviceConfidence;
     private float minLocationConfidence;
     private int maxTimestampMinutes;
@@ -83,6 +85,17 @@ public class GeofencingAdditionalService extends AdditionalService {
 
     public void setMaxAccuracyMeters(int maxAccuracyMeters) {
         this.maxAccuracyMeters = maxAccuracyMeters;
+    }
+
+
+    public boolean isDefined() {
+        if(countryWhiteList!=null && !countryBlackList.isEmpty()) return true;
+        if(countryBlackList!=null && !countryBlackList.isEmpty()) return true;
+        if(maxAccuracyMeters!=0) return true;
+        if(maxTimestampMinutes!=0) return true;
+        if(minDeviceConfidence>0) return true;
+        if(minLocationConfidence>0) return true;
+        return false;
     }
 }
 

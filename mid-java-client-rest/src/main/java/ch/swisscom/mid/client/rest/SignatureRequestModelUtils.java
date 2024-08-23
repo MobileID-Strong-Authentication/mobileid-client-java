@@ -140,12 +140,12 @@ public class SignatureRequestModelUtils {
                 userLang.setValue((((UserLangAdditionalService) currentAS).getUserLanguage().getValue()));
                 additionalServiceLang.setDescription(currentAS.getUri());
                 additionalServiceLang.setUserLang(userLang);
-            } if (currentAS instanceof GeofencingAdditionalService) {
+                additionalService = additionalServiceLang;
+            } else if (currentAS instanceof GeofencingAdditionalService) {
                 GeofencingAdditionalService gfc = (GeofencingAdditionalService) currentAS;
                 AdditionalServiceGeofencing asg = new AdditionalServiceGeofencing();
                 asg.setDescription(currentAS.getUri());
-                if(gfc.getCountryWhiteList() != null || gfc.getCountryBlackList() != null || gfc.getMaxTimestampMinutes() != 0 ||
-                   gfc.getMinDeviceConfidence() > 0 || gfc.getMinLocationConfidence() > 0 || gfc.getMaxAccuracyMeters() != 0) {
+                if(gfc.isDefined()) {
                     // If any geo-fencing parameter is set, then we need to create a GeoFencingRequest object
                     asg.setGeoFencingReqeust(GeoFencingRequest.builder()
                             .countryWhiteList(gfc.getCountryWhiteList())
@@ -155,9 +155,12 @@ public class SignatureRequestModelUtils {
                             .minLocationConfidence(gfc.getMinLocationConfidence())
                             .maxAccuracyMeters(gfc.getMaxAccuracyMeters())
                             .build());
+                } else {
+                    asg.setGeoFencingReqeust(null);
                 }
                 additionalService = asg;
             } else {
+                additionalService = new AdditionalService();
                 additionalService.setDescription(currentAS.getUri());
             }
             processedAdditionalServices.add(additionalService);
