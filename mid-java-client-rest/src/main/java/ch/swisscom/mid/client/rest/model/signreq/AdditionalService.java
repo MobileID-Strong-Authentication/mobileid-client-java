@@ -6,10 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "Description",
-    "UserLang"
-})
 public class AdditionalService {
 
     @JsonProperty("Description")
@@ -27,21 +23,6 @@ public class AdditionalService {
         this.description = description;
     }
 
-    public AdditionalService withDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    @JsonProperty("UserLang")
-    public UserLang getUserLang() {
-        return userLang;
-    }
-
-    @JsonProperty("UserLang")
-    public void setUserLang(UserLang userLang) {
-        this.userLang = userLang;
-    }
-
     public AdditionalService withUserLang(UserLang userLang) {
         this.userLang = userLang;
         return this;
@@ -55,10 +36,6 @@ public class AdditionalService {
         sb.append('=');
         sb.append(((this.description == null)?"<null>":this.description));
         sb.append(',');
-        sb.append("userLang");
-        sb.append('=');
-        sb.append(((this.userLang == null)?"<null>":this.userLang));
-        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -66,5 +43,4 @@ public class AdditionalService {
         }
         return sb.toString();
     }
-
 }
