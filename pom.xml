@@ -6,7 +6,7 @@
 
     <groupId>ch.mobileid.mid-java-client</groupId>
     <artifactId>mid-java-client-parent</artifactId>
-    <version>1.5.5</version>
+    <version>1.5.6</version>
     <name>Mobile ID Java client</name>
     <description>Mobile ID client reference implementation in Java</description>
     <url>https://github.com/MobileID-Strong-Authentication/mobileid-client-java</url>
@@ -27,6 +27,14 @@
         <developer>
             <id>bmocanu</id>
             <name>Bogdan Mocanu</name>
+        </developer>
+        <developer>
+            <id>thomas4v</id>
+            <name>Tomasz Gruszewski</name>
+        </developer>
+        <developer>
+            <id>pso-rsystems</id>
+            <name>Piotr Sokolowski</name>
         </developer>
     </developers>
 
@@ -105,7 +113,7 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
-                <version>1.75</version>
+                <version>1.78</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
