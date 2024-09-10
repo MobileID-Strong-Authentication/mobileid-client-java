@@ -17,6 +17,10 @@ package ch.swisscom.mid.client.model;
 
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Specific class to use when requesting the Geofencing additional service to Mobile ID. Please also see the
  * {@link GeofencingAdditionalServiceResponse} class for the content that is returned from Mobile ID when this additional service
@@ -28,4 +32,70 @@ public class GeofencingAdditionalService extends AdditionalService {
         super(DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING);
     }
 
+    private List<String> countryWhiteList = new ArrayList<>();
+    private List<String> countryBlackList = new ArrayList<>();
+    private float minDeviceConfidence;
+    private float minLocationConfidence;
+    private int maxTimestampMinutes;
+    private int maxAccuracyMeters;
+
+    public List<String> getCountryWhiteList() {
+        return countryWhiteList;
+    }
+
+    public void setCountryWhiteList(List<String> countryWhiteList) {
+        this.countryWhiteList = countryWhiteList;
+    }
+
+    public List<String> getCountryBlackList() {
+        return countryBlackList;
+    }
+
+    public void setCountryBlackList(List<String> countryBlackList) {
+        this.countryBlackList = countryBlackList;
+    }
+
+    public float getMinDeviceConfidence() {
+        return minDeviceConfidence;
+    }
+
+    public void setMinDeviceConfidence(float minDeviceConfidence) {
+        this.minDeviceConfidence = minDeviceConfidence;
+    }
+
+    public float getMinLocationConfidence() {
+        return minLocationConfidence;
+    }
+
+    public void setMinLocationConfidence(float minLocationConfidence) {
+        this.minLocationConfidence = minLocationConfidence;
+    }
+
+    public int getMaxTimestampMinutes() {
+        return maxTimestampMinutes;
+    }
+
+    public void setMaxTimestampMinutes(int maxTimestampMinutes) {
+        this.maxTimestampMinutes = maxTimestampMinutes;
+    }
+
+    public int getMaxAccuracyMeters() {
+        return maxAccuracyMeters;
+    }
+
+    public void setMaxAccuracyMeters(int maxAccuracyMeters) {
+        this.maxAccuracyMeters = maxAccuracyMeters;
+    }
+
+
+    public boolean isDefined() {
+        if(countryWhiteList!=null && !countryBlackList.isEmpty()) return true;
+        if(countryBlackList!=null && !countryBlackList.isEmpty()) return true;
+        if(maxAccuracyMeters!=0) return true;
+        if(maxTimestampMinutes!=0) return true;
+        if(minDeviceConfidence>0) return true;
+        if(minLocationConfidence>0) return true;
+        return false;
+    }
 }
+

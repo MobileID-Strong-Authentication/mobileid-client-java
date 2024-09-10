@@ -15,6 +15,16 @@
  */
 package ch.swisscom.mid.client.soap;
 
+import ch.swisscom.mid.client.MIDFlowException;
+import ch.swisscom.mid.client.config.ClientConfiguration;
+import ch.swisscom.mid.client.config.ComProtocol;
+import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.impl.ComProtocolHandler;
+import ch.swisscom.mid.client.impl.Loggers;
+import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.soap.adapter.MssFaultProcessor;
+import ch.swisscom.mid.client.soap.adapter.MssRequestBuilder;
+import ch.swisscom.mid.client.soap.adapter.MssResponseProcessor;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.etsi.uri.ts102204.etsi204_kiuru.MSSProfileQueryType;
@@ -26,17 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.ws.soap.SOAPFaultException;
-
-import ch.swisscom.mid.client.MIDFlowException;
-import ch.swisscom.mid.client.config.ClientConfiguration;
-import ch.swisscom.mid.client.config.ComProtocol;
-import ch.swisscom.mid.client.config.TrafficObserver;
-import ch.swisscom.mid.client.impl.ComProtocolHandler;
-import ch.swisscom.mid.client.impl.Loggers;
-import ch.swisscom.mid.client.model.*;
-import ch.swisscom.mid.client.soap.adapter.MssFaultProcessor;
-import ch.swisscom.mid.client.soap.adapter.MssRequestBuilder;
-import ch.swisscom.mid.client.soap.adapter.MssResponseProcessor;
 
 public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
 
@@ -58,18 +57,20 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
     @Override
     public void initialize(ClientConfiguration config) {
         this.config = config;
+
+
         mssSignatureServicePool = new GenericObjectPool<>(new MssServiceFactory<>(config,
-                                                                                  MSSSignaturePortType.class,
-                                                                                  config.getUrls()::getSignatureServiceUrl));
+                MSSSignaturePortType.class,
+                config.getUrls()::getSignatureServiceUrl));
         mssStatusQueryServicePool = new GenericObjectPool<>(new MssServiceFactory<>(config,
-                                                                                    MSSStatusQueryType.class,
-                                                                                    config.getUrls()::getStatusQueryServiceUrl));
+                MSSStatusQueryType.class,
+                config.getUrls()::getStatusQueryServiceUrl));
         mssReceiptServicePool = new GenericObjectPool<>(new MssServiceFactory<>(config,
-                                                                                MSSReceiptType.class,
-                                                                                config.getUrls()::getReceiptServiceUrl));
+                MSSReceiptType.class,
+                config.getUrls()::getReceiptServiceUrl));
         mssProfileQueryServicePool = new GenericObjectPool<>(new MssServiceFactory<>(config,
-                                                                                     MSSProfileQueryType.class,
-                                                                                     config.getUrls()::getProfileQueryServiceUrl));
+                MSSProfileQueryType.class,
+                config.getUrls()::getProfileQueryServiceUrl));
         logConfig.info("Initializing MID SOAP client with config: [{}]", config);
     }
 
@@ -94,10 +95,10 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             logClient.info("Received MSS (sync) signature response: [{}]", mssSignatureResp == null ? "null" : "not-null, looks OK");
         } catch (SOAPFaultException e) {
             throw new MIDFlowException("SOAP Fault received", e,
-                                       MssFaultProcessor.processSoapFaultException(e));
+                    MssFaultProcessor.processSoapFaultException(e));
         } catch (Exception e) {
             throw new MIDFlowException("Error in (sync) Signature operation.", e,
-                                       MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
+                    MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
         } finally {
             if (mssSignatureService != null) {
                 try {
@@ -110,9 +111,9 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
         }
         SignatureResponse signatureResponse = MssResponseProcessor.processMssSignatureResponse(mssSignatureResp);
         signatureResponse.setTracking(MssResponseProcessor.createSignatureTracking(mssSignatureResp,
-                                                                                   request.getTrafficObserver(),
-                                                                                   request.getOverrideApId(),
-                                                                                   request.getOverrideApPassword()));
+                request.getTrafficObserver(),
+                request.getOverrideApId(),
+                request.getOverrideApPassword()));
         return signatureResponse;
     }
 
@@ -130,10 +131,10 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             logClient.info("Received MSS (async) signature response: [{}]", mssSignatureResp == null ? "null" : "not-null, looks OK");
         } catch (SOAPFaultException e) {
             throw new MIDFlowException("SOAP Fault received", e,
-                                       MssFaultProcessor.processSoapFaultException(e));
+                    MssFaultProcessor.processSoapFaultException(e));
         } catch (Exception e) {
             throw new MIDFlowException("Error in (async) Signature operation.", e,
-                                       MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
+                    MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
         } finally {
             if (mssSignatureService != null) {
                 try {
@@ -146,9 +147,9 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
         }
         SignatureResponse signatureResponse = MssResponseProcessor.processMssSignatureResponse(mssSignatureResp);
         signatureResponse.setTracking(MssResponseProcessor.createSignatureTracking(mssSignatureResp,
-                                                                                   request.getTrafficObserver(),
-                                                                                   request.getOverrideApId(),
-                                                                                   request.getOverrideApPassword()));
+                request.getTrafficObserver(),
+                request.getOverrideApId(),
+                request.getOverrideApPassword()));
         return signatureResponse;
     }
 
@@ -166,10 +167,10 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             logClient.info("Received MSS Status Query response: [{}]", mssStatusRespType == null ? "null" : "not-null, looks OK");
         } catch (SOAPFaultException e) {
             throw new MIDFlowException("SOAP Fault received", e,
-                                       MssFaultProcessor.processSoapFaultException(e));
+                    MssFaultProcessor.processSoapFaultException(e));
         } catch (Exception e) {
             throw new MIDFlowException("Error in Status Query operation.", e,
-                                       MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
+                    MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
         } finally {
             if (mssStatusQueryService != null) {
                 try {
@@ -197,10 +198,10 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             logClient.info("Received MSS Receipt response: [{}]", mssReceiptResp == null ? "null" : "not-null, looks OK");
         } catch (SOAPFaultException e) {
             throw new MIDFlowException("SOAP Fault received", e,
-                                       MssFaultProcessor.processSoapFaultException(e));
+                    MssFaultProcessor.processSoapFaultException(e));
         } catch (Exception e) {
             throw new MIDFlowException("Error in MSS Receipt operation.", e,
-                                       MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
+                    MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
         } finally {
             if (mssReceiptService != null) {
                 try {
@@ -230,7 +231,7 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
             throw new MIDFlowException("SOAP Fault received", e, MssFaultProcessor.processSoapFaultException(e));
         } catch (Exception e) {
             throw new MIDFlowException("Error in Profile Query operation.", e,
-                                       MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
+                    MssFaultProcessor.processException(e, FailureReason.MID_SERVICE_FAILURE));
         } finally {
             if (mssProfileQueryService != null) {
                 try {
@@ -252,5 +253,4 @@ public class ComProtocolHandlerSoapImpl implements ComProtocolHandler {
         }
         trafficObserver.notifyOfGeneratedApTransId(apTransId, ComProtocol.REST);
     }
-
 }

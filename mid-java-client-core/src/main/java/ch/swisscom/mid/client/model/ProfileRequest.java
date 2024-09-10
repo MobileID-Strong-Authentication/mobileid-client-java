@@ -69,6 +69,7 @@ public class ProfileRequest {
         localExtensionParams.add(ProfileQueryExtensions.PIN_STATUS);
         localExtensionParams.add(ProfileQueryExtensions.RECOVERY_CODE_STATUS);
         localExtensionParams.add(ProfileQueryExtensions.AUTO_ACTIVATION_STATUS);
+        localExtensionParams.add(ProfileQueryExtensions.CARD_DETAILS);
     }
 
     public String getMajorVersion() {

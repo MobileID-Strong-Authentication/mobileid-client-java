@@ -14,6 +14,7 @@ public class ServiceResponse {
 
     @JsonProperty("Description")
     private String description;
+
     @JsonProperty("Geofencing")
     private Geofencing geofencing;
 

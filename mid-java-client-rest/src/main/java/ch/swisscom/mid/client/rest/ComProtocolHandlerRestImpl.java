@@ -51,6 +51,7 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 
 import ch.swisscom.mid.client.MIDFlowException;
@@ -102,14 +103,25 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
                 .loadKeyMaterial(produceAKeyStore(tlsConfig),
                                  tlsConfig.getKeyStoreKeyPassword() == null ? null : tlsConfig.getKeyStoreKeyPassword().toCharArray(),
                                  produceAPrivateKeyStrategy(tlsConfig));
+
+            if (tlsConfig.getSslContext() != null) {
+                sslContextBuilder.setProtocol(tlsConfig.getSslContext());
+            }
+
             if (trustStoreIsConfigured(tlsConfig)) {
                 sslContextBuilder.loadTrustMaterial(produceATrustStore(tlsConfig), null);
             }
+
+            final SSLContext sslCtx = sslContextBuilder.build();
             if (tlsConfig.isHostnameVerification()) {
-                sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContextBuilder.build());
+                sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslCtx);
             } else {
-                sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContextBuilder.build(),
+                sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslCtx,
                                                                             NoopHostnameVerifier.INSTANCE);
+            }
+
+            if (tlsConfig.getSslContext() == null && sslCtx != null) {
+                logConfig.debug("Evaluated sslContext protocol for Rest HTTP Client = [{}]", sslCtx.getProtocol());
             }
         } catch (Exception e) {
             throw new ConfigurationException("Failed to configure the TLS/SSL connection factory for the MID client", e);
@@ -149,6 +161,8 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
             .setConnectionManager(connectionManager)
             .setDefaultRequestConfig(httpClientRequestConfig)
             .build();
+
+
     }
 
     @Override
@@ -271,9 +285,10 @@ public class ComProtocolHandlerRestImpl implements ComProtocolHandler {
                        "key store type: [{}], " +
                        "key store alias: [{}], " +
                        "trust store source: [{}], " +
-                       "trust store type: [{}]",
+                       "trust store type: [{}], " +
+                       "tls ssl context: [{}]",
                        keyStoreSource, tlsConfig.getKeyStoreType(), tlsConfig.getKeyStoreCertificateAlias(),
-                       trustStoreSource, tlsConfig.getTrustStoreType());
+                       trustStoreSource, tlsConfig.getTrustStoreType(), tlsConfig.getSslContext());
     }
 
     private KeyStore produceAKeyStore(TlsConfiguration tlsConfig) {

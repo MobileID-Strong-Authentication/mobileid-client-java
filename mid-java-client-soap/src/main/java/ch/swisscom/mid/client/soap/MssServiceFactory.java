@@ -187,9 +187,14 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
         logTlsConfiguration(tlsConfig);
 
         try {
-            SSLContext sslContext = SSLContext.getInstance("SSLv3");
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            SSLContext sslContext;
+            if (tlsConfig.getSslContext() == null) {
+                sslContext = SSLContext.getInstance("Default");
+            } else {
+                sslContext = SSLContext.getInstance(tlsConfig.getSslContext());
+            }
 
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(produceAKeyStore(tlsConfig), tlsConfig.getKeyStoreKeyPassword().toCharArray());
             KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
 
@@ -232,9 +237,10 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
                        "key store type: [{}], " +
                        "key store alias: [{}], " +
                        "trust store source: [{}], " +
-                       "trust store type: [{}]",
+                       "trust store type: [{}], " +
+                       "tls ssl context: [{}]",
                        keyStoreSource, tlsConfig.getKeyStoreType(), tlsConfig.getKeyStoreCertificateAlias(),
-                       trustStoreSource, tlsConfig.getTrustStoreType());
+                       trustStoreSource, tlsConfig.getTrustStoreType(), tlsConfig.getSslContext());
     }
 
 

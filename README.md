@@ -1,4 +1,6 @@
-# Mobile ID Java client (v1.5.2)
+# Mobile ID Java client
+
+[![GitHub release](https://img.shields.io/github/v/release/MobileID-Strong-Authentication/mobileid-client-java?display_name=tag&sort=semver&style=for-the-badge)](https://github.com/MobileID-Strong-Authentication/mobileid-client-java/releases/latest)
 
 Swisscom Mobile ID is a cost-efficient, managed authentication service from Swisscom. The customer-facing API is
 based on open standard ETSI 102 2041. The library from this repository is a reference implementation for 
@@ -104,6 +106,7 @@ tls.setKeyStoreKeyPassword("secret");
 tls.setKeyStoreCertificateAlias("mid-cert");
 tls.setTrustStoreFile("truststore.jks");
 tls.setTrustStorePassword("secret");
+tls.setSslContext("SSLv3");
 
 HttpConfiguration http = config.getHttp();
 http.setConnectionTimeoutInMs(20 * 1000);

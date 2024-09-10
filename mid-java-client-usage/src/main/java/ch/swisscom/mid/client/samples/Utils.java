@@ -43,6 +43,7 @@ public class Utils {
         tls.setTrustStoreFile("/home/localuser/truststore.jks");
         tls.setTrustStorePassword("secret");
         tls.setHostnameVerification(true);
+        tls.setSslContext("TLSv1.2");
 
         HttpConfiguration http = config.getHttp();
         http.setConnectionTimeoutInMs(20 * 1000);

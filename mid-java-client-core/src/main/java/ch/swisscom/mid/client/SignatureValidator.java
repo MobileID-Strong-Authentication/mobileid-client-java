@@ -31,4 +31,11 @@ public interface SignatureValidator {
      */
     SignatureValidationResult validateSignature(String base64SignatureContent, String requestedDtbs, Traceable trace);
 
+    /**
+     * Retrieves mobile id serial number from Signature Response base64 SignatureContent element
+     *
+     * @param base64SignatureContent the Base64 encoded digital signature data from signature response
+     * @return mobile id serial number extracted from digital signature data from signature response
+     */
+    String getMIDSerialNumber(String base64SignatureContent, Traceable trace);
 }

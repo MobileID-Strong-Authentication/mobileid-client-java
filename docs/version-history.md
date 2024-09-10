@@ -1,5 +1,18 @@
 # Version history
 
+# v1.5.5
+Add support for sslContext configuration for mid-java-client-rest via sslContext property in TlsConfiguration instance.
+Introduced "geofencing" parameter to be used with SignatureRequest via cli. The change ensures geofencing data is returned 
+only when the geofencing parameter in the cli is explicitly set.
+Introduced get-mid-sn query/param for cli interface to retrieve Mobile ID serial number, exposed getMIDSerialNumber method 
+via SignatureValidator interface for programmatically retrieving mentioned property.
+
+# v1.5.4
+Update the httpclient5 to the latest version 5.2.1
+
+# v1.5.3
+Add support for sslContext configuration for mid-java-client-soap via sslContext property in TlsConfiguration instance. 
+
 # v1.5.2
 Update most of the libraries to their latest versions. Fix two vulnerabilities reported by Dependabot for the Jackson Databind libraries. 
 
