@@ -19,7 +19,6 @@ import ch.swisscom.mid.client.config.DefaultConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Specific class to use when requesting the Geofencing additional service to Mobile ID. Please also see the
@@ -34,10 +33,10 @@ public class GeofencingAdditionalService extends AdditionalService {
 
     private List<String> countryWhiteList = new ArrayList<>();
     private List<String> countryBlackList = new ArrayList<>();
-    private float minDeviceConfidence;
-    private float minLocationConfidence;
-    private int maxTimestampMinutes;
-    private int maxAccuracyMeters;
+    private String minDeviceConfidence;
+    private String minLocationConfidence;
+    private String maxTimestampMinutes;
+    private String maxAccuracyMeters;
 
     public List<String> getCountryWhiteList() {
         return countryWhiteList;
@@ -55,35 +54,35 @@ public class GeofencingAdditionalService extends AdditionalService {
         this.countryBlackList = countryBlackList;
     }
 
-    public float getMinDeviceConfidence() {
+    public String getMinDeviceConfidence() {
         return minDeviceConfidence;
     }
 
-    public void setMinDeviceConfidence(float minDeviceConfidence) {
+    public void setMinDeviceConfidence(String minDeviceConfidence) {
         this.minDeviceConfidence = minDeviceConfidence;
     }
 
-    public float getMinLocationConfidence() {
+    public String getMinLocationConfidence() {
         return minLocationConfidence;
     }
 
-    public void setMinLocationConfidence(float minLocationConfidence) {
+    public void setMinLocationConfidence(String minLocationConfidence) {
         this.minLocationConfidence = minLocationConfidence;
     }
 
-    public int getMaxTimestampMinutes() {
+    public String getMaxTimestampMinutes() {
         return maxTimestampMinutes;
     }
 
-    public void setMaxTimestampMinutes(int maxTimestampMinutes) {
+    public void setMaxTimestampMinutes(String maxTimestampMinutes) {
         this.maxTimestampMinutes = maxTimestampMinutes;
     }
 
-    public int getMaxAccuracyMeters() {
+    public String getMaxAccuracyMeters() {
         return maxAccuracyMeters;
     }
 
-    public void setMaxAccuracyMeters(int maxAccuracyMeters) {
+    public void setMaxAccuracyMeters(String maxAccuracyMeters) {
         this.maxAccuracyMeters = maxAccuracyMeters;
     }
 
@@ -91,10 +90,10 @@ public class GeofencingAdditionalService extends AdditionalService {
     public boolean isDefined() {
         if(countryWhiteList!=null && !countryBlackList.isEmpty()) return true;
         if(countryBlackList!=null && !countryBlackList.isEmpty()) return true;
-        if(maxAccuracyMeters!=0) return true;
-        if(maxTimestampMinutes!=0) return true;
-        if(minDeviceConfidence>0) return true;
-        if(minLocationConfidence>0) return true;
+        if (minDeviceConfidence != null && !minDeviceConfidence.isEmpty() && !minDeviceConfidence.equalsIgnoreCase("0")) return true;
+        if (minLocationConfidence != null && !minLocationConfidence.isEmpty() && !minLocationConfidence.equalsIgnoreCase("0")) return true;
+        if (maxAccuracyMeters != null && !maxAccuracyMeters.isEmpty()) return true;
+        if (maxTimestampMinutes != null && !maxTimestampMinutes.isEmpty()) return true;
         return false;
     }
 }

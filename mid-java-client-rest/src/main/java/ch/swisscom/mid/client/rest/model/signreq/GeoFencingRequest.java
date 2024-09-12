@@ -27,11 +27,11 @@ public class GeoFencingRequest {
     @JsonProperty("countryblacklist")
     private List<String> countryBlackList;
     @JsonProperty("mindeviceconfidence")
-    private float minDeviceConfidence;
+    private String minDeviceConfidence;
     @JsonProperty("minlocationconfidence")
-    private float minLocationConfidence;
+    private String minLocationConfidence;
     @JsonProperty("maxtimestampminutes")
-    private int maxTimestampMinutes;
+    private String maxTimestampMinutes;
     @JsonProperty("maxaccuracymeters")
-    private int maxAccuracyMeters;
+    private String maxAccuracyMeters;
 }

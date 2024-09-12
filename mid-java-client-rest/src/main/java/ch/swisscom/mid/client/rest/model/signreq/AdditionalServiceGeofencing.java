@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "Description",
-    "GeoFeancingRequest"
+    "GeoFencingRequest"
 
 })
 public class AdditionalServiceGeofencing extends AdditionalService {
