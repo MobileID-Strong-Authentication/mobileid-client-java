@@ -88,7 +88,7 @@ public class GeofencingAdditionalService extends AdditionalService {
 
 
     public boolean isDefined() {
-        if(countryWhiteList!=null && !countryBlackList.isEmpty()) return true;
+        if (countryWhiteList != null && !countryWhiteList.isEmpty()) return true;
         if(countryBlackList!=null && !countryBlackList.isEmpty()) return true;
         if (minDeviceConfidence != null && !minDeviceConfidence.isEmpty() && !minDeviceConfidence.equalsIgnoreCase("0")) return true;
         if (minLocationConfidence != null && !minLocationConfidence.isEmpty() && !minLocationConfidence.equalsIgnoreCase("0")) return true;
