@@ -94,11 +94,18 @@ public class MIDClientImpl implements MIDClient {
             try {
                 selectedProtocolHandler.close();
             } catch (Exception e) {
-                logClient.debug("ComProtocolHandler failed to close: {}: {}, cause: {}: {}",
-                                e.getClass().getSimpleName(),
-                                e.getLocalizedMessage(),
-                                e.getCause().getClass(),
-                                e.getCause().getLocalizedMessage());
+                Throwable cause = e.getCause();
+                if (cause != null) {
+                    logClient.debug("ComProtocolHandler failed to close: {}: {}, cause: {}: {}",
+                                    e.getClass().getSimpleName(),
+                                    e.getLocalizedMessage(),
+                                    cause.getClass().getSimpleName(),
+                                    cause.getLocalizedMessage());
+                } else {
+                    logClient.debug("ComProtocolHandler failed to close: {}: {}, cause: <none>",
+                                    e.getClass().getSimpleName(),
+                                    e.getLocalizedMessage());
+                }
             }
         }
     }
