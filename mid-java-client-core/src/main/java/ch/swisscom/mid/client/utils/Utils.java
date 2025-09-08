@@ -20,7 +20,11 @@ package ch.swisscom.mid.client.utils;
 
 import ch.swisscom.mid.client.config.ConfigurationException;
 import ch.swisscom.mid.client.model.DataAssemblyException;
+import ch.swisscom.mid.client.model.TXNApprovalReqType;
 import ch.swisscom.mid.client.model.Traceable;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -49,6 +53,21 @@ public class Utils {
         if (target == null) {
             throw new DataAssemblyException(errorMessage);
         }
+    }
+
+    public static void dataIsTXNApprovalRequestType(String data, String errorMessage) throws DataAssemblyException {
+        final ObjectMapper jacksonMapper = new ObjectMapper();
+        jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        TXNApprovalReqType parsedDtbs = null;
+        try {
+            parsedDtbs = jacksonMapper.readValue(data, TXNApprovalReqType.class);
+        } catch (JsonProcessingException e) {
+            throw new DataAssemblyException(errorMessage);
+        }
+        if (parsedDtbs == null || parsedDtbs.getDtbd().isEmpty()) {
+            throw new DataAssemblyException(errorMessage);
+        }
+
     }
 
     public static <T> void dataNotEmpty(List<T> list, String errorMessage) throws DataAssemblyException {

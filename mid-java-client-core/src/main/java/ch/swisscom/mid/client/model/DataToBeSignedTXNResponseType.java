@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 
-public class DataToBeSignedTXN {
+public class DataToBeSignedTXNResponseType {
     @JsonProperty("format_version")
     private String formatVersion;
 
     @JsonProperty("content_string")
     private List<Map<String, String>> dtbd = new ArrayList<>();
 
-    public DataToBeSignedTXN() {
+    public DataToBeSignedTXNResponseType() {
     }
 
-    public DataToBeSignedTXN(String formatVersion, List<Map<String, String>> dtbd) {
+    public DataToBeSignedTXNResponseType(String formatVersion, List<Map<String, String>> dtbd) {
         this.formatVersion = formatVersion;
         this.dtbd = dtbd;
     }
@@ -40,7 +40,7 @@ public class DataToBeSignedTXN {
 
     @Override
     public String toString() {
-        return "DataToBeSignedTXN{" +
+        return "DataToBeSignedTXNResponseType{" +
                 "formatVersion='" + formatVersion + '\'' +
                 ", content_string=" + dtbd +
                 '}';

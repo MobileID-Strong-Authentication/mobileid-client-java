@@ -3,7 +3,7 @@ package ch.swisscom.mid.client.impl;
 import ch.swisscom.mid.client.SignatureValidator;
 import ch.swisscom.mid.client.config.ConfigurationException;
 import ch.swisscom.mid.client.config.SignatureValidationConfiguration;
-import ch.swisscom.mid.client.model.DataToBeSignedTXN;
+import ch.swisscom.mid.client.model.DataToBeSignedTXNResponseType;
 import ch.swisscom.mid.client.model.SignatureValidationFailureReason;
 import ch.swisscom.mid.client.model.SignatureValidationResult;
 import ch.swisscom.mid.client.model.Traceable;
@@ -184,7 +184,7 @@ public class SignatureValidatorImpl implements SignatureValidator {
                         .replace("\"[", "[")
                         .replace("]\"", "]"));
 
-                DataToBeSignedTXN resDtbs = jacksonMapper.readValue(escResultDtbs, DataToBeSignedTXN.class);
+                DataToBeSignedTXNResponseType resDtbs = jacksonMapper.readValue(escResultDtbs, DataToBeSignedTXNResponseType.class);
                 String finalResDtbs = jacksonMapper.writeValueAsString(resDtbs.getDtbd());
                 result.setDtbsMatching(reqDtbsValueStr.equals(finalResDtbs));
             } catch (JsonProcessingException e) {
