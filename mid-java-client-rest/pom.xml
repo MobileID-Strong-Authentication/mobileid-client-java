@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.mobileid.mid-java-client</groupId>
         <artifactId>mid-java-client-parent</artifactId>
-        <version>1.5.6</version>
+        <version>1.5.7</version>
     </parent>
 
     <artifactId>mid-java-client-rest</artifactId>
@@ -77,7 +77,5 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
-
 </project>

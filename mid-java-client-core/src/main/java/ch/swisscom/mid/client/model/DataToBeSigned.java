@@ -15,6 +15,7 @@
  */
 package ch.swisscom.mid.client.model;
 
+import static ch.swisscom.mid.client.utils.Utils.dataIsTXNApprovalRequestType;
 import static ch.swisscom.mid.client.utils.Utils.dataNotEmpty;
 
 public class DataToBeSigned {
@@ -61,14 +62,17 @@ public class DataToBeSigned {
         dataNotEmpty(data, "The data in the DataToBeSigned cannot be null or empty");
         dataNotEmpty(encoding, "The encoding in the DataToBeSigned cannot be null or empty (set it to \"UTF-8\", for example)");
         dataNotEmpty(mimeType, "The mime type in the DataToBeSigned cannot be null or empty (set it to \"text/plain\", for example)");
+        if (mimeType.equalsIgnoreCase("application/vnd.mobileid.txn-approval")) {
+            dataIsTXNApprovalRequestType(data, "The DataToBeSigned format is not valid for mime type 'application/vnd.mobileid.txn-approval'");
+        }
     }
 
     @Override
     public String toString() {
         return "DataToBeSigned{" +
-               "data='" + data + '\'' +
-               ", encoding='" + encoding + '\'' +
-               ", mimeType='" + mimeType + '\'' +
-               '}';
+                "data='" + data + '\'' +
+                ", encoding='" + encoding + '\'' +
+                ", mimeType='" + mimeType + '\'' +
+                '}';
     }
 }

@@ -15,33 +15,26 @@
  */
 package ch.swisscom.mid.client.rest;
 
-import ch.swisscom.mid.client.config.TlsConfiguration;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.http.MimeType;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.model.*;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.http.MimeType;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_ID;
 import static ch.swisscom.mid.client.rest.TestData.CUSTOM_AP_PASSWORD;
 import static ch.swisscom.mid.client.rest.TestSupport.*;
-import static ch.swisscom.mid.client.rest.TestSupport.fileToBytes;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SyncSignatureTest {
 
@@ -68,11 +61,11 @@ public class SyncSignatureTest {
     @Test
     public void testSignature_success() {
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", MimeType.JSON.toString())
-                        .withBody(fileToString("/samples/rest-response-signature.json"))));
+                post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-signature.json"))));
 
         SignatureRequest signatureRequest = buildSignatureRequest();
         SignatureResponse response = client.requestSyncSignature(signatureRequest);
@@ -87,13 +80,13 @@ public class SyncSignatureTest {
     @Test
     public void testSignature_success_overrideApIdAndApPassword() {
         server.stubFor(
-            post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
-                .withRequestBody(containing("\"" + CUSTOM_AP_ID + "\""))
-                .withRequestBody(containing("\"" + CUSTOM_AP_PASSWORD + "\""))
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", MimeType.JSON.toString())
-                        .withBody(fileToString("/samples/rest-response-signature.json"))));
+                post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                        .withRequestBody(containing("\"" + CUSTOM_AP_ID + "\""))
+                        .withRequestBody(containing("\"" + CUSTOM_AP_PASSWORD + "\""))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-signature.json"))));
 
         SignatureRequest signatureRequest = buildSignatureRequest();
         signatureRequest.setOverrideApId(CUSTOM_AP_ID);
@@ -113,12 +106,12 @@ public class SyncSignatureTest {
     @Test
     public void testSignature_userCancel() {
         server.stubFor(
-            post(urlEqualTo("/rest/service"))
-                .willReturn(
-                    aResponse()
-                        .withStatus(500)
-                        .withHeader("Content-Type", MimeType.JSON.toString())
-                        .withBody(fileToString("/samples/rest-response-fault-user-cancel.json"))));
+                post(urlEqualTo("/rest/service"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(500)
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-fault-user-cancel.json"))));
 
         SignatureRequest signatureRequest = buildSignatureRequest();
         try {
@@ -135,12 +128,12 @@ public class SyncSignatureTest {
     @Test
     public void testSignature_conFailure_responseTimeout() {
         server.stubFor(
-            post(urlEqualTo("/rest/service"))
-                .willReturn(
-                    aResponse()
-                        .withStatus(200)
-                        .withBody("")
-                        .withFixedDelay(5000)));
+                post(urlEqualTo("/rest/service"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("")
+                                        .withFixedDelay(5000)));
 
         SignatureRequest signatureRequest = buildSignatureRequest();
         try {
@@ -154,6 +147,46 @@ public class SyncSignatureTest {
         }
     }
 
+    @Test
+    public void testSignatureWithDtbsAsTXNApproval_success() {
+        server.stubFor(
+                post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-signature.json"))));
+
+        SignatureRequest signatureRequest = buildSignatureReqWithDTBDTXNApproval(
+                "{\"type\":\"Address Change\",\"dtbd\":[{\"key\":\"Client\",\"value\":\"#CLIENT#\"},{\"key\":\"FN\",\"value\":\"Test User\"},{\"key\":\"Country\",\"value\":\"Poland\"},{\"key\":\"Session\",\"value\":\"#SESSION#\"}]}"
+        );
+        SignatureResponse response = client.requestSyncSignature(signatureRequest);
+        assertThat(response.getStatus().getStatusCode(), is(StatusCode.SIGNATURE));
+        assertThat(response.getStatus().getStatusCodeString(), is("500"));
+        assertThat(response.getStatus().getStatusMessage(), is("SIGNATURE"));
+        assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
+        assertThat(response.getBase64Signature(), is(notNullValue()));
+        assertThat(response.getBase64Signature().length(), is(TestData.BASE64_SIGNATURE_LENGTH));
+    }
+
+    @Test
+    public void testSignatureWithDtbsAsTXNApproval_invalidDtbsContent() {
+        server.stubFor(
+                post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
+                        .willReturn(
+                                aResponse()
+                                        .withHeader("Content-Type", MimeType.JSON.toString())
+                                        .withBody(fileToString("/samples/rest-response-signature.json"))));
+
+        SignatureRequest signatureRequest = buildSignatureReqWithDTBDTXNApproval(
+                "{\"type2\":\"Address Change\",\"dtbd\":[{}]"
+        );
+
+        Exception exception = assertThrows(DataAssemblyException.class, () -> {
+            SignatureResponse response = client.requestSyncSignature(signatureRequest);
+        });
+        assertEquals("The DataToBeSigned format is not valid for mime type 'application/vnd.mobileid.txn-approval'", exception.getMessage());
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     private static SignatureRequest buildSignatureRequest() {
@@ -162,6 +195,18 @@ public class SyncSignatureTest {
         request.getDataToBeSigned().setData("Test: Do you want to login?");
         request.getDataToBeSigned().setEncodingToUtf8();
         request.getDataToBeSigned().setMimeTypeToTextPlain();
+        request.getMobileUser().setMsisdn(TrialNumbers.ONE_THAT_GIVES_MISSING_PARAM);
+        request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
+        request.addAdditionalService(new GeofencingAdditionalService());
+        return request;
+    }
+
+    private static SignatureRequest buildSignatureReqWithDTBDTXNApproval(String dtbs) {
+        SignatureRequest request = new SignatureRequest();
+        request.setUserLanguage(UserLanguage.ENGLISH);
+        request.getDataToBeSigned().setData(dtbs);
+        request.getDataToBeSigned().setEncodingToUtf8();
+        request.getDataToBeSigned().setMimeType("application/vnd.mobileid.txn-approval");
         request.getMobileUser().setMsisdn(TrialNumbers.ONE_THAT_GIVES_MISSING_PARAM);
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
         request.addAdditionalService(new GeofencingAdditionalService());

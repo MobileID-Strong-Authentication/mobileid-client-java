@@ -6,7 +6,7 @@
 
     <groupId>ch.mobileid.mid-java-client</groupId>
     <artifactId>mid-java-client-parent</artifactId>
-    <version>1.5.6</version>
+    <version>1.5.7</version>
     <name>Mobile ID Java client</name>
     <description>Mobile ID client reference implementation in Java</description>
     <url>https://github.com/MobileID-Strong-Authentication/mobileid-client-java</url>
@@ -56,7 +56,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.4.12</version>
+                <version>1.5.18</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -119,6 +119,11 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk18on</artifactId>
                 <version>1.75</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>1.78.1</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
