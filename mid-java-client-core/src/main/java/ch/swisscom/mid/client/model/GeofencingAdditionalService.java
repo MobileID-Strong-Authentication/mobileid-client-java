@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swisscom (Schweiz) AG
+ * Copyright 2021-2025 Swisscom (Schweiz) AG
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,10 +88,12 @@ public class GeofencingAdditionalService extends AdditionalService {
 
 
     public boolean isDefined() {
-        if(countryWhiteList!=null && !countryBlackList.isEmpty()) return true;
-        if(countryBlackList!=null && !countryBlackList.isEmpty()) return true;
-        if (minDeviceConfidence != null && !minDeviceConfidence.isEmpty() && !minDeviceConfidence.equalsIgnoreCase("0")) return true;
-        if (minLocationConfidence != null && !minLocationConfidence.isEmpty() && !minLocationConfidence.equalsIgnoreCase("0")) return true;
+        if (countryWhiteList != null && !countryWhiteList.isEmpty()) return true;
+        if (countryBlackList != null && !countryBlackList.isEmpty()) return true;
+        if (minDeviceConfidence != null && !minDeviceConfidence.isEmpty() && !minDeviceConfidence.equalsIgnoreCase("0"))
+            return true;
+        if (minLocationConfidence != null && !minLocationConfidence.isEmpty() && !minLocationConfidence.equalsIgnoreCase("0"))
+            return true;
         if (maxAccuracyMeters != null && !maxAccuracyMeters.isEmpty()) return true;
         if (maxTimestampMinutes != null && !maxTimestampMinutes.isEmpty()) return true;
         return false;

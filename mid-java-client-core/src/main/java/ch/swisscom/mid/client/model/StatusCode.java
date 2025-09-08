@@ -54,6 +54,8 @@ public enum StatusCode implements DocumentedEnum {
                                     + "Please try again later."),
     NO_CERT_FOUND(422, true, "The Mobile ID user exists but is not in an active state. "
                              + "The user must activate the account on the Mobile ID selfcare portal."),
+    GEOFENCING_POLICY_VIOLATION(450, true, "Geo policy for referenced AP ID was violated. "
+            + "Please try again later or contact Swisscom Support, if the problem persists."),
     SIGNATURE(500, false, "The MSS Signature transaction was successful."),
     REVOKED_CERTIFICATE(501, false, "The Mobile ID user’s509 certificate has been revoked. "
                                     + "The user must re-activate the account on the Mobile ID selfcare portal."),

@@ -3,9 +3,13 @@ package ch.swisscom.mid.client.impl;
 import ch.swisscom.mid.client.SignatureValidator;
 import ch.swisscom.mid.client.config.ConfigurationException;
 import ch.swisscom.mid.client.config.SignatureValidationConfiguration;
+import ch.swisscom.mid.client.model.DataToBeSignedTXN;
 import ch.swisscom.mid.client.model.SignatureValidationFailureReason;
 import ch.swisscom.mid.client.model.SignatureValidationResult;
 import ch.swisscom.mid.client.model.Traceable;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.CMSException;
@@ -32,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ch.swisscom.mid.client.utils.Utils.*;
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 
 /**
  * Default implementation of {@link SignatureValidator}.
@@ -43,15 +48,22 @@ public class SignatureValidatorImpl implements SignatureValidator {
     private static final Logger log = LoggerFactory.getLogger(Loggers.SIGNATURE_VALIDATOR);
 
     private final KeyStore validationTrustStore;
+    private ObjectMapper jacksonMapper;
 
     public SignatureValidatorImpl(SignatureValidationConfiguration config) {
         Security.addProvider(new BouncyCastleProvider());
         this.validationTrustStore = loadValidationTruststore(config);
+
+        jacksonMapper = new ObjectMapper();
+        jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public SignatureValidatorImpl(KeyStore validationTrustStore) {
         Security.addProvider(new BouncyCastleProvider());
         this.validationTrustStore = validationTrustStore;
+
+        jacksonMapper = new ObjectMapper();
+        jacksonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Override
@@ -143,14 +155,45 @@ public class SignatureValidatorImpl implements SignatureValidator {
             }
         } catch (OperatorCreationException | CMSException e) {
             log.warn("Failed to validate the signature against the signer info " +
-                     "during the signature CMS content validation{}", printTrace(trace), e);
+                    "during the signature CMS content validation{}", printTrace(trace), e);
             result.setValidationException(e);
             result.setValidationFailureReason(SignatureValidationFailureReason.SIGNATURE_VALIDATION_FAILED);
             return result;
         }
 
         // verify the DTBS from the request vs the one from the response
-        if (requestedDtbs.equals(result.getSignedDtbs())) {
+        if (result.getSignedDtbs() == null) {
+            log.info("Failed to match the DTBS texts, requested=[{}] vs signed=[{}]{}", requestedDtbs, result.getSignedDtbs(), printTrace(trace));
+            result.setValidationFailureReason(SignatureValidationFailureReason.DATA_TO_BE_SIGNED_NOT_MATCHING);
+            return result;
+        }
+        if (requestedDtbs.startsWith("{")) {
+            result.setDtbsMatching(false);
+            try {
+                // parse item
+                String[] dtbsArray = requestedDtbs.split("\"dtbd\":");
+                String reqDtbsValueStr = "";
+                if (dtbsArray.length > 0) {
+                    String reqDtbsValueRaw = dtbsArray[1];
+                    reqDtbsValueStr = reqDtbsValueRaw.substring(0, reqDtbsValueRaw.length() - 1);
+                }
+                // fix response DTBS string
+                String escResultDtbs = unescapeJava(result.getSignedDtbs()
+                        .replace("\"format_version\"", "\\\"format_version\\\"")
+                        .replace("\"content_string\"", "\\\"content_string\\\"")
+                        .replace("\"[", "[")
+                        .replace("]\"", "]"));
+
+                DataToBeSignedTXN resDtbs = jacksonMapper.readValue(escResultDtbs, DataToBeSignedTXN.class);
+                String finalResDtbs = jacksonMapper.writeValueAsString(resDtbs.getDtbd());
+                result.setDtbsMatching(reqDtbsValueStr.equals(finalResDtbs));
+            } catch (JsonProcessingException e) {
+                log.info("Failed to match the DTBS texts, requested=[{}] vs signed=[{}]{}", requestedDtbs, result.getSignedDtbs(), printTrace(trace));
+                result.setValidationFailureReason(SignatureValidationFailureReason.DATA_TO_BE_SIGNED_NOT_MATCHING);
+            }
+            return result;
+
+        } else if (requestedDtbs.equals(result.getSignedDtbs())) {
             result.setDtbsMatching(true);
         } else {
             log.info("Failed to match the DTBS texts, requested=[{}] vs signed=[{}]{}", requestedDtbs, result.getSignedDtbs(), printTrace(trace));
@@ -225,23 +268,23 @@ public class SignatureValidatorImpl implements SignatureValidator {
             if (config.getTrustStoreFile() != null) {
                 try (InputStream is = new FileInputStream(config.getTrustStoreFile())) {
                     trustStore.load(is, config.getTrustStorePassword() == null ?
-                                        null : config.getTrustStorePassword().toCharArray());
+                            null : config.getTrustStorePassword().toCharArray());
                 }
             } else if (config.getTrustStoreClasspathFile() != null) {
                 try (InputStream is = this.getClass().getResourceAsStream(config.getTrustStoreClasspathFile())) {
                     trustStore.load(is, config.getTrustStorePassword() == null ?
-                                        null : config.getTrustStorePassword().toCharArray());
+                            null : config.getTrustStorePassword().toCharArray());
                 }
             } else {
                 try (InputStream is = new ByteArrayInputStream(config.getTrustStoreBytes())) {
                     trustStore.load(is, config.getTrustStorePassword() == null ?
-                                        null : config.getTrustStorePassword().toCharArray());
+                            null : config.getTrustStorePassword().toCharArray());
                 }
             }
             return trustStore;
         } catch (Exception e) {
             throw new ConfigurationException("Failed to initialize the digital signature validation truststore " +
-                                             "(Mobile ID CMS signature validator)", e);
+                    "(Mobile ID CMS signature validator)", e);
         }
     }
 }
