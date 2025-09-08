@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swisscom (Schweiz) AG
+ * Copyright 2021-2025 Swisscom (Schweiz) AG
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,18 @@
  */
 package ch.swisscom.mid.client.rest;
 
-import org.apache.hc.client5.http.HttpHostConnectException;
-
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
-import javax.net.ssl.SSLException;
-
 import ch.swisscom.mid.client.model.FailureReason;
 import ch.swisscom.mid.client.model.Fault;
 import ch.swisscom.mid.client.model.StatusCode;
 import ch.swisscom.mid.client.rest.model.fault.Code;
 import ch.swisscom.mid.client.rest.model.fault.MSSFault;
 import ch.swisscom.mid.client.rest.model.fault.SubCode;
+import org.apache.hc.client5.http.HttpHostConnectException;
+
+import javax.net.ssl.SSLException;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 public class FaultProcessor {
 

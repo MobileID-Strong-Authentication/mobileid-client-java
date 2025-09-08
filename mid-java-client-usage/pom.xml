@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.mobileid.mid-java-client</groupId>
         <artifactId>mid-java-client-parent</artifactId>
-        <version>1.5.6</version>
+        <version>1.5.7</version>
     </parent>
 
     <artifactId>mid-java-client-usage</artifactId>
@@ -125,7 +125,8 @@
                             <goal>assemble</goal>
                         </goals>
                         <configuration>
-                            <assembleDirectory>${project.build.directory}/release/mid-client-${project.version}</assembleDirectory>
+                            <assembleDirectory>${project.build.directory}/release/mid-client-${project.version}
+                            </assembleDirectory>
                             <programs>
                                 <program>
                                     <mainClass>ch.swisscom.mid.client.cli.Cli</mainClass>
