@@ -35,7 +35,7 @@ on:
       - main
       - 'releases/**'
   pull_request:
-      types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
 
 permissions:
   pull-requests: read # allows SonarCloud to decorate PRs with analysis results
@@ -44,18 +44,18 @@ jobs:
   sonarqube:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        # Disabling shallow clones is recommended for improving the relevancy of reporting
-        fetch-depth: 0
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v5.3.1 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: actions/checkout@v4
         with:
-          # Additional arguments for the sonarcloud scanner
-          args:             
-            # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
-            # mandatory
-            -Dsonar.projectKey=MobileID-Strong-Authentication_mobileid-client-java
-            -Dsonar.organization=mobileid-strong-authentication
+          # Disabling shallow clones is recommended for improving the relevancy of reporting
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6.0.0 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          with:
+            # Additional arguments for the sonarcloud scanner
+            args:
+              # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
+              # mandatory
+              -Dsonar.projectKey=MobileID-Strong-Authentication_mobileid-client-java
+              -Dsonar.organization=mobileid-strong-authentication
