@@ -51,11 +51,12 @@ jobs:
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6.0.0 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
         env:
+          # Pass the token securely via environment variable
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          with:
-            # Additional arguments for the sonarcloud scanner
-            args:
-              # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
-              # mandatory
-              -Dsonar.projectKey=MobileID-Strong-Authentication_mobileid-client-java
-              -Dsonar.organization=mobileid-strong-authentication
+        with:
+          # Additional arguments for the sonarcloud scanner
+          args: >
+            -Dsonar.projectKey=MobileID-Strong-Authentication_mobileid-client-java
+            -Dsonar.organization=mobileid-strong-authentication
+          # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
+          # mandatory
