@@ -6,7 +6,7 @@
 
     <groupId>ch.mobileid.mid-java-client</groupId>
     <artifactId>mid-java-client-parent</artifactId>
-    <version>1.5.7</version>
+    <version>1.5.8</version>
     <name>Mobile ID Java client</name>
     <description>Mobile ID client reference implementation in Java</description>
     <url>https://github.com/MobileID-Strong-Authentication/mobileid-client-java</url>
@@ -86,7 +86,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.14.0</version>
+                <version>2.16.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -113,17 +113,17 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
-                <version>1.78</version>
+                <version>1.80</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk18on</artifactId>
-                <version>1.78.1</version>
+                <version>1.80</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcutil-jdk18on</artifactId>
-                <version>1.78.1</version>
+                <version>1.80</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
