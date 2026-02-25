@@ -135,6 +135,7 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     private String convertToPrettyPrintedMessage(SOAPMessage soapMessage) {
         try {
             TransformerFactory tff = TransformerFactory.newInstance();
+            tff.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             Transformer tf = tff.newTransformer();
