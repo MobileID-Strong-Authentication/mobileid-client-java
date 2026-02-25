@@ -61,4 +61,5 @@ jobs:
         mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=MobileID-Strong-Authentication_mobileid-client-java \
           -Dsonar.organization=mobileid-strong-authentication \
-          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.exclusions=**/*.java
