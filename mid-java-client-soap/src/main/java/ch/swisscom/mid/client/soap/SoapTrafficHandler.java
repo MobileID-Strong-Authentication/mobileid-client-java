@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.util.Set;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.OutputKeys;
@@ -134,6 +135,8 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     private String convertToPrettyPrintedMessage(SOAPMessage soapMessage) {
         try {
             TransformerFactory tff = TransformerFactory.newInstance();
+            tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             Transformer tf = tff.newTransformer();
             // Set formatting
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
