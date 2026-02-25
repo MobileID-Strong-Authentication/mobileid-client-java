@@ -69,7 +69,6 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
     private static final String JDK_JAXWS_REQUEST_TIMEOUT = "com.sun.xml.internal.ws.request.timeout";
     private static final String JBOSS_CXF_REQUEST_TIMEOUT = "javax.xml.ws.client.receiveTimeout";
 
-    private static final java.lang.String JAXWS_HOSTNAME_VERIFIER = "com.sun.xml.internal.ws.transport.https.client.hostname.verifier";
     private static final java.lang.String JAXWS_SSL_SOCKET_FACTORY = "com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory";
 
     private static final String MSSP_NAMESPACE = "http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl";
@@ -150,9 +149,8 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
             bindingProvider.getRequestContext().put(JAXWS_SSL_SOCKET_FACTORY, sslSocketFactory);
 
             if (!clientConfiguration.getTls().isHostnameVerification()) {
-                NoopHostnameVerifier noopHostnameVerifier = new NoopHostnameVerifier();
-                bindingProvider.getRequestContext().put(JAXWSProperties.HOSTNAME_VERIFIER, noopHostnameVerifier);
-                bindingProvider.getRequestContext().put(JAXWS_HOSTNAME_VERIFIER, noopHostnameVerifier);
+                log.warn("MSS Soap client: Hostname verification is disabled in configuration. " +
+                         "This setting is ignored for security reasons. Hostname verification will remain active.");
             }
 
             String serviceBaseUrl = serviceUrlSupplier.get();
@@ -297,15 +295,6 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
             return keyStore;
         } catch (Exception e) {
             throw new ConfigurationException("Failed to initialize the TLS truststore", e);
-        }
-    }
-
-    // ----------------------------------------------------------------------------------------------------
-
-    private static class NoopHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostName, SSLSession session) {
-            return true;
         }
     }
 
