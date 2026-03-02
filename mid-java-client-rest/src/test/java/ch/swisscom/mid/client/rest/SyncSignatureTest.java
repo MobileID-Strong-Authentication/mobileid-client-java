@@ -20,6 +20,8 @@ import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.MimeType;
 import org.junit.jupiter.api.AfterAll;
@@ -32,8 +34,7 @@ import static ch.swisscom.mid.client.rest.TestSupport.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SyncSignatureTest {
@@ -75,6 +76,15 @@ public class SyncSignatureTest {
         assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
         assertThat(response.getBase64Signature(), is(notNullValue()));
         assertThat(response.getBase64Signature().length(), is(TestData.BASE64_SIGNATURE_LENGTH));
+        assertThat(response.getAdditionalServiceResponses(), is(notNullValue()));
+        assertThat(response.getAdditionalServiceResponses().size(), is(1));
+        assertThat(response.getAdditionalServiceResponses().get(0), is(notNullValue()));
+        assertThat(response.getAdditionalServiceResponses().get(0), instanceOf(GeofencingAdditionalServiceResponse.class));
+        assertThat(((GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0)).getAccuracy(), is(16));
+        assertThat(((GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0)).getCountry(), is("CH"));
+        assertThat(((GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0)).getDeviceConfidence(), is("1.0"));
+        assertThat(((GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0)).getLocationConfidence(), is("1.0"));
+        assertThat(((GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0)).getTimestamp(), is("2021-01-01T11:00:00.000+01:00"));
     }
 
     @Test

@@ -18,11 +18,11 @@ package ch.swisscom.mid.client.samples;
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
-import ch.swisscom.mid.client.model.GeofencingAdditionalService;
 import ch.swisscom.mid.client.model.SignatureProfiles;
 import ch.swisscom.mid.client.model.SignatureRequest;
 import ch.swisscom.mid.client.model.SignatureResponse;
 import ch.swisscom.mid.client.model.UserLanguage;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
 
 import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
 

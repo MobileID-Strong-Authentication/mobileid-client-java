@@ -15,19 +15,21 @@
  */
 package ch.swisscom.mid.client.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
 import ch.swisscom.mid.client.rest.model.statusreq.MSSStatusReq;
 import ch.swisscom.mid.client.rest.model.statusreq.MSSStatusRequest;
 import ch.swisscom.mid.client.rest.model.statusresp.Geofencing;
 import ch.swisscom.mid.client.rest.model.statusresp.MSSStatusResp;
 import ch.swisscom.mid.client.rest.model.statusresp.MSSStatusResponse;
 import ch.swisscom.mid.client.rest.model.statusresp.ServiceResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ch.swisscom.mid.client.utils.Utils.generateInstantAsString;
 import static ch.swisscom.mid.client.utils.Utils.generateTransId;
@@ -78,9 +80,9 @@ public class StatusQueryModelUtils {
             return result;
         } else {
             throw new MIDFlowException("Invalid MSS status response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureResponse.class.getSimpleName(),
-                                       new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureResponse.class.getSimpleName(),
+                    new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
     }
 
@@ -107,10 +109,10 @@ public class StatusQueryModelUtils {
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
                 if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
-                    && serviceResponse.getGeofencing() != null) {
+                        && serviceResponse.getGeofencing() != null) {
 
-                    Geofencing geofencing = serviceResponse.getGeofencing();
-                    GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
+                    final Geofencing geofencing = serviceResponse.getGeofencing();
+                    final GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
                     if (geofencing.getErrorCode() == null) {
                         geoResponse.setCountry(geofencing.getCountry());
                         geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
@@ -122,6 +124,18 @@ public class StatusQueryModelUtils {
                         geoResponse.setErrorMessage(geofencing.getErrorMessage());
                     }
                     resultList.add(geoResponse);
+                    continue;
+                }
+
+                if (DefaultConfiguration.ADDITIONAL_SERVICE_APP2APP.equals(serviceResponse.getDescription())) {
+                    final ch.swisscom.mid.client.rest.model.statusresp.App2App app2app = serviceResponse.getApp2app();
+                    final App2AppAdditionalServiceResponse a2aResponse = new App2AppAdditionalServiceResponse();
+
+                    if (serviceResponse.getApp2app() != null) {
+                        a2aResponse.setAuthUri(app2app.getAuthUri());
+                    }
+
+                    resultList.add(a2aResponse);
                 }
             }
         }

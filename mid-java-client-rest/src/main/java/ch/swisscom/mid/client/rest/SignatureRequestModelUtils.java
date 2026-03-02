@@ -15,23 +15,26 @@
  */
 package ch.swisscom.mid.client.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.TrafficObserver;
 import ch.swisscom.mid.client.model.*;
-import ch.swisscom.mid.client.rest.model.signreq.AdditionalService;
-import ch.swisscom.mid.client.rest.model.signreq.DataToBeSigned;
-import ch.swisscom.mid.client.rest.model.signreq.MobileUser;
+import ch.swisscom.mid.client.model.Status;
+import ch.swisscom.mid.client.model.StatusCode;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
+import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
 import ch.swisscom.mid.client.rest.model.signreq.*;
-import ch.swisscom.mid.client.rest.model.signresp.Geofencing;
-import ch.swisscom.mid.client.rest.model.signresp.MSSSignature;
-import ch.swisscom.mid.client.rest.model.signresp.MSSSignatureResp;
-import ch.swisscom.mid.client.rest.model.signresp.MSSSignatureResponse;
-import ch.swisscom.mid.client.rest.model.signresp.ServiceResponse;
+import ch.swisscom.mid.client.rest.model.signreq.APInfo;
+import ch.swisscom.mid.client.rest.model.signreq.DataToBeSigned;
+import ch.swisscom.mid.client.rest.model.signreq.MSSPInfo;
+import ch.swisscom.mid.client.rest.model.signreq.MobileUser;
+import ch.swisscom.mid.client.rest.model.signreq.MsspId;
+import ch.swisscom.mid.client.rest.model.signresp.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ch.swisscom.mid.client.utils.Utils.generateInstantAsString;
 import static ch.swisscom.mid.client.utils.Utils.generateTransId;
@@ -49,8 +52,8 @@ public class SignatureRequestModelUtils {
         signatureReq.setMajorVersion(clientRequest.getMajorVersion());
         signatureReq.setMinorVersion(clientRequest.getMinorVersion());
         signatureReq.setMessagingMode(sync ?
-                                      DefaultConfiguration.SIGNATURE_MODE_SYNC :
-                                      DefaultConfiguration.SIGNATURE_MODE_ASYNC);
+                DefaultConfiguration.SIGNATURE_MODE_SYNC :
+                DefaultConfiguration.SIGNATURE_MODE_ASYNC);
         signatureReq.setMobileUser(createMobileUser(clientRequest));
         signatureReq.setSignatureProfile(clientRequest.getSignatureProfile());
         signatureReq.setTimeOut(String.valueOf(clientRequest.getUserResponseTimeOutInSeconds()));
@@ -75,9 +78,9 @@ public class SignatureRequestModelUtils {
             result.setAdditionalServiceResponses(processAdditionalServiceResponses(response));
         } else {
             throw new MIDFlowException("Invalid MSS response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureResponse.class.getSimpleName(),
-                                       new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureResponse.class.getSimpleName(),
+                    new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
         return result;
     }
@@ -97,9 +100,9 @@ public class SignatureRequestModelUtils {
             return result;
         } else {
             throw new MIDFlowException("Invalid MSS response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureTracking.class.getSimpleName(),
-                                       new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureTracking.class.getSimpleName(),
+                    new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
     }
 
@@ -131,8 +134,8 @@ public class SignatureRequestModelUtils {
 
     private static List<AdditionalService> createAdditionalServices(SignatureRequest clientRequest) {
         List<AdditionalService> processedAdditionalServices = new ArrayList<>();
-        List<ch.swisscom.mid.client.model.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
-        for (ch.swisscom.mid.client.model.AdditionalService currentAS : requestedAdditionalService) {
+        List<ch.swisscom.mid.client.model.service.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
+        for (ch.swisscom.mid.client.model.service.AdditionalService currentAS : requestedAdditionalService) {
             AdditionalService additionalService = null;
             if (currentAS instanceof UserLangAdditionalService) {
                 AdditionalServiceLanguage additionalServiceLang = new AdditionalServiceLanguage();
@@ -145,7 +148,7 @@ public class SignatureRequestModelUtils {
                 GeofencingAdditionalService gfc = (GeofencingAdditionalService) currentAS;
                 AdditionalServiceGeofencing asg = new AdditionalServiceGeofencing();
                 asg.setDescription(currentAS.getUri());
-                if(gfc.isDefined()) {
+                if (gfc.isDefined()) {
                     // If any geo-fencing parameter is set, then we need to create a GeoFencingRequest object
                     asg.setGeoFencingReqeust(GeoFencingRequest.builder()
                             .countryWhiteList(gfc.getCountryWhiteList())
@@ -174,7 +177,7 @@ public class SignatureRequestModelUtils {
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
                 if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
-                    && serviceResponse.getGeofencing() != null) {
+                        && serviceResponse.getGeofencing() != null) {
 
                     Geofencing geofencing = serviceResponse.getGeofencing();
                     GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();

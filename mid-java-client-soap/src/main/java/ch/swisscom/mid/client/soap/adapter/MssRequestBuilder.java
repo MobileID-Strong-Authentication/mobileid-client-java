@@ -15,18 +15,19 @@
  */
 package ch.swisscom.mid.client.soap.adapter;
 
-import org.etsi.uri.ts102204.v1_1.*;
-
-import java.math.BigInteger;
-import java.util.List;
-
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.AdditionalService;
+import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
 import ch.swisscom.mid.client.utils.Utils;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptMessagingModeType;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptProfileType;
 import fi.ficom.mss.ts102204.v1_0.ObjectFactory;
+import org.etsi.uri.ts102204.v1_1.*;
+
+import java.math.BigInteger;
+import java.util.List;
 
 public class MssRequestBuilder {
 
@@ -188,8 +189,8 @@ public class MssRequestBuilder {
             return null;
         }
         MSSSignatureReqType.AdditionalServices serviceList = new MSSSignatureReqType.AdditionalServices();
-        List<ch.swisscom.mid.client.model.AdditionalService> requestedAdditionalService = signatureRequest.getAdditionalServices();
-        for (ch.swisscom.mid.client.model.AdditionalService currentAS : requestedAdditionalService) {
+        List<AdditionalService> requestedAdditionalService = signatureRequest.getAdditionalServices();
+        for (AdditionalService currentAS : requestedAdditionalService) {
             AdditionalServiceType additionalService = new AdditionalServiceType();
             if (currentAS instanceof UserLangAdditionalService) {
                 MssURIType serviceDescription = new MssURIType();
@@ -197,8 +198,8 @@ public class MssRequestBuilder {
                 additionalService.setDescription(serviceDescription);
                 fi.ficom.mss.ts102204.v1_0.ObjectFactory factory = new ObjectFactory();
                 additionalService
-                    .getSessionIDOrEventIDOrNoSpamCode()
-                    .add(factory.createUserLang(((UserLangAdditionalService) currentAS).getUserLanguage().getValue()));
+                        .getSessionIDOrEventIDOrNoSpamCode()
+                        .add(factory.createUserLang(((UserLangAdditionalService) currentAS).getUserLanguage().getValue()));
             } else {
                 MssURIType serviceDescription = new MssURIType();
                 serviceDescription.setMssURI(currentAS.getUri());
@@ -235,7 +236,7 @@ public class MssRequestBuilder {
 
         StatusDetailType mssStatusDetail = new StatusDetailType();
         mssStatusDetail.getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates()
-            .add(objectFactory.createReceiptRequestExtension(mssExtension));
+                .add(objectFactory.createReceiptRequestExtension(mssExtension));
         return mssStatusDetail;
     }
 
