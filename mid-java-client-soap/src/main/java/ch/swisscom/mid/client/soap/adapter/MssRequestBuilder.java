@@ -18,11 +18,13 @@ package ch.swisscom.mid.client.soap.adapter;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.AdditionalService;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
 import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
 import ch.swisscom.mid.client.utils.Utils;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptMessagingModeType;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptProfileType;
+import fi.ficom.mss.ts102204.v1_0.App2App;
 import fi.ficom.mss.ts102204.v1_0.ObjectFactory;
 import org.etsi.uri.ts102204.v1_1.*;
 
@@ -200,6 +202,16 @@ public class MssRequestBuilder {
                 additionalService
                         .getSessionIDOrEventIDOrNoSpamCode()
                         .add(factory.createUserLang(((UserLangAdditionalService) currentAS).getUserLanguage().getValue()));
+            } else if (currentAS instanceof App2AppAdditionalService) {
+                MssURIType serviceDescription = new MssURIType();
+                serviceDescription.setMssURI(currentAS.getUri());
+                additionalService.setDescription(serviceDescription);
+                final fi.ficom.mss.ts102204.v1_0.ObjectFactory factory = new ObjectFactory();
+                ch.swisscom.mid.client.model.App2App app2appRequest = ((App2AppAdditionalService) currentAS).getApp2app();
+                final String redirectUri = app2appRequest != null ? app2appRequest.getRedirectUri() : "";
+                final App2App app2App = factory.createApp2App();
+                app2App.setRedirectUri(redirectUri);
+                additionalService.getSessionIDOrEventIDOrNoSpamCode().add(app2App);
             } else {
                 MssURIType serviceDescription = new MssURIType();
                 serviceDescription.setMssURI(currentAS.getUri());

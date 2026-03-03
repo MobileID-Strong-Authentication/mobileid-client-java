@@ -20,7 +20,9 @@ import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.TrafficObserver;
 import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
 import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
+import ch.swisscom.mid.ts102204.as.v1.App2App;
 import ch.swisscom.mid.ts102204.as.v1.GeoFencing;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import fi.ficom.mss.ts102204.v1_0.ServiceResponses;
@@ -220,7 +222,7 @@ public class MssResponseProcessor {
     }
 
     private static List<AdditionalServiceResponse> processAdditionalServiceResponses(StatusType mssStatus) {
-        List<AdditionalServiceResponse> resultList = new ArrayList<>();
+        List<AdditionalServiceResponse> additionalServiceResponses = new ArrayList<>();
         if (mssStatus != null) {
             StatusDetailType mssStatusDetail = mssStatus.getStatusDetail();
             if (mssStatusDetail != null) {
@@ -228,30 +230,38 @@ public class MssResponseProcessor {
                 for (Object mssResponse : mssResponseList) {
                     if (mssResponse instanceof ServiceResponses) {
                         ServiceResponses mssServiceResponses = (ServiceResponses) mssResponse;
-                        if (mssServiceResponses.getServiceResponse() != null &&
-                                mssServiceResponses.getServiceResponse().size() > 0) {
-                            ServiceResponses.ServiceResponse mssServiceResponse = mssServiceResponses.getServiceResponse().get(0);
-                            if (mssServiceResponse.getDescription() != null &&
-                                    mssServiceResponse.getDescription().getMssURI() != null) {
-                                String mssServiceUri = mssServiceResponse.getDescription().getMssURI();
+                        if (mssServiceResponses.getServiceResponse() != null && !mssServiceResponses.getServiceResponse().isEmpty()) {
+                            for (ServiceResponses.ServiceResponse mssServiceResponse : mssServiceResponses.getServiceResponse()) {
+                                if (mssServiceResponse.getDescription() != null &&
+                                        mssServiceResponse.getDescription().getMssURI() != null) {
+                                    String mssServiceUri = mssServiceResponse.getDescription().getMssURI();
 
-                                if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(mssServiceUri)
-                                        && mssServiceResponse.getGeoFencing() != null) {
-
-                                    GeoFencing geofencing = mssServiceResponse.getGeoFencing();
-                                    GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
-                                    if (geofencing.getErrorcode() == null) {
-                                        geoResponse.setCountry(geofencing.getCountry());
-                                        geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
-                                        geoResponse.setTimestamp(gregorianCalendarToString(geofencing.getTimestamp()));
-                                        geoResponse.setDeviceConfidence(geofencing.getDeviceconfidence());
-                                        geoResponse.setLocationConfidence(geofencing.getLocationconfidence());
-                                    } else {
-                                        geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(
-                                                geofencing.getErrorcode() == null ? null : geofencing.getErrorcode().toString()));
-                                        geoResponse.setErrorMessage(geofencing.getErrormessage());
+                                    if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(mssServiceUri)
+                                            && mssServiceResponse.getGeoFencing() != null) {
+                                        final GeoFencing geofencing = mssServiceResponse.getGeoFencing();
+                                        final GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
+                                        if (geofencing.getErrorcode() == null) {
+                                            geoResponse.setCountry(geofencing.getCountry());
+                                            geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
+                                            geoResponse.setTimestamp(gregorianCalendarToString(geofencing.getTimestamp()));
+                                            geoResponse.setDeviceConfidence(geofencing.getDeviceconfidence());
+                                            geoResponse.setLocationConfidence(geofencing.getLocationconfidence());
+                                        } else {
+                                            geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(
+                                                    geofencing.getErrorcode() == null ? null : geofencing.getErrorcode().toString()));
+                                            geoResponse.setErrorMessage(geofencing.getErrormessage());
+                                        }
+                                        additionalServiceResponses.add(geoResponse);
                                     }
-                                    resultList.add(geoResponse);
+
+                                    if (DefaultConfiguration.ADDITIONAL_SERVICE_APP2APP.equals(mssServiceUri)) {
+                                        final App2App app2AppResp = mssServiceResponse.getApp2App();
+                                        final App2AppAdditionalServiceResponse app2AppAdditionalServiceResponse = new App2AppAdditionalServiceResponse();
+                                        if (app2AppResp != null) {
+                                            app2AppAdditionalServiceResponse.setAuthUri(app2AppResp.getAuthuri());
+                                        }
+                                        additionalServiceResponses.add(app2AppAdditionalServiceResponse);
+                                    }
                                 }
                             }
                         }
@@ -259,7 +269,7 @@ public class MssResponseProcessor {
                 }
             }
         }
-        return resultList;
+        return additionalServiceResponses;
     }
 
     private static Status getGenericErrorStatus(String statusMessage) {

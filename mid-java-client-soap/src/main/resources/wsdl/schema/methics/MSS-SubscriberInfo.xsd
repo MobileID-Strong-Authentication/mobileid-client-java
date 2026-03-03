@@ -19,7 +19,7 @@
     <element name="SubscriberInfo">
         <complexType>
             <sequence>
-                <element name="Detail" type="tns:SubscriberInfoDetail" 
+                <element name="Detail" type="tns:SubscriberInfoDetail"
                          minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
         </complexType>
@@ -42,4 +42,9 @@
         </complexType>
     </element>
 
+    <element name="App2App">
+        <complexType>
+            <attribute name="authuri" type="string"/>
+        </complexType>
+    </element>
 </schema>
