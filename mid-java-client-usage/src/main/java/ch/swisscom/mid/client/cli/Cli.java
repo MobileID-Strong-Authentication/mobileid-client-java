@@ -94,7 +94,7 @@ public class Cli {
     private static String interfaceType;
     private static int verboseLevel;
     private static boolean addGeofencingSrv = false;
-    private static String addApp2AppSrvRedirectUri;
+    private static String app2AppSrvRedirectUri;
 
     public static void main(String[] args) {
         versionProvider = new ClientVersionProvider();
@@ -222,8 +222,9 @@ public class Cli {
                     response = midClient.requestSyncSignature(request);
                 } else {
                     // optional app2app Additional service
-                    if (StringUtils.isNotEmpty(addApp2AppSrvRedirectUri)) {
-                        request.addAdditionalService(new App2AppAdditionalService(addApp2AppSrvRedirectUri));
+                    if (StringUtils.isNotEmpty(app2AppSrvRedirectUri)) {
+                        request.addAdditionalService(new App2AppAdditionalService(app2AppSrvRedirectUri));
+                        System.out.println("App2AppAdditionalService was requested with redirectUri=[" + app2AppSrvRedirectUri + "]");
                     }
                     response = midClient.requestAsyncSignature(request);
                     while (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
@@ -431,13 +432,13 @@ public class Cli {
                 case PARAM_APP2APP: {
                     if (argValue == null) {
                         if (argIndex + 1 < args.length) {
-                            addApp2AppSrvRedirectUri = args[argIndex + 1];
+                            app2AppSrvRedirectUri = args[argIndex + 1];
                             argIndex++;
                         } else {
                             showHelp("app2app is missing");
                         }
                     } else {
-                        addApp2AppSrvRedirectUri = argValue;
+                        app2AppSrvRedirectUri = argValue;
                     }
                     break;
                 }
@@ -667,6 +668,7 @@ public class Cli {
         if (operation.equals(OPERATION_SIGN)) {
             System.out.println("Async operation       : " + (!syncSignature));
             System.out.println("Language              : " + lang);
+            System.out.println("App2APP               : " + (StringUtils.isNotEmpty(app2AppSrvRedirectUri) ? app2AppSrvRedirectUri : "Empty"));
             System.out.println("DTBS                  : " + dtbs);
             System.out.println("Send receipt          : " + sendReceipt);
         }

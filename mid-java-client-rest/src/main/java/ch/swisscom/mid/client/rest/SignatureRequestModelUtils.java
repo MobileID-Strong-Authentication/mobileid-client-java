@@ -22,6 +22,7 @@ import ch.swisscom.mid.client.config.TrafficObserver;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.Status;
 import ch.swisscom.mid.client.model.StatusCode;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
 import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
 import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
 import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
@@ -162,9 +163,18 @@ public class SignatureRequestModelUtils {
                     asg.setGeoFencingReqeust(null);
                 }
                 additionalService = asg;
+            } else if (currentAS instanceof App2AppAdditionalService) {
+                final App2AppAdditionalService app2SrvModel = (App2AppAdditionalService) currentAS;
+                final AdditionalServiceApp2App app2appSignReq = new AdditionalServiceApp2App();
+                final App2AppRequest app2appReq = new App2AppRequest();
+                app2appReq.setRedirectUri(app2SrvModel.getApp2app().getRedirectUri());
+                app2appSignReq.setDescription(currentAS.getUri());
+                app2appSignReq.setApp2AppRequest(app2appReq);
+                additionalService = app2appSignReq;
             } else {
                 additionalService = new AdditionalService();
                 additionalService.setDescription(currentAS.getUri());
+
             }
             processedAdditionalServices.add(additionalService);
         }

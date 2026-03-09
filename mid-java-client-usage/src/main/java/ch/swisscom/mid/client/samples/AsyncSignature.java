@@ -39,7 +39,7 @@ public class AsyncSignature {
         request.getMobileUser().setMsisdn("41790000000");
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
         request.addAdditionalService(new GeofencingAdditionalService());
-        request.addAdditionalService(new App2AppAdditionalService());
+        request.addAdditionalService(new App2AppAdditionalService("mobileid://auth?mobile_auth_redirect_uri"));
 
         try {
             SignatureResponse response = client.requestAsyncSignature(request);
