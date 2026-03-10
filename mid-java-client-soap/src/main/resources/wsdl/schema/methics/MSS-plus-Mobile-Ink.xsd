@@ -426,4 +426,11 @@
         </xs:choice>
     </xs:complexType>
 
-</xs:schema> 
+    <xs:element name="App2App">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="RedirectUri" type="xs:anyURI"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

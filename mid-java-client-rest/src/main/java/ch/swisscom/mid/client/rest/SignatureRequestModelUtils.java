@@ -19,20 +19,21 @@ import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.Status;
 import ch.swisscom.mid.client.model.StatusCode;
-import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
-import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
-import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
-import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
+import ch.swisscom.mid.client.model.service.*;
 import ch.swisscom.mid.client.rest.model.signreq.*;
 import ch.swisscom.mid.client.rest.model.signreq.APInfo;
+import ch.swisscom.mid.client.rest.model.signreq.AdditionalService;
 import ch.swisscom.mid.client.rest.model.signreq.DataToBeSigned;
 import ch.swisscom.mid.client.rest.model.signreq.MSSPInfo;
 import ch.swisscom.mid.client.rest.model.signreq.MobileUser;
 import ch.swisscom.mid.client.rest.model.signreq.MsspId;
 import ch.swisscom.mid.client.rest.model.signresp.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ import static ch.swisscom.mid.client.utils.Utils.generateInstantAsString;
 import static ch.swisscom.mid.client.utils.Utils.generateTransId;
 
 public class SignatureRequestModelUtils {
+    private static final Logger log = LoggerFactory.getLogger(Loggers.SIGN_REQ_MODEL_UTILS);
 
     public static MSSSignatureRequest createSignatureRequest(ClientConfiguration config,
                                                              SignatureRequest clientRequest,
@@ -184,8 +186,11 @@ public class SignatureRequestModelUtils {
     private static List<AdditionalServiceResponse> processAdditionalServiceResponses(MSSSignatureResp response) {
         List<AdditionalServiceResponse> resultList = new ArrayList<>();
         List<ServiceResponse> serviceResponseList = response.getServiceResponses();
+        log.debug("processAdditionalServiceResponses has serviceResponseList=[{}]", serviceResponseList);
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
+                log.debug("Processing service response with description=[{}]", serviceResponse.getDescription());
+
                 if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
                         && serviceResponse.getGeofencing() != null) {
 
@@ -202,6 +207,19 @@ public class SignatureRequestModelUtils {
                         geoResponse.setErrorMessage(geofencing.getErrorMessage());
                     }
                     resultList.add(geoResponse);
+                    continue;
+                }
+
+                if (DefaultConfiguration.ADDITIONAL_SERVICE_APP2APP.equals(serviceResponse.getDescription())) {
+
+                    ch.swisscom.mid.client.rest.model.statusresp.App2App app2app = serviceResponse.getApp2app();
+                    final App2AppAdditionalServiceResponse a2aResponse = new App2AppAdditionalServiceResponse();
+
+                    if (serviceResponse.getApp2app() != null) {
+                        a2aResponse.setAuthUri(app2app.getAuthUri());
+                    }
+
+                    resultList.add(a2aResponse);
                 }
             }
         }

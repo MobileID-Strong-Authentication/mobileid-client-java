@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
         "Description",
         "App2App"
-
 })
 public class AdditionalServiceApp2App extends AdditionalService {
 

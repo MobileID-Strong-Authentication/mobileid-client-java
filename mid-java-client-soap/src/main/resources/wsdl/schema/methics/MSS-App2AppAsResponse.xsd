@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        targetNamespace="http://mid.swisscom.ch/TS102204/as/v1.0"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!--        elementFormDefault="qualified">-->
+    <xs:annotation>
+        <xs:documentation>
+            Additional Services defined here:
+            - App2App URI: http://mid.swisscom.ch/as#app2app
+
+            Revision history:
+            - March 2026: Initial schema for Swisscom MID additional services App2app Additional Service
+        </xs:documentation>
+    </xs:annotation>
+    <!--    <xs:element name="App2App">-->
+    <!--        <xs:complexType>-->
+    <!--            <xs:attribute name="AuthUri" type="xs:anyURI"/>-->
+    <!--        </xs:complexType>-->
+    <!--    </xs:element>-->
+
+    <!--    <xs:element name="App2App">-->
+    <!--        <xs:complexType>-->
+    <!--            <xs:sequence>-->
+    <!--                <xs:element name="AuthUri" type="xs:anyURI"/>-->
+    <!--            </xs:sequence>-->
+    <!--        </xs:complexType>-->
+    <!--    </xs:element>-->
+</xs:schema>

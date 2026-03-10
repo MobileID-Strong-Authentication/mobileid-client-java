@@ -2,7 +2,7 @@
 <soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:env="http://www.w3.org/2003/05/soap-envelope">
     <env:Header/>
     <soapenv:Body>
-        <MSS_StatusQueryResponse xmlns="http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl">
+        <MSS_StatusQueryResponse xmlns="http://uri.etsi.org/TS102204/v1.1.2#">
             <MSS_StatusResp xmlns="" MajorVersion="1" MinorVersion="1">
                 <mss:AP_Info xmlns:fi="http://mss.ficom.fi/TS102204/v1.0.0#" xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
                              AP_ID="mid://test.swisscom.ch" AP_PWD="not-needed" AP_TransID="ID-b91ff09e-6fd1-4a8f-bc4c-6ba05327b4dc"
@@ -36,12 +36,12 @@
                                                 deviceconfidence="0.9"
                                                 locationconfidence="1.0"
                                                 xmlns:ns1="http://mid.swisscom.ch/TS102204/as/v1.0"/>
+
                             </fi:ServiceResponse>
                             <fi:ServiceResponse>
                                 <fi:Description>
                                     <mss:mssURI>http://mid.swisscom.ch/as#app2app</mss:mssURI>
                                 </fi:Description>
-                                <ns1:App2App authuri="mobileid://auth?mobile_auth_redirect_uri" xmlns:ns1="http://mid.swisscom.ch/TS102204/as/v1.0"/>
                             </fi:ServiceResponse>
                         </fi:ServiceResponses>
                     </mss:StatusDetail>

@@ -22,7 +22,6 @@ import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
 import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
-import ch.swisscom.mid.ts102204.as.v1.App2App;
 import ch.swisscom.mid.ts102204.as.v1.GeoFencing;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import fi.ficom.mss.ts102204.v1_0.ServiceResponses;
@@ -227,14 +226,17 @@ public class MssResponseProcessor {
             StatusDetailType mssStatusDetail = mssStatus.getStatusDetail();
             if (mssStatusDetail != null) {
                 List<Object> mssResponseList = mssStatusDetail.getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates();
+                logProtocol.debug("processAdditionalServiceResponses(soap) has mssResponseList size=[{}]", mssResponseList.size());
                 for (Object mssResponse : mssResponseList) {
                     if (mssResponse instanceof ServiceResponses) {
                         ServiceResponses mssServiceResponses = (ServiceResponses) mssResponse;
                         if (mssServiceResponses.getServiceResponse() != null && !mssServiceResponses.getServiceResponse().isEmpty()) {
+                            logProtocol.debug("processAdditionalServiceResponses(soap) has mssServiceResponses.getServiceResponse()=[{}]", mssServiceResponses.getServiceResponse().size());
                             for (ServiceResponses.ServiceResponse mssServiceResponse : mssServiceResponses.getServiceResponse()) {
                                 if (mssServiceResponse.getDescription() != null &&
                                         mssServiceResponse.getDescription().getMssURI() != null) {
                                     String mssServiceUri = mssServiceResponse.getDescription().getMssURI();
+                                    logProtocol.debug("mssServiceUri is=[{}]", mssServiceUri);
 
                                     if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(mssServiceUri)
                                             && mssServiceResponse.getGeoFencing() != null) {
@@ -255,10 +257,14 @@ public class MssResponseProcessor {
                                     }
 
                                     if (DefaultConfiguration.ADDITIONAL_SERVICE_APP2APP.equals(mssServiceUri)) {
-                                        final App2App app2AppResp = mssServiceResponse.getApp2App();
+
+                                        fi.ficom.mss.ts102204.v1_0.App2App app2AppResp = mssServiceResponse.getApp2App();
                                         final App2AppAdditionalServiceResponse app2AppAdditionalServiceResponse = new App2AppAdditionalServiceResponse();
+                                        logProtocol.debug("app2AppResp=[{}]", app2AppResp);
+
                                         if (app2AppResp != null) {
-                                            app2AppAdditionalServiceResponse.setAuthUri(app2AppResp.getAuthuri());
+                                            logProtocol.debug("app2AppResp.getAuthUri()=[{}]", app2AppResp.getAuthUri());
+                                            app2AppAdditionalServiceResponse.setAuthUri(app2AppResp.getAuthUri());
                                         }
                                         additionalServiceResponses.add(app2AppAdditionalServiceResponse);
                                     }

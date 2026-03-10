@@ -11,6 +11,7 @@ import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.impl.SignatureValidatorImpl;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
 import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -224,11 +225,13 @@ public class Cli {
                     // optional app2app Additional service
                     if (StringUtils.isNotEmpty(app2AppSrvRedirectUri)) {
                         request.addAdditionalService(new App2AppAdditionalService(app2AppSrvRedirectUri));
-                        System.out.println("App2AppAdditionalService was requested with redirectUri=[" + app2AppSrvRedirectUri + "]");
                     }
                     response = midClient.requestAsyncSignature(request);
-                    while (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
-                            response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) {
+                    System.out.println("isApp2AppFlowResponse response: " + isApp2AppFlowResponse(response));
+
+
+                    while ((response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
+                            response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) && !isApp2AppFlowResponse(response)) {
                         //noinspection BusyWait
                         Thread.sleep(5000);
                         response = midClient.pollForSignatureStatus(response.getTracking());
@@ -256,6 +259,7 @@ public class Cli {
                             printValidationResult(false, result);
                         }
                     }
+
                     if (sendReceipt) {
                         if (!validateSignature || signatureIsValid) {
                             ReceiptRequest receiptRequest = new ReceiptRequest();
@@ -561,6 +565,8 @@ public class Cli {
                 setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "info", loggerContext);
                 setLoggerToLevel(Loggers.REQUEST_RESPONSE, "warn", loggerContext);
                 setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.STATUS_QUERY_MODEL_UTILS, "info", loggerContext);
+                setLoggerToLevel(Loggers.SIGN_REQ_MODEL_UTILS, "info", loggerContext);
                 break;
             }
             case 1: {
@@ -570,7 +576,9 @@ public class Cli {
                 setLoggerToLevel(Loggers.CONFIG, "info", loggerContext);
                 setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "info", loggerContext);
                 setLoggerToLevel(Loggers.REQUEST_RESPONSE, "debug", loggerContext);
-                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "info", loggerContext);
+                setLoggerToLevel(Loggers.STATUS_QUERY_MODEL_UTILS, "warn", loggerContext);
+                setLoggerToLevel(Loggers.SIGN_REQ_MODEL_UTILS, "warn", loggerContext);
                 break;
             }
             case 2: // falls through
@@ -586,6 +594,8 @@ public class Cli {
                 } else {
                     setLoggerToLevel("org.apache.hc", "trace", loggerContext);
                 }
+                setLoggerToLevel(Loggers.STATUS_QUERY_MODEL_UTILS, "debug", loggerContext);
+                setLoggerToLevel(Loggers.SIGN_REQ_MODEL_UTILS, "debug", loggerContext);
                 break;
             }
             default: {
@@ -688,5 +698,17 @@ public class Cli {
         } finally {
             closeStream(is);
         }
+    }
+
+    private static boolean isApp2AppFlowResponse(SignatureResponse response) {
+        if (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK) {
+            if (response.getAdditionalServiceResponses() == null || response.getAdditionalServiceResponses().isEmpty()) {
+                // not App2AppAdditionalServiceResponse
+                System.out.println("response.getAdditionalServiceResponses: " + response.getAdditionalServiceResponses());
+                return false;
+            }
+            return response.getAdditionalServiceResponses().stream().anyMatch(as -> ((AdditionalServiceResponse) as) instanceof App2AppAdditionalServiceResponse);
+        }
+        return false;
     }
 }

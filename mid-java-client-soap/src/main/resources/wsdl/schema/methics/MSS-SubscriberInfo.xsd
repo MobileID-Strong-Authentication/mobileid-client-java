@@ -41,10 +41,4 @@
             <attribute name="errormessage" type="string"/>
         </complexType>
     </element>
-
-    <element name="App2App">
-        <complexType>
-            <attribute name="authuri" type="string"/>
-        </complexType>
-    </element>
 </schema>

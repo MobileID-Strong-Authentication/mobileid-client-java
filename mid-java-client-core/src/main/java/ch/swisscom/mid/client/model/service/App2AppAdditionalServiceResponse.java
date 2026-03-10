@@ -20,16 +20,14 @@ package ch.swisscom.mid.client.model.service;
 
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.model.AdditionalServiceResponse;
-import ch.swisscom.mid.client.model.GeofencingErrorCode;
 
 /**
- * The information returned when the App2app additional service is requested to Mobile ID.
+ * The information returned when the App2App additional service is requested to Mobile ID.
  */
 public class App2AppAdditionalServiceResponse extends AdditionalServiceResponse {
 
     /**
-     * The error code that might be returned if the Geofencing service failed to gather requested data. If this field
-     * is <code>null</code>, things are OK. See {@link GeofencingErrorCode}.
+     * The URI to which the user should be redirected to start the authentication process in the Mobile ID app.
      */
     private String authUri;
 
@@ -49,6 +47,6 @@ public class App2AppAdditionalServiceResponse extends AdditionalServiceResponse 
     public String toString() {
         return "App2AppAdditionalServiceResponse{" +
                 "authUri='" + authUri + '\'' +
-                '}';
+                '}' + super.toString();
     }
 }

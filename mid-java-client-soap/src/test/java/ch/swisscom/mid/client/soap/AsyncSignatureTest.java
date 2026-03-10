@@ -105,7 +105,7 @@ public class AsyncSignatureTest {
         SignatureRequest signatureRequest = buildSignatureRequest();
         SignatureResponse response = client.requestAsyncSignature(signatureRequest);
 
-        assertInitialDefaultStatus(response);
+        assertInitialDefaultStatusOk(response);
 
         assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
         assertThat(response.getTracking(), is(notNullValue()));
@@ -130,56 +130,30 @@ public class AsyncSignatureTest {
                         .willReturn(
                                 aResponse()
                                         .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                                        .withBody(fileToString("/samples/soap-response-async-signature.xml")))
+                                        // .withBody(fileToString("/samples/soap-response-async-signature.xml")))
+                                        .withBody(fileToString("/samples/soap-response-async-signature-app2app-geo.xml")))
                         .willSetStateTo("Signature running - poll 0"));
-
-        server.stubFor(
-                post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
-                        .inScenario("Async signature")
-                        .whenScenarioStateIs("Signature running - poll 0")
-                        .willReturn(
-                                aResponse()
-                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                                        .withBody(fileToString("/samples/soap-response-status-outstanding.xml")))
-                        .willSetStateTo("Signature running - poll 1")
-        );
-
-        server.stubFor(
-                post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
-                        .inScenario("Async signature")
-                        .whenScenarioStateIs("Signature running - poll 1")
-                        .willReturn(
-                                aResponse()
-                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                                        .withBody(fileToString("/samples/soap-response-status-signature-app2app.xml")))
-                        .willSetStateTo("Signature finished")
-        );
 
         final List<AdditionalService> additionalSrv = Arrays.asList(
                 new GeofencingAdditionalService(), new App2AppAdditionalService("myapp://example-soap-app"));
+
         SignatureRequest signatureRequest = buildSignatureRequestWithServices(additionalSrv);
         SignatureResponse response = client.requestAsyncSignature(signatureRequest);
 
-        assertInitialDefaultStatus(response);
+        assertInitialDefaultStatusOk(response);
         assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
         assertThat(response.getTracking(), is(notNullValue()));
         assertThat(response.getTracking().getMobileUserMsisdn(), is(TestData.MSISDN));
         assertThat(response.getTracking().getTransactionId(), is(TestData.CUSTOM_TRANS_ID));
 
-        response = client.pollForSignatureStatus(response.getTracking());
-        assertStatus(response, StatusCode.OUTSTANDING_TRANSACTION, "504");
-
-        response = client.pollForSignatureStatus(response.getTracking());
-        assertStatus(response, StatusCode.SIGNATURE, "500");
-        assertSignature(response, notNullValue(), TestData.BASE64_SIGNATURE_LENGTH);
         assertThat(response.getAdditionalServiceResponses().size(), is(2));
-        assertResponseTo(response, "/samples/soap-response-status-signature-expected-app2app.json");
+        assertResponseTo(response, "/samples/soap-response-status-signature-expected-app2app-geo.json");
 
         final GeofencingAdditionalServiceResponse geofencingResponse = (GeofencingAdditionalServiceResponse) response.getAdditionalServiceResponses().get(0);
-        assertOnGeofencingResponse(geofencingResponse, "CH", 5, "0.9", "1.0", "2026-03-03T11:00:00.000+01:00");
+        assertOnGeofencingResponse(geofencingResponse, "CH", 10, "0.5", "1.0", "2026-03-10T11:00:00.000+01:00");
 
         final App2AppAdditionalServiceResponse app2appResponse = (App2AppAdditionalServiceResponse) response.getAdditionalServiceResponses().get(1);
-        assertOnApp2AppResponse(app2appResponse, "mobileid://auth?mobile_auth_redirect_uri");
+        assertOnApp2AppResponse(app2appResponse, "mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f");
     }
 
     @Test
@@ -191,53 +165,25 @@ public class AsyncSignatureTest {
                         .willReturn(
                                 aResponse()
                                         .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                                        .withBody(fileToString("/samples/soap-response-async-signature.xml")))
+                                        .withBody(fileToString("/samples/soap-response-async-signature-app2app.xml")))
                         .willSetStateTo("Signature running - poll 0"));
-
-        server.stubFor(
-                post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
-                        .inScenario("Async signature")
-                        .whenScenarioStateIs("Signature running - poll 0")
-                        .willReturn(
-                                aResponse()
-                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                                        .withBody(fileToString("/samples/soap-response-status-outstanding.xml")))
-                        .willSetStateTo("Signature running - poll 1")
-        );
-
-        server.stubFor(
-                post(urlEqualTo(DefaultConfiguration.SOAP_STATUS_QUERY_PORT_SUB_URL))
-                        .inScenario("Async signature")
-                        .whenScenarioStateIs("Signature running - poll 1")
-                        .willReturn(
-                                aResponse()
-                                        .withHeader("Content-Type", CONTENT_TYPE_SOAP_XML)
-                                        .withBody(fileToString("/samples/soap-response-status-signature-app2app-only.xml")))
-                        .willSetStateTo("Signature finished")
-        );
 
         final List<AdditionalService> additionalSer = Arrays.asList(new App2AppAdditionalService("myapp://example-soap-app"));
         SignatureRequest signatureRequest = buildSignatureRequestWithServices(additionalSer);
         SignatureResponse response = client.requestAsyncSignature(signatureRequest);
 
-        assertInitialDefaultStatus(response);
+        assertInitialDefaultStatusOk(response);
         assertThat(response.getSignatureProfile(), is(TestData.CUSTOM_SIGNATURE_PROFILE));
         assertThat(response.getTracking(), is(notNullValue()));
         assertThat(response.getTracking().getMobileUserMsisdn(), is(TestData.MSISDN));
         assertThat(response.getTracking().getTransactionId(), is(TestData.CUSTOM_TRANS_ID));
 
-        response = client.pollForSignatureStatus(response.getTracking());
-        assertStatus(response, StatusCode.OUTSTANDING_TRANSACTION, "504");
-
-        response = client.pollForSignatureStatus(response.getTracking());
-        assertStatus(response, StatusCode.SIGNATURE, "500");
-        assertSignature(response, notNullValue(), TestData.BASE64_SIGNATURE_LENGTH);
         assertThat(response.getAdditionalServiceResponses().size(), is(1));
         assertResponseTo(response, "/samples/soap-response-status-signature-expected-app2app-only.json");
 
         final App2AppAdditionalServiceResponse app2appResponse = (App2AppAdditionalServiceResponse)
                 response.getAdditionalServiceResponses().get(0);
-        assertOnApp2AppResponse(app2appResponse, "mobileid://auth?mobile_auth_redirect_uri");
+        assertOnApp2AppResponse(app2appResponse, "mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f");
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -285,7 +231,7 @@ public class AsyncSignatureTest {
         assertThat(a2a.getAuthUri(), is(authUri));
     }
 
-    private static void assertInitialDefaultStatus(SignatureResponse response) {
+    private static void assertInitialDefaultStatusOk(SignatureResponse response) {
         assertThat(response.getStatus().getStatusCode(), is(StatusCode.REQUEST_OK));
         assertThat(response.getStatus().getStatusCodeString(), is("100"));
         assertThat(response.getStatus().getStatusMessage(), is("REQUEST_OK"));

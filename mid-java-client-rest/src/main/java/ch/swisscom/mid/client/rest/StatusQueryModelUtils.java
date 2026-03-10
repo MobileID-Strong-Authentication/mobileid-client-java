@@ -18,6 +18,7 @@ package ch.swisscom.mid.client.rest;
 import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
+import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
 import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
@@ -27,6 +28,8 @@ import ch.swisscom.mid.client.rest.model.statusresp.Geofencing;
 import ch.swisscom.mid.client.rest.model.statusresp.MSSStatusResp;
 import ch.swisscom.mid.client.rest.model.statusresp.MSSStatusResponse;
 import ch.swisscom.mid.client.rest.model.statusresp.ServiceResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ import static ch.swisscom.mid.client.utils.Utils.generateInstantAsString;
 import static ch.swisscom.mid.client.utils.Utils.generateTransId;
 
 public class StatusQueryModelUtils {
+    private static final Logger log = LoggerFactory.getLogger(Loggers.STATUS_QUERY_MODEL_UTILS);
 
     public static MSSStatusRequest createStatusQueryRequest(ClientConfiguration config,
                                                             SignatureTracking signatureTracking) {
@@ -106,8 +110,11 @@ public class StatusQueryModelUtils {
     private static List<AdditionalServiceResponse> processAdditionalServiceResponses(MSSStatusResp response) {
         List<AdditionalServiceResponse> resultList = new ArrayList<>();
         List<ServiceResponse> serviceResponseList = response.getServiceResponses();
+        log.debug("processAdditionalServiceResponses has serviceResponseList=[{}]", serviceResponseList);
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
+                log.debug("Processing service response with description=[{}]", serviceResponse.getDescription());
+
                 if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
                         && serviceResponse.getGeofencing() != null) {
 

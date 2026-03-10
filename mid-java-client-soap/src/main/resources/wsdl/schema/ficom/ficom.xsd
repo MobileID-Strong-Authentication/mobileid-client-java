@@ -4,16 +4,16 @@
            xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
            xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
            xmlns:asc="http://mid.swisscom.ch/TS102204/as/v1.0"
+           xmlns:fi="http://mss.ficom.fi/TS102204/v1.0.0#"
            elementFormDefault="qualified">
 
     <xs:import namespace="http://uri.etsi.org/TS102204/v1.1.2#" schemaLocation="../methics/MSS-plus-Mobile-Ink.xsd"/>
-
-    <!-- <xs:import namespace="urn:oasis:names:tc:SAML:2.0:assertion" schemaLocation="../oasis/saml-schema-assertion-2.0.xsd" /> -->
     <xs:import namespace="urn:oasis:names:tc:SAML:2.0:protocol" schemaLocation="../oasis/saml-schema-protocol-2.0.xsd"/>
+    <xs:import namespace="http://mid.swisscom.ch/TS102204/as/v1.0" schemaLocation="../methics/MSS-SubscriberInfo.xsd"/>
+    <xs:import namespace="http://mid.swisscom.ch/TS102204/as/v1.0" schemaLocation="../methics/MSS-App2AppAsResponse.xsd"/>
+    <!-- <xs:import namespace="urn:oasis:names:tc:SAML:2.0:assertion" schemaLocation="../oasis/saml-schema-assertion-2.0.xsd" /> -->
     <!-- <xs:import namespace="urn:oasis:names:tc:SPML:2.0" schemaLocation="pstc_spmlv2_core.xsd" /> -->
     <!-- <xs:import namespace="http://www.w3.org/2002/03/xkms#" schemaLocation="xkms.xsd" /> -->
-
-    <xs:import namespace="http://mid.swisscom.ch/TS102204/as/v1.0" schemaLocation="../methics/MSS-SubscriberInfo.xsd"/>
 
 
     <xs:element name="NoSpamCode">
@@ -39,13 +39,6 @@
     -->
     <xs:element name="UserLang" type="xs:string"/>
 
-    <xs:element name="App2App">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="RedirectUri" type="xs:string"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
 
     <!-- as per JHS 106 -->
     <xs:element name="PostalAddress">
@@ -72,7 +65,7 @@
                             <xs:element ref="samlp:Response" minOccurs="0"/>
                             <xs:element ref="asc:SubscriberInfo" minOccurs="0"/>
                             <xs:element ref="asc:GeoFencing" minOccurs="0"/>
-                            <xs:element ref="asc:App2App" minOccurs="0"/>
+                            <xs:element ref="fi:App2App" minOccurs="0"/>
                             <!-- <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/> -->
                         </xs:sequence>
                     </xs:complexType>
@@ -86,6 +79,14 @@
             <xs:sequence>
                 <xs:element name="SignatureValue" type="xs:base64Binary"/>
                 <xs:element name="X509Certificate" type="xs:base64Binary"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="App2App">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="AuthUri" type="xs:anyURI"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
