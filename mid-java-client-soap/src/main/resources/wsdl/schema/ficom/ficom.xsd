@@ -4,6 +4,7 @@
            xmlns:mss="http://uri.etsi.org/TS102204/v1.1.2#"
            xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
            xmlns:asc="http://mid.swisscom.ch/TS102204/as/v1.0"
+           xmlns:as="http://mid.swisscom.ch/TS102204/as/v1.0"
            xmlns:fi="http://mss.ficom.fi/TS102204/v1.0.0#"
            elementFormDefault="qualified">
 
@@ -86,9 +87,16 @@
     <xs:element name="App2App">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="AuthUri" type="xs:anyURI"/>
+                <xs:element ref="as:AuthUri" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <!--    <xs:element name="App2App">-->
+    <!--        <xs:complexType>-->
+    <!--            <xs:sequence>-->
+    <!--                <xs:element name="AuthUri" type="xs:anyURI"/>-->
+    <!--            </xs:sequence>-->
+    <!--        </xs:complexType>-->
+    <!--    </xs:element>-->
 
 </xs:schema>

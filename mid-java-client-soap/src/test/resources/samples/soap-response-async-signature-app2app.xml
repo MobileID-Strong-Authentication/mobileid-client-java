@@ -28,7 +28,7 @@
                                     <mss:mssURI>http://mid.swisscom.ch/as#app2app</mss:mssURI>
                                 </fi:Description>
                                 <fi:App2App>
-                                    <fi:AuthUri>mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&amp;session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&amp;user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f</fi:AuthUri>
+                                    <ns1:AuthUri xmlns:ns1="http://mid.swisscom.ch/TS102204/as/v1.0">mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&amp;session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&amp;user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f</ns1:AuthUri>
                                 </fi:App2App>
                             </fi:ServiceResponse>
                         </fi:ServiceResponses>

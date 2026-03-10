@@ -15,11 +15,14 @@
  */
 package ch.swisscom.mid.client.soap;
 
+import ch.swisscom.mid.client.config.ComProtocol;
+import ch.swisscom.mid.client.config.RequestTrace;
+import ch.swisscom.mid.client.config.ResponseTrace;
+import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.impl.Loggers;
+import ch.swisscom.mid.client.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -29,16 +32,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-import ch.swisscom.mid.client.config.ComProtocol;
-import ch.swisscom.mid.client.config.RequestTrace;
-import ch.swisscom.mid.client.config.ResponseTrace;
-import ch.swisscom.mid.client.config.TrafficObserver;
-import ch.swisscom.mid.client.impl.Loggers;
-import ch.swisscom.mid.client.utils.Utils;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 /**
  * SOAPHandler used to log the contents of incoming and outgoing messages.
@@ -48,7 +50,7 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
     private static final Logger logRequestResponse = LoggerFactory.getLogger(Loggers.REQUEST_RESPONSE);
     private static final Logger logFullRequestResponse = LoggerFactory.getLogger(Loggers.FULL_REQUEST_RESPONSE);
-
+    private static final int MAX_LOG_SIZE = Integer.MAX_VALUE;
     private TrafficObserver trafficObserver;
 
     // ----------------------------------------------------------------------------------------------------
@@ -66,6 +68,8 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     public boolean handleMessage(SOAPMessageContext smc) {
         boolean isRequestMessage = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         String soapMessageString = serializeSoapMessageToString(smc);
+
+
         if (isRequestMessage) {
             if (logRequestResponse.isInfoEnabled()) {
                 logRequestResponse.info("Sending SOAP request: [{}]", soapMessageString);
@@ -138,6 +142,7 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
             tff.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
             Transformer tf = tff.newTransformer();
             // Set formatting
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -150,6 +155,49 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
         } catch (Exception e) {
             logClient.error("Failed to pretty print SOAP message for logging purpose", e);
             return null;
+        }
+    }
+
+    private String convertToPrettyPrintedMessageExt(SOAPMessage message) {
+        if (message == null) {
+            return null;
+        }
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            message.writeTo(out);
+            String rawXml = out.toString(StandardCharsets.UTF_8.name());
+            return formatXml(rawXml);
+
+        } catch (Exception e) {
+            return "Failed to serialize SOAP message: " + e.getMessage();
+        }
+    }
+
+    private String formatXml(String xml) {
+        try {
+            TransformerFactory factory = TransformerFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+            Transformer transformer = factory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
+            Source xmlInput = new StreamSource(new StringReader(xml));
+            StringWriter writer = new StringWriter();
+
+            transformer.transform(xmlInput, new StreamResult(writer));
+
+            String formatted = writer.toString();
+
+            if (formatted.length() > MAX_LOG_SIZE) {
+                return formatted.substring(0, MAX_LOG_SIZE) + "\n...[truncated]";
+            }
+
+            return formatted;
+
+        } catch (Exception e) {
+            return xml; // fallback to raw
         }
     }
 

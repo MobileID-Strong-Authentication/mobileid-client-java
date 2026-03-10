@@ -20,7 +20,7 @@
   "additionalServiceResponses": [
     {
       "uri": "http://mid.swisscom.ch/as#app2app",
-      "authUri": "mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f"
+      "authUri": "mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f"" \n"
     }
   ]
 }
