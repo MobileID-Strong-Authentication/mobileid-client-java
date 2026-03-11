@@ -244,7 +244,15 @@ public class MssResponseProcessor {
                                         final GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
                                         if (geofencing.getErrorcode() == null) {
                                             geoResponse.setCountry(geofencing.getCountry());
-                                            geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
+                                            int accuracy = 0;
+                                            if (geofencing.getAccuracy() != null) {
+                                                try {
+                                                    accuracy = Integer.parseInt(geofencing.getAccuracy());
+                                                } catch (NumberFormatException e) {
+                                                    logProtocol.debug("Invalid geofencing accuracy value [{}], defaulting to 0", geofencing.getAccuracy());
+                                                }
+                                            }
+                                            geoResponse.setAccuracy(accuracy);
                                             geoResponse.setTimestamp(gregorianCalendarToString(geofencing.getTimestamp()));
                                             geoResponse.setDeviceConfidence(geofencing.getDeviceconfidence());
                                             geoResponse.setLocationConfidence(geofencing.getLocationconfidence());
