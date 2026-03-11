@@ -15,10 +15,25 @@
  */
 package ch.swisscom.mid.client.soap.adapter;
 
+import ch.swisscom.mid.client.MIDFlowException;
+import ch.swisscom.mid.client.config.DefaultConfiguration;
+import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.impl.Loggers;
+import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
+import ch.swisscom.mid.ts102204.as.v1.GeoFencing;
+import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
+import fi.ficom.mss.ts102204.v1_0.ServiceResponses;
+import fi.methics.ts102204.ext.v1_0.*;
+import fi.methics.ts102204.ext.v1_0.MobileUserType;
 import org.etsi.uri.ts102204.v1_1.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -28,25 +43,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
-
-import ch.swisscom.mid.client.MIDFlowException;
-import ch.swisscom.mid.client.config.DefaultConfiguration;
-import ch.swisscom.mid.client.config.TrafficObserver;
-import ch.swisscom.mid.client.impl.Loggers;
-import ch.swisscom.mid.client.model.*;
-import ch.swisscom.mid.ts102204.as.v1.GeoFencing;
-import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
-import fi.ficom.mss.ts102204.v1_0.ServiceResponses;
-import fi.methics.ts102204.ext.v1_0.CertificateType;
-import fi.methics.ts102204.ext.v1_0.MobileUserType;
-import fi.methics.ts102204.ext.v1_0.PinStatusType;
-import fi.methics.ts102204.ext.v1_0.ProfileQueryExtension;
-import fi.methics.ts102204.ext.v1_0.SscdListType;
-import fi.methics.ts102204.ext.v1_0.SscdType;
 
 public class MssResponseProcessor {
 
@@ -77,15 +73,15 @@ public class MssResponseProcessor {
         ProfileResponse response = new ProfileResponse();
         if (mssResponse.getSignatureProfile() != null) {
             response.setSignatureProfiles(
-                mssResponse.getSignatureProfile().stream().map(MssURIType::getMssURI).collect(Collectors.toList()));
+                    mssResponse.getSignatureProfile().stream().map(MssURIType::getMssURI).collect(Collectors.toList()));
         }
         if (mssResponse.getStatus() != null &&
-            mssResponse.getStatus().getStatusDetail() != null &&
-            mssResponse.getStatus().getStatusDetail().getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates() != null) {
+                mssResponse.getStatus().getStatusDetail() != null &&
+                mssResponse.getStatus().getStatusDetail().getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates() != null) {
             List<Object> profileQueryExtensions = mssResponse
-                .getStatus()
-                .getStatusDetail()
-                .getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates();
+                    .getStatus()
+                    .getStatusDetail()
+                    .getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates();
             if (profileQueryExtensions.size() == 1) {
                 ProfileQueryExtension mssPQExt = (ProfileQueryExtension) profileQueryExtensions.get(0);
                 if (mssPQExt.getMobileUser() != null) {
@@ -94,7 +90,7 @@ public class MssResponseProcessor {
                     if (mssPQMobileUser != null) {
                         mobileUserInfo.setRecoveryCodeCreated(mssPQMobileUser.isRecoveryCodeCreated());
                         mobileUserInfo.setAutoActivation(Boolean.parseBoolean(
-                            mssPQMobileUser.getOtherAttributes().get(new QName("AutoActivation"))));
+                                mssPQMobileUser.getOtherAttributes().get(new QName("AutoActivation"))));
                     }
                     response.setMobileUser(mobileUserInfo);
                 }
@@ -105,15 +101,15 @@ public class MssResponseProcessor {
                     if (mssSscds.getSim() != null) {
                         SscdType mssSim = mssSscds.getSim();
                         response.getSimDevices().add(processDeviceInfo(mssSim::getState,
-                                                                       mssSim::getPinStatus,
-                                                                       mssSim::getMobileUserCertificate));
+                                mssSim::getPinStatus,
+                                mssSim::getMobileUserCertificate));
                     }
                     if (mssSscds.getApp() != null && mssSscds.getApp().size() > 0) {
                         List<SscdType> mssAppList = mssSscds.getApp();
                         for (SscdType mssApp : mssAppList) {
                             response.getAppDevices().add(processDeviceInfo(mssApp::getState,
-                                                                           mssApp::getPinStatus,
-                                                                           mssApp::getMobileUserCertificate));
+                                    mssApp::getPinStatus,
+                                    mssApp::getMobileUserCertificate));
                         }
                     }
                 }
@@ -134,9 +130,9 @@ public class MssResponseProcessor {
             return result;
         } else {
             throw new MIDFlowException("Invalid MSS response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureTracking.class.getSimpleName(),
-                                       MssFaultProcessor.processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureTracking.class.getSimpleName(),
+                    MssFaultProcessor.processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
     }
 
@@ -156,21 +152,21 @@ public class MssResponseProcessor {
                 }
             }
             if (mssStatus.getStatusDetail() != null &&
-                mssStatus.getStatusDetail().getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates() != null) {
+                    mssStatus.getStatusDetail().getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates() != null) {
                 List<Object> mssResponseExtensionList = mssStatus
-                    .getStatusDetail()
-                    .getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates();
+                        .getStatusDetail()
+                        .getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates();
                 if (mssResponseExtensionList.size() == 1) {
                     @SuppressWarnings("unchecked")
                     JAXBElement<ReceiptExtensionType> receiptExtensionTypeElement =
-                        (JAXBElement<ReceiptExtensionType>) mssStatus.getStatusDetail()
-                            .getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates()
-                            .get(0);
+                            (JAXBElement<ReceiptExtensionType>) mssStatus.getStatusDetail()
+                                    .getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates()
+                                    .get(0);
                     receiptResponseExtension = processReceiptRespExtension(receiptExtensionTypeElement.getValue());
                 } else {
                     logProtocol.warn("Expected one MSS receipt extension in the MSS Receipt response. " +
-                                     "Instead found [{}] extensions. " +
-                                     "Skipping the receipt extension processing altogether", mssResponseExtensionList.size());
+                            "Instead found [{}] extensions. " +
+                            "Skipping the receipt extension processing altogether", mssResponseExtensionList.size());
                 }
             }
         }
@@ -197,9 +193,9 @@ public class MssResponseProcessor {
             return result;
         } else {
             throw new MIDFlowException("Invalid MSS status response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureResponse.class.getSimpleName(),
-                                       MssFaultProcessor.processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureResponse.class.getSimpleName(),
+                    MssFaultProcessor.processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
     }
 
@@ -225,38 +221,53 @@ public class MssResponseProcessor {
     }
 
     private static List<AdditionalServiceResponse> processAdditionalServiceResponses(StatusType mssStatus) {
-        List<AdditionalServiceResponse> resultList = new ArrayList<>();
+        List<AdditionalServiceResponse> additionalServiceResponses = new ArrayList<>();
         if (mssStatus != null) {
             StatusDetailType mssStatusDetail = mssStatus.getStatusDetail();
             if (mssStatusDetail != null) {
                 List<Object> mssResponseList = mssStatusDetail.getRegistrationOutputOrEncryptedRegistrationOutputOrEncryptionCertificates();
+                logProtocol.debug("processAdditionalServiceResponses(soap) has mssResponseList size=[{}]", mssResponseList.size());
                 for (Object mssResponse : mssResponseList) {
                     if (mssResponse instanceof ServiceResponses) {
                         ServiceResponses mssServiceResponses = (ServiceResponses) mssResponse;
-                        if (mssServiceResponses.getServiceResponse() != null &&
-                            mssServiceResponses.getServiceResponse().size() > 0) {
-                            ServiceResponses.ServiceResponse mssServiceResponse = mssServiceResponses.getServiceResponse().get(0);
-                            if (mssServiceResponse.getDescription() != null &&
-                                mssServiceResponse.getDescription().getMssURI() != null) {
-                                String mssServiceUri = mssServiceResponse.getDescription().getMssURI();
+                        if (mssServiceResponses.getServiceResponse() != null && !mssServiceResponses.getServiceResponse().isEmpty()) {
+                            logProtocol.debug("processAdditionalServiceResponses(soap) has mssServiceResponses.getServiceResponse()=[{}]", mssServiceResponses.getServiceResponse().size());
+                            for (ServiceResponses.ServiceResponse mssServiceResponse : mssServiceResponses.getServiceResponse()) {
+                                if (mssServiceResponse.getDescription() != null &&
+                                        mssServiceResponse.getDescription().getMssURI() != null) {
+                                    String mssServiceUri = mssServiceResponse.getDescription().getMssURI();
+                                    logProtocol.debug("mssServiceUri is=[{}]", mssServiceUri);
 
-                                if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(mssServiceUri)
-                                    && mssServiceResponse.getGeoFencing() != null) {
-
-                                    GeoFencing geofencing = mssServiceResponse.getGeoFencing();
-                                    GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
-                                    if (geofencing.getErrorcode() == null) {
-                                        geoResponse.setCountry(geofencing.getCountry());
-                                        geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
-                                        geoResponse.setTimestamp(gregorianCalendarToString(geofencing.getTimestamp()));
-                                        geoResponse.setDeviceConfidence(geofencing.getDeviceconfidence());
-                                        geoResponse.setLocationConfidence(geofencing.getLocationconfidence());
-                                    } else {
-                                        geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(
-                                            geofencing.getErrorcode() == null ? null : geofencing.getErrorcode().toString()));
-                                        geoResponse.setErrorMessage(geofencing.getErrormessage());
+                                    if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(mssServiceUri)
+                                            && mssServiceResponse.getGeoFencing() != null) {
+                                        final GeoFencing geofencing = mssServiceResponse.getGeoFencing();
+                                        final GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
+                                        if (geofencing.getErrorcode() == null) {
+                                            geoResponse.setCountry(geofencing.getCountry());
+                                            geoResponse.setAccuracy(geofencing.getAccuracy() == null ? 0 : Integer.parseInt(geofencing.getAccuracy()));
+                                            geoResponse.setTimestamp(gregorianCalendarToString(geofencing.getTimestamp()));
+                                            geoResponse.setDeviceConfidence(geofencing.getDeviceconfidence());
+                                            geoResponse.setLocationConfidence(geofencing.getLocationconfidence());
+                                        } else {
+                                            geoResponse.setErrorCode(GeofencingErrorCode.getByCodeAsString(
+                                                    geofencing.getErrorcode() == null ? null : geofencing.getErrorcode().toString()));
+                                            geoResponse.setErrorMessage(geofencing.getErrormessage());
+                                        }
+                                        additionalServiceResponses.add(geoResponse);
                                     }
-                                    resultList.add(geoResponse);
+
+                                    if (DefaultConfiguration.ADDITIONAL_SERVICE_APP2APP.equals(mssServiceUri)) {
+
+                                        fi.ficom.mss.ts102204.v1_0.App2App app2AppResp = mssServiceResponse.getApp2App();
+                                        final App2AppAdditionalServiceResponse app2AppAdditionalServiceResponse = new App2AppAdditionalServiceResponse();
+                                        logProtocol.debug("app2AppResp=[{}]", app2AppResp);
+
+                                        if (app2AppResp != null) {
+                                            logProtocol.debug("app2AppResp.getAuthUri()=[{}]", app2AppResp.getAuthUri());
+                                            app2AppAdditionalServiceResponse.setAuthUri(app2AppResp.getAuthUri());
+                                        }
+                                        additionalServiceResponses.add(app2AppAdditionalServiceResponse);
+                                    }
                                 }
                             }
                         }
@@ -264,7 +275,7 @@ public class MssResponseProcessor {
                 }
             }
         }
-        return resultList;
+        return additionalServiceResponses;
     }
 
     private static Status getGenericErrorStatus(String statusMessage) {
@@ -294,7 +305,7 @@ public class MssResponseProcessor {
                 if (mssCertElementList != null && mssCertElementList.size() > 0) {
                     CertificateData certificateData = new CertificateData();
                     certificateData.setCertificateAsBase64(
-                        Base64.getEncoder().encodeToString(((JAXBElement<byte[]>) mssCertElementList.get(0)).getValue()));
+                            Base64.getEncoder().encodeToString(((JAXBElement<byte[]>) mssCertElementList.get(0)).getValue()));
                     if (mssCertElementList.size() > 1) {
                         certificateData.setSubjectName(((JAXBElement<String>) mssCertElementList.get(1)).getValue());
                     }
@@ -304,7 +315,7 @@ public class MssResponseProcessor {
                         for (int index = 2; index < mssCertElementList.size(); index += 2) {
                             certificateData = new CertificateData();
                             certificateData.setCertificateAsBase64(
-                                Base64.getEncoder().encodeToString(((JAXBElement<byte[]>) mssCertElementList.get(0)).getValue()));
+                                    Base64.getEncoder().encodeToString(((JAXBElement<byte[]>) mssCertElementList.get(0)).getValue()));
                             if (index + 1 < mssCertElementList.size()) {
                                 certificateData.setSubjectName(((JAXBElement<String>) mssCertElementList.get(index + 1)).getValue());
                             }

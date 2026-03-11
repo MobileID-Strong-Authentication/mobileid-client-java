@@ -15,11 +15,14 @@
  */
 package ch.swisscom.mid.client.soap;
 
+import ch.swisscom.mid.client.config.ComProtocol;
+import ch.swisscom.mid.client.config.RequestTrace;
+import ch.swisscom.mid.client.config.ResponseTrace;
+import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.impl.Loggers;
+import ch.swisscom.mid.client.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -32,13 +35,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-import ch.swisscom.mid.client.config.ComProtocol;
-import ch.swisscom.mid.client.config.RequestTrace;
-import ch.swisscom.mid.client.config.ResponseTrace;
-import ch.swisscom.mid.client.config.TrafficObserver;
-import ch.swisscom.mid.client.impl.Loggers;
-import ch.swisscom.mid.client.utils.Utils;
+import java.io.ByteArrayOutputStream;
+import java.util.Set;
 
 /**
  * SOAPHandler used to log the contents of incoming and outgoing messages.
@@ -48,7 +46,6 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
     private static final Logger logRequestResponse = LoggerFactory.getLogger(Loggers.REQUEST_RESPONSE);
     private static final Logger logFullRequestResponse = LoggerFactory.getLogger(Loggers.FULL_REQUEST_RESPONSE);
-
     private TrafficObserver trafficObserver;
 
     // ----------------------------------------------------------------------------------------------------
@@ -66,6 +63,8 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     public boolean handleMessage(SOAPMessageContext smc) {
         boolean isRequestMessage = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         String soapMessageString = serializeSoapMessageToString(smc);
+
+
         if (isRequestMessage) {
             if (logRequestResponse.isInfoEnabled()) {
                 logRequestResponse.info("Sending SOAP request: [{}]", soapMessageString);
@@ -106,7 +105,7 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     public void close(MessageContext messageContext) {
-        // no code here, nothing to cleanup
+        // no code here, nothing to clean up
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -138,6 +137,7 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
             tff.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             tff.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
             Transformer tf = tff.newTransformer();
             // Set formatting
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -152,5 +152,4 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
             return null;
         }
     }
-
 }

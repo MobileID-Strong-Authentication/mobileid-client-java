@@ -42,6 +42,9 @@ Arguments:
     -receipt                                            - For sign operation. Send a receipt after the signature is acquired successfully
     
     -geofencing                                         - For sign operation. Request additional geofencing data
+    
+    -app2app="myapp://example"                          - For sign operation (async only). Request App2App service which allows an Application Provider to automatically switch from
+                                                          their App to the Mobile ID App (and the Mobile ID App to automatically switch back to the originating App)
 
     -validate                                           - For sign operation. Validate the signature once it is successfully acquired
 
@@ -78,6 +81,7 @@ Use cases:
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000 -soap
     - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -req-timeout=120
     - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
+    - ./bin/mid-client.sh -sign -async -msisdn=41790000000 -lang=en -app2app="myapp://example" -dtbs="Do you want to login?" -rest -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
            -sign -sync -receipt -geofencing \
@@ -95,46 +99,64 @@ Use the _-v_, _-vv_ and _-vvv_ arguments for increasingly detailed log levels, i
 exchanged packets.
 
 ## Examples
+
 Start with a fresh set of configuration files:
+
 ```shell
 ./bin/mid-client.sh -init 
 ```
 
 Get the profile information for a particular phone number (MSISDN) that your application provider is controlling:
+
 ```shell
 ./bin/mid-client.sh -profile-query -msisdn 41790000000 
 ```
 
 Get the same profile information using a particular configuration file and the SOAP interface of Mobile ID:
+
 ```shell
 ./bin/mid-client.sh -profile-query -msisdn 41790000000 -config local-config.properties -soap 
 ```
 
 Request a digital signature to a particular phone number (MSISDN), in sync mode:
+
 ```shell
 ./bin/mid-client.sh -sign -msisdn=41790000000 -geofencing -lang=en -dtbs "Do you want to login?" -sync  
 ```
 
 Request a digital signature to a particular phone number (MSISDN), in async mode (this is the default mode) and with signature receipt:
+
 ```shell
 ./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -dtbs "Do you want to login?" -receipt -req-timeout 120  
 ```
 
+Request a digital signature to a particular phone number (MSISDN), in async mode (this is the default mode) and with app2app service:
+
+```shell
+./bin/mid-client.sh -sign -msisdn=41790000000 -lang=en -app2app="myapp://example" -req-timeout 120  
+```
+
 Request a Mobile ID Serial number based on particular phone number (MSISDN), in async mode:
+
 ```shell
 ./bin/mid-client.sh -get-mid-sn -msisdn=41790000000 -rest
 ```
 
 Note: when working with arguments that have values (such as _-msisdn_) you can pass the value either as the next argument:
+
 ```shell
 ./bin/mid-client.sh -sign -msisdn 41790000000
 ```
+
 or in the form _name=value_:
+
 ```shell
 ./bin/mid-client.sh -sign -msisdn=41790000000
 ```
+
 Please note that the _-dtbs_ argument is a bit more special, as it will most likely contain spaces, so either the entire name=value
 construct is enclosed in double quotes or, if you use the name<space>value form, then the value is enclosed in double quotes:
+
 ```shell
 ./bin/mid-client.sh -sign -msisdn=41790000000 -dtbs "Do you want to login?"
 ./bin/mid-client.sh -sign -msisdn=41790000000 "-dtbs=Do you want to login?"

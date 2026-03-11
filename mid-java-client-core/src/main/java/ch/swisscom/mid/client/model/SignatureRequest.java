@@ -15,15 +15,15 @@
  */
 package ch.swisscom.mid.client.model;
 
+import ch.swisscom.mid.client.config.DefaultConfiguration;
+import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.model.service.AdditionalService;
+import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.swisscom.mid.client.config.DefaultConfiguration;
-import ch.swisscom.mid.client.config.TrafficObserver;
-
-import static ch.swisscom.mid.client.utils.Utils.dataNotEmpty;
-import static ch.swisscom.mid.client.utils.Utils.dataNotNull;
-import static ch.swisscom.mid.client.utils.Utils.dataTrue;
+import static ch.swisscom.mid.client.utils.Utils.*;
 
 public class SignatureRequest {
 
@@ -35,7 +35,7 @@ public class SignatureRequest {
      * If this is not set then the ID from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
      */
     private String overrideApId;
-    
+
     /**
      * Optional custom AP password that will override the AP password configured via {@link ch.swisscom.mid.client.config.ClientConfiguration}.
      * If this is not set then the password from {@link ch.swisscom.mid.client.config.ClientConfiguration} is used.
@@ -152,22 +152,22 @@ public class SignatureRequest {
         dataNotEmpty(majorVersion, "The major version cannot be null or empty (see DefaultConfiguration for default values)");
         dataNotEmpty(minorVersion, "The minor version cannot be null or empty (see DefaultConfiguration for default values)");
         dataNotEmpty(additionalServices, "Invalid signature request configuration. " +
-                                         "At least the UserLang additional service needs to be configured (call setUserLanguage).");
+                "At least the UserLang additional service needs to be configured (call setUserLanguage).");
         dataNotNull(dataToBeSigned, "The data to be signed cannot be null (call setDataToBeSigned)");
         dataToBeSigned.validateYourself();
         dataNotNull(mobileUser, "The target mobile user cannot be null");
         mobileUser.validateYourself();
         dataNotEmpty(signatureProfile, "The signature profile cannot be null or empty. See " +
-                                       SignatureProfiles.class.getSimpleName() +
-                                       " for a list of possible profiles to choose from");
+                SignatureProfiles.class.getSimpleName() +
+                " for a list of possible profiles to choose from");
         dataTrue(userResponseTimeOutInSeconds >= DefaultConfiguration.SIGNATURE_MINIMUM_TIME_OUT_IN_SECONDS,
-                 "The user response timeout cannot be lower than " +
-                 DefaultConfiguration.SIGNATURE_MINIMUM_TIME_OUT_IN_SECONDS +
-                 " seconds");
+                "The user response timeout cannot be lower than " +
+                        DefaultConfiguration.SIGNATURE_MINIMUM_TIME_OUT_IN_SECONDS +
+                        " seconds");
         dataTrue(userResponseTimeOutInSeconds <= DefaultConfiguration.SIGNATURE_MAXIMUM_TIME_OUT_IN_SECONDS,
-                 "The user response timeout cannot be higher than " +
-                 DefaultConfiguration.SIGNATURE_MAXIMUM_TIME_OUT_IN_SECONDS +
-                 " seconds");
+                "The user response timeout cannot be higher than " +
+                        DefaultConfiguration.SIGNATURE_MAXIMUM_TIME_OUT_IN_SECONDS +
+                        " seconds");
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -177,14 +177,14 @@ public class SignatureRequest {
     @Override
     public String toString() {
         return "SignatureRequest{" +
-               "majorVersion='" + majorVersion + '\'' +
-               ", minorVersion='" + minorVersion + '\'' +
-               ", additionalServices=" + additionalServices +
-               ", dataToBeSigned=" + dataToBeSigned +
-               ", mobileUser=" + mobileUser +
-               ", userResponseTimeOutInSeconds=" + userResponseTimeOutInSeconds +
-               ", signatureProfile='" + signatureProfile + '\'' +
-               ", trafficObserver=" + trafficObserver +
-               '}';
+                "majorVersion='" + majorVersion + '\'' +
+                ", minorVersion='" + minorVersion + '\'' +
+                ", additionalServices=" + additionalServices +
+                ", dataToBeSigned=" + dataToBeSigned +
+                ", mobileUser=" + mobileUser +
+                ", userResponseTimeOutInSeconds=" + userResponseTimeOutInSeconds +
+                ", signatureProfile='" + signatureProfile + '\'' +
+                ", trafficObserver=" + trafficObserver +
+                '}';
     }
 }
