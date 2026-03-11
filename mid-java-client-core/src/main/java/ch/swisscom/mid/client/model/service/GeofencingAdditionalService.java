@@ -113,8 +113,8 @@ public class GeofencingAdditionalService extends AdditionalService {
         if (minLocationConfidence != null && !minLocationConfidence.isEmpty() && !minLocationConfidence.equalsIgnoreCase("0"))
             return true;
         if (maxAccuracyMeters != null && !maxAccuracyMeters.isEmpty()) return true;
-        if (maxTimestampMinutes != null && !maxTimestampMinutes.isEmpty()) return true;
-        return false;
+
+        return maxTimestampMinutes != null && !maxTimestampMinutes.isEmpty();
     }
 }
 

@@ -236,6 +236,9 @@ public class Cli {
                         response = midClient.pollForSignatureStatus(response.getTracking());
                     }
                 }
+                if (response == null) {
+                    throw new MIDClientException("Response tp requestAsyncSignature is null, request was: " + request);
+                }
                 logClient.info(response.toString());
 
                 if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
@@ -703,10 +706,10 @@ public class Cli {
         if (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK) {
             if (response.getAdditionalServiceResponses() == null || response.getAdditionalServiceResponses().isEmpty()) {
                 // not App2AppAdditionalServiceResponse
-                logClient.info("response.getAdditionalServiceResponses: " + response.getAdditionalServiceResponses());
+                logClient.info("response.getAdditionalServiceResponses: {}", response.getAdditionalServiceResponses());
                 return false;
             }
-            return response.getAdditionalServiceResponses().stream().anyMatch(as -> ((AdditionalServiceResponse) as) instanceof App2AppAdditionalServiceResponse);
+            return response.getAdditionalServiceResponses().stream().anyMatch(as -> as instanceof App2AppAdditionalServiceResponse);
         }
         return false;
     }
