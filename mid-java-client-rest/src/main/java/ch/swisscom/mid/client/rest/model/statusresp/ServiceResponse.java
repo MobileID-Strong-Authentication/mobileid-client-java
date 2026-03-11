@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class ServiceResponse {
 
+    public static final String NULL = "<null>";
+
     @JsonProperty("Description")
     private String description;
 
@@ -72,15 +74,15 @@ public class ServiceResponse {
         sb.append(ServiceResponse.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null) ? "<null>" : this.description));
+        sb.append(((this.description == null) ? NULL : this.description));
         sb.append(',');
         sb.append("geofencing");
         sb.append('=');
-        sb.append(((this.geofencing == null) ? "<null>" : this.geofencing));
+        sb.append(((this.geofencing == null) ? NULL : this.geofencing));
         sb.append(',');
         sb.append("app2app");
         sb.append('=');
-        sb.append(((this.app2app == null) ? "<null>" : this.app2app));
+        sb.append(((this.app2app == null) ? NULL : this.app2app));
         sb.append(',');
         if (sb.charAt((sb.length() - 1)) == ',') {
             sb.setCharAt((sb.length() - 1), ']');

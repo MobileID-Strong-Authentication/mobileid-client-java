@@ -32,14 +32,10 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
@@ -50,7 +46,6 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     private static final Logger logClient = LoggerFactory.getLogger(Loggers.CLIENT);
     private static final Logger logRequestResponse = LoggerFactory.getLogger(Loggers.REQUEST_RESPONSE);
     private static final Logger logFullRequestResponse = LoggerFactory.getLogger(Loggers.FULL_REQUEST_RESPONSE);
-    private static final int MAX_LOG_SIZE = Integer.MAX_VALUE;
     private TrafficObserver trafficObserver;
 
     // ----------------------------------------------------------------------------------------------------
@@ -110,7 +105,7 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     public void close(MessageContext messageContext) {
-        // no code here, nothing to cleanup
+        // no code here, nothing to clean up
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -157,48 +152,4 @@ public class SoapTrafficHandler implements SOAPHandler<SOAPMessageContext> {
             return null;
         }
     }
-
-    private String convertToPrettyPrintedMessageExt(SOAPMessage message) {
-        if (message == null) {
-            return null;
-        }
-
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            message.writeTo(out);
-            String rawXml = out.toString(StandardCharsets.UTF_8.name());
-            return formatXml(rawXml);
-
-        } catch (Exception e) {
-            return "Failed to serialize SOAP message: " + e.getMessage();
-        }
-    }
-
-    private String formatXml(String xml) {
-        try {
-            TransformerFactory factory = TransformerFactory.newInstance();
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-
-            Transformer transformer = factory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-            Source xmlInput = new StreamSource(new StringReader(xml));
-            StringWriter writer = new StringWriter();
-
-            transformer.transform(xmlInput, new StreamResult(writer));
-
-            String formatted = writer.toString();
-
-            if (formatted.length() > MAX_LOG_SIZE) {
-                return formatted.substring(0, MAX_LOG_SIZE) + "\n...[truncated]";
-            }
-
-            return formatted;
-
-        } catch (Exception e) {
-            return xml; // fallback to raw
-        }
-    }
-
 }

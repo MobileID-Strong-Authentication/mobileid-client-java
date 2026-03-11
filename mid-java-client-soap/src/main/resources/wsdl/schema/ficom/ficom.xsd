@@ -38,7 +38,7 @@
        when parsing input with any _other_ of choice elements, than
        the UserLang.
     -->
-    <xs:element name="UserLang" type="xs:string"/>
+    <xs:element name="UserLang" type="xs:string" default="de"/>
 
 
     <!-- as per JHS 106 -->
@@ -88,15 +88,9 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="as:AuthUri" minOccurs="0"/>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <!--    <xs:element name="App2App">-->
-    <!--        <xs:complexType>-->
-    <!--            <xs:sequence>-->
-    <!--                <xs:element name="AuthUri" type="xs:anyURI"/>-->
-    <!--            </xs:sequence>-->
-    <!--        </xs:complexType>-->
-    <!--    </xs:element>-->
 
 </xs:schema>

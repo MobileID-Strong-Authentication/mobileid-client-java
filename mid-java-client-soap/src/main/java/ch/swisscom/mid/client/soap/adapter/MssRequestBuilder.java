@@ -202,17 +202,13 @@ public class MssRequestBuilder {
                         .getSessionIDOrEventIDOrNoSpamCode()
                         .add(factory.createUserLang(((UserLangAdditionalService) currentAS).getUserLanguage().getValue()));
             } else if (currentAS instanceof App2AppAdditionalService) {
-                MssURIType serviceDescription = new MssURIType();
+                final MssURIType serviceDescription = new MssURIType();
                 serviceDescription.setMssURI(currentAS.getUri());
                 additionalService.setDescription(serviceDescription);
-//                final fi.ficom.mss.ts102204.v1_0.ObjectFactory factory = new ObjectFactory();
                 ch.swisscom.mid.client.model.App2App app2appRequest = ((App2AppAdditionalService) currentAS).getApp2app();
                 final String redirectUri = app2appRequest != null ? app2appRequest.getRedirectUri() : "";
-                org.etsi.uri.ts102204.v1_1.App2App app2App = new org.etsi.uri.ts102204.v1_1.App2App();
+                final org.etsi.uri.ts102204.v1_1.App2App app2App = new org.etsi.uri.ts102204.v1_1.App2App();
                 app2App.setRedirectUri(redirectUri);
-//                final App2App app2App = factory.createApp2App();
-
-                // app2App.setRedirectUri(redirectUri);
                 additionalService.getSessionIDOrEventIDOrNoSpamCode().add(app2App);
             } else {
                 MssURIType serviceDescription = new MssURIType();

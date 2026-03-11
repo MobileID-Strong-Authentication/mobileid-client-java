@@ -38,6 +38,7 @@ import static ch.swisscom.mid.client.utils.Utils.getThisOrNull;
  * ./mid-client.sh -sign -async -msisdn 4071111111111 -lang en -dtbs "Do you want to login?" -receipt
  * ./bin/mid-client.sh -sign -async -msisdn=41790000000 -lang=en -app2app="myapp://example" -dtbs="Do you want to login?" -rest -vv
  * ./mid-client.sh -get-mid-sn -msisdn 4071111111111 -lang en
+ *
  */
 public class Cli {
 
@@ -227,9 +228,7 @@ public class Cli {
                         request.addAdditionalService(new App2AppAdditionalService(app2AppSrvRedirectUri));
                     }
                     response = midClient.requestAsyncSignature(request);
-                    System.out.println("isApp2AppFlowResponse response: " + isApp2AppFlowResponse(response));
-
-
+                    logClient.info("isApp2AppFlowResponse: [{}]", isApp2AppFlowResponse(response));
                     while ((response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
                             response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) && !isApp2AppFlowResponse(response)) {
                         //noinspection BusyWait
@@ -237,7 +236,7 @@ public class Cli {
                         response = midClient.pollForSignatureStatus(response.getTracking());
                     }
                 }
-                System.out.println(response.toString());
+                logClient.info(response.toString());
 
                 if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
                     boolean signatureIsValid = false;
@@ -704,7 +703,7 @@ public class Cli {
         if (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK) {
             if (response.getAdditionalServiceResponses() == null || response.getAdditionalServiceResponses().isEmpty()) {
                 // not App2AppAdditionalServiceResponse
-                System.out.println("response.getAdditionalServiceResponses: " + response.getAdditionalServiceResponses());
+                logClient.info("response.getAdditionalServiceResponses: " + response.getAdditionalServiceResponses());
                 return false;
             }
             return response.getAdditionalServiceResponses().stream().anyMatch(as -> ((AdditionalServiceResponse) as) instanceof App2AppAdditionalServiceResponse);

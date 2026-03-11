@@ -62,7 +62,7 @@ public class AsyncSignatureTest {
     // ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void testAsyncSignature_success() {
+    void testAsyncSignature_success() {
         // given
         server.stubFor(
                 post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
@@ -125,7 +125,7 @@ public class AsyncSignatureTest {
     }
 
     @Test
-    public void testAsyncSignature_success_overrideApIdAndPassword() {
+    void testAsyncSignature_success_overrideApIdAndPassword() {
         // given
         server.stubFor(
                 post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
@@ -207,7 +207,7 @@ public class AsyncSignatureTest {
     // ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void testAsyncSignature_successWithOnlyApp2AppService() {
+    void testAsyncSignature_successWithOnlyApp2AppService() {
         // given
         server.stubFor(
                 post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
@@ -265,7 +265,7 @@ public class AsyncSignatureTest {
     }
 
     @Test
-    public void testSignature_successWithLanguageAndApp2AppService() {
+    void testSignature_successWithLanguageAndApp2AppService() {
         // given
         server.stubFor(
                 post(urlEqualTo(DefaultConfiguration.REST_ENDPOINT_SUB_URL))
