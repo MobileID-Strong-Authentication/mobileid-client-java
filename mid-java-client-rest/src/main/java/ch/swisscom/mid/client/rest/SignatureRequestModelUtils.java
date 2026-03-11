@@ -139,7 +139,7 @@ public class SignatureRequestModelUtils {
         List<AdditionalService> processedAdditionalServices = new ArrayList<>();
         List<ch.swisscom.mid.client.model.service.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
         for (ch.swisscom.mid.client.model.service.AdditionalService currentAS : requestedAdditionalService) {
-            AdditionalService additionalService = null;
+            AdditionalService additionalService;
             if (currentAS instanceof UserLangAdditionalService) {
                 AdditionalServiceLanguage additionalServiceLang = new AdditionalServiceLanguage();
                 UserLang userLang = new UserLang();
@@ -152,7 +152,7 @@ public class SignatureRequestModelUtils {
                 AdditionalServiceGeofencing asg = new AdditionalServiceGeofencing();
                 asg.setDescription(currentAS.getUri());
                 if (gfc.isDefined()) {
-                    // If any geo-fencing parameter is set, then we need to create a GeoFencingRequest object
+                    // If any geofencing parameter is set, then we need to create a GeoFencingRequest object
                     asg.setGeoFencingReqeust(GeoFencingRequest.builder()
                             .countryWhiteList(gfc.getCountryWhiteList())
                             .countryBlackList(gfc.getCountryBlackList())

@@ -709,7 +709,7 @@ public class Cli {
                 logClient.info("response.getAdditionalServiceResponses: {}", response.getAdditionalServiceResponses());
                 return false;
             }
-            return response.getAdditionalServiceResponses().stream().anyMatch(as -> as instanceof App2AppAdditionalServiceResponse);
+            return response.getAdditionalServiceResponses().stream().anyMatch(App2AppAdditionalServiceResponse.class::isInstance);
         }
         return false;
     }
