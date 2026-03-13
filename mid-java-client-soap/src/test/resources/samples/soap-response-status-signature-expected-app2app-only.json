@@ -1,0 +1,26 @@
+{
+  "majorVersion": null,
+  "minorVersion": null,
+  "signatureProfile": "http://mid.swisscom.ch/My-Custom-Profile",
+  "base64Signature": null,
+  "status": {
+    "statusCodeString": "100",
+    "statusCode": "REQUEST_OK",
+    "statusMessage": "REQUEST_OK"
+  },
+  "tracking": {
+    "majorVersion": "1",
+    "minorVersion": "1",
+    "overrideApId": null,
+    "overrideApPassword": null,
+    "transactionId": "CAFE_BABE",
+    "mobileUserMsisdn": "418888888888",
+    "trafficObserver": null
+  },
+  "additionalServiceResponses": [
+    {
+      "uri": "http://mid.swisscom.ch/as#app2app",
+      "authUri": "mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_token%3DABCD&session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8dkHoOnhqf158&user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f"" \n"
+    }
+  ]
+}

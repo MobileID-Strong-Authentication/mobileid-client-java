@@ -19,6 +19,7 @@ import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
 
 import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
 

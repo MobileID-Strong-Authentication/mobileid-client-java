@@ -10,8 +10,12 @@ import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
 import ch.swisscom.mid.client.impl.SignatureValidatorImpl;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +29,16 @@ import static ch.swisscom.mid.client.utils.Utils.getThisOrNull;
 /**
  * Command line interface for the Mobile ID client. Allows the running of the MID Client from the command line, with most of
  * the configuration parameters read from a properties file and only the most important parameters given through the command arguments.
- *
+ * <p>
  * Examples:
  * ./mid-client.sh -help
  * ./mid-client.sh -profile-query -msisdn=4071111111111
  * ./mid-client.sh -sign -sync -msisdn=4071111111111 -lang=en "-dtbs=Do you want to login?" -receipt
  * ./mid-client.sh -sign -async -msisdn=4071111111111 -lang=en "-dtbs=Do you want to login?" -receipt
  * ./mid-client.sh -sign -async -msisdn 4071111111111 -lang en -dtbs "Do you want to login?" -receipt
+ * ./bin/mid-client.sh -sign -async -msisdn=41790000000 -lang=en -app2app="myapp://example" -dtbs="Do you want to login?" -rest -vv
  * ./mid-client.sh -get-mid-sn -msisdn 4071111111111 -lang en
+ *
  */
 public class Cli {
 
@@ -54,6 +60,8 @@ public class Cli {
     private static final String PARAM_REST = "rest";
     private static final String PARAM_SOAP = "soap";
     private static final String PARAM_GEO = "geofencing";
+    private static final String PARAM_APP2APP = "app2app";
+
     private static final String PARAM_VALIDATE_SIGNATURE = "validate";
     private static final String PARAM_HELP = "help";
 
@@ -88,6 +96,7 @@ public class Cli {
     private static String interfaceType;
     private static int verboseLevel;
     private static boolean addGeofencingSrv = false;
+    private static String app2AppSrvRedirectUri;
 
     public static void main(String[] args) {
         versionProvider = new ClientVersionProvider();
@@ -184,7 +193,7 @@ public class Cli {
                         response = midClient.pollForSignatureStatus(response.getTracking());
                     }
                 }
-                
+
                 System.out.println(response.toString());
                 if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
                     SignatureValidationConfiguration svConfig = new SignatureValidationConfiguration();
@@ -214,15 +223,23 @@ public class Cli {
                 if (syncSignature) {
                     response = midClient.requestSyncSignature(request);
                 } else {
+                    // optional app2app Additional service
+                    if (StringUtils.isNotEmpty(app2AppSrvRedirectUri)) {
+                        request.addAdditionalService(new App2AppAdditionalService(app2AppSrvRedirectUri));
+                    }
                     response = midClient.requestAsyncSignature(request);
-                    while (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
-                           response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) {
+                    logClient.info("isApp2AppFlowResponse: [{}]", isApp2AppFlowResponse(response));
+                    while ((response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
+                            response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION)) {
                         //noinspection BusyWait
                         Thread.sleep(5000);
                         response = midClient.pollForSignatureStatus(response.getTracking());
                     }
                 }
-                System.out.println(response.toString());
+                if (response == null) {
+                    throw new MIDClientException("Response tp requestAsyncSignature is null, request was: " + request);
+                }
+                logClient.info(response.toString());
 
                 if (response.getStatus().getStatusCode() == StatusCode.SIGNATURE) {
                     boolean signatureIsValid = false;
@@ -234,7 +251,7 @@ public class Cli {
 
                         SignatureValidator validator = new SignatureValidatorImpl(svConfig);
                         SignatureValidationResult result =
-                            validator.validateSignature(response.getBase64Signature(), request.getDataToBeSigned().getData(), null);
+                                validator.validateSignature(response.getBase64Signature(), request.getDataToBeSigned().getData(), null);
 
                         // 4 points validation: signerCertificate, signerCertificatePath, signature, dtbsMatching
                         if (result.isValidationSuccessful()) {
@@ -244,6 +261,7 @@ public class Cli {
                             printValidationResult(false, result);
                         }
                     }
+
                     if (sendReceipt) {
                         if (!validateSignature || signatureIsValid) {
                             ReceiptRequest receiptRequest = new ReceiptRequest();
@@ -292,6 +310,7 @@ public class Cli {
             }
         }
     }
+
     private static void parseArguments(String[] args) {
         if (args.length == 0) {
             showHelp(null);
@@ -372,7 +391,7 @@ public class Cli {
                 case PARAM_SIGN: {
                     if (operation != null) {
                         showHelp("More than one operation selector was found in the calling arguments. "
-                                 + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY+ " or -" + PARAM_GET_MID_SN);
+                                + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY + " or -" + PARAM_GET_MID_SN);
                         return;
                     }
                     operation = OPERATION_SIGN;
@@ -381,7 +400,7 @@ public class Cli {
                 case PARAM_PROFILE_QUERY: {
                     if (operation != null) {
                         showHelp("More than one operation selector was found in the calling arguments. "
-                                 + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY+ " or -" + PARAM_GET_MID_SN);
+                                + "Use either -" + PARAM_SIGN + " or -" + PARAM_PROFILE_QUERY + " or -" + PARAM_GET_MID_SN);
                         return;
                     }
                     operation = OPERATION_PROFILE_QUERY;
@@ -414,6 +433,19 @@ public class Cli {
                 }
                 case PARAM_GEO: {
                     addGeofencingSrv = true;
+                    break;
+                }
+                case PARAM_APP2APP: {
+                    if (argValue == null) {
+                        if (argIndex + 1 < args.length) {
+                            app2AppSrvRedirectUri = args[argIndex + 1];
+                            argIndex++;
+                        } else {
+                            showHelp("app2app is missing");
+                        }
+                    } else {
+                        app2AppSrvRedirectUri = argValue;
+                    }
                     break;
                 }
                 case PARAM_MSISDN: {
@@ -458,7 +490,7 @@ public class Cli {
                 case PARAM_REST: {
                     if (interfaceType != null) {
                         showHelp("More than one interface selector was found in the calling arguments. "
-                                 + "Use either -" + PARAM_REST + " or -" + PARAM_SOAP);
+                                + "Use either -" + PARAM_REST + " or -" + PARAM_SOAP);
                         return;
                     }
                     interfaceType = INTERFACE_REST;
@@ -467,7 +499,7 @@ public class Cli {
                 case PARAM_SOAP: {
                     if (interfaceType != null) {
                         showHelp("More than one interface selector was found in the calling arguments. "
-                                 + "Use either -" + PARAM_REST + " or -" + PARAM_SOAP);
+                                + "Use either -" + PARAM_REST + " or -" + PARAM_SOAP);
                         return;
                     }
                     interfaceType = INTERFACE_SOAP;
@@ -506,10 +538,10 @@ public class Cli {
 
     private static void runInit() {
         String[][] configPairs = new String[][]{
-            new String[]{"/cli-files/config-sample.properties", "config.properties"},
-            new String[]{"/cli-files/keystore.jks", "keystore.jks"},
-            new String[]{"/cli-files/truststore.jks", "truststore.jks"},
-            new String[]{"/cli-files/signature-validation-truststore.jks", "signature-validation-truststore.jks"}
+                new String[]{"/cli-files/config-sample.properties", "config.properties"},
+                new String[]{"/cli-files/keystore.jks", "keystore.jks"},
+                new String[]{"/cli-files/truststore.jks", "truststore.jks"},
+                new String[]{"/cli-files/signature-validation-truststore.jks", "signature-validation-truststore.jks"}
         };
         for (String[] configPair : configPairs) {
             String inputFile = configPair[0];
@@ -535,6 +567,8 @@ public class Cli {
                 setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "info", loggerContext);
                 setLoggerToLevel(Loggers.REQUEST_RESPONSE, "warn", loggerContext);
                 setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.STATUS_QUERY_MODEL_UTILS, "info", loggerContext);
+                setLoggerToLevel(Loggers.SIGN_REQ_MODEL_UTILS, "info", loggerContext);
                 break;
             }
             case 1: {
@@ -544,7 +578,9 @@ public class Cli {
                 setLoggerToLevel(Loggers.CONFIG, "info", loggerContext);
                 setLoggerToLevel(Loggers.CLIENT_PROTOCOL, "info", loggerContext);
                 setLoggerToLevel(Loggers.REQUEST_RESPONSE, "debug", loggerContext);
-                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "warn", loggerContext);
+                setLoggerToLevel(Loggers.FULL_REQUEST_RESPONSE, "info", loggerContext);
+                setLoggerToLevel(Loggers.STATUS_QUERY_MODEL_UTILS, "warn", loggerContext);
+                setLoggerToLevel(Loggers.SIGN_REQ_MODEL_UTILS, "warn", loggerContext);
                 break;
             }
             case 2: // falls through
@@ -560,6 +596,8 @@ public class Cli {
                 } else {
                     setLoggerToLevel("org.apache.hc", "trace", loggerContext);
                 }
+                setLoggerToLevel(Loggers.STATUS_QUERY_MODEL_UTILS, "debug", loggerContext);
+                setLoggerToLevel(Loggers.SIGN_REQ_MODEL_UTILS, "debug", loggerContext);
                 break;
             }
             default: {
@@ -642,6 +680,7 @@ public class Cli {
         if (operation.equals(OPERATION_SIGN)) {
             System.out.println("Async operation       : " + (!syncSignature));
             System.out.println("Language              : " + lang);
+            System.out.println("App2APP               : " + (StringUtils.isNotEmpty(app2AppSrvRedirectUri) ? app2AppSrvRedirectUri : "Empty"));
             System.out.println("DTBS                  : " + dtbs);
             System.out.println("Send receipt          : " + sendReceipt);
         }
@@ -661,5 +700,17 @@ public class Cli {
         } finally {
             closeStream(is);
         }
+    }
+
+    private static boolean isApp2AppFlowResponse(SignatureResponse response) {
+        if (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK) {
+            if (response.getAdditionalServiceResponses() == null || response.getAdditionalServiceResponses().isEmpty()) {
+                // not App2AppAdditionalServiceResponse
+                logClient.info("response.getAdditionalServiceResponses: {}", response.getAdditionalServiceResponses());
+                return false;
+            }
+            return response.getAdditionalServiceResponses().stream().anyMatch(App2AppAdditionalServiceResponse.class::isInstance);
+        }
+        return false;
     }
 }

@@ -15,28 +15,34 @@
  */
 package ch.swisscom.mid.client.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.swisscom.mid.client.MIDFlowException;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.TrafficObserver;
+import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.Status;
+import ch.swisscom.mid.client.model.StatusCode;
+import ch.swisscom.mid.client.model.service.*;
+import ch.swisscom.mid.client.rest.model.signreq.*;
+import ch.swisscom.mid.client.rest.model.signreq.APInfo;
 import ch.swisscom.mid.client.rest.model.signreq.AdditionalService;
 import ch.swisscom.mid.client.rest.model.signreq.DataToBeSigned;
+import ch.swisscom.mid.client.rest.model.signreq.MSSPInfo;
 import ch.swisscom.mid.client.rest.model.signreq.MobileUser;
-import ch.swisscom.mid.client.rest.model.signreq.*;
-import ch.swisscom.mid.client.rest.model.signresp.Geofencing;
-import ch.swisscom.mid.client.rest.model.signresp.MSSSignature;
-import ch.swisscom.mid.client.rest.model.signresp.MSSSignatureResp;
-import ch.swisscom.mid.client.rest.model.signresp.MSSSignatureResponse;
-import ch.swisscom.mid.client.rest.model.signresp.ServiceResponse;
+import ch.swisscom.mid.client.rest.model.signreq.MsspId;
+import ch.swisscom.mid.client.rest.model.signresp.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ch.swisscom.mid.client.utils.Utils.generateInstantAsString;
 import static ch.swisscom.mid.client.utils.Utils.generateTransId;
 
 public class SignatureRequestModelUtils {
+    private static final Logger log = LoggerFactory.getLogger(Loggers.SIGN_REQ_MODEL_UTILS);
 
     public static MSSSignatureRequest createSignatureRequest(ClientConfiguration config,
                                                              SignatureRequest clientRequest,
@@ -49,8 +55,8 @@ public class SignatureRequestModelUtils {
         signatureReq.setMajorVersion(clientRequest.getMajorVersion());
         signatureReq.setMinorVersion(clientRequest.getMinorVersion());
         signatureReq.setMessagingMode(sync ?
-                                      DefaultConfiguration.SIGNATURE_MODE_SYNC :
-                                      DefaultConfiguration.SIGNATURE_MODE_ASYNC);
+                DefaultConfiguration.SIGNATURE_MODE_SYNC :
+                DefaultConfiguration.SIGNATURE_MODE_ASYNC);
         signatureReq.setMobileUser(createMobileUser(clientRequest));
         signatureReq.setSignatureProfile(clientRequest.getSignatureProfile());
         signatureReq.setTimeOut(String.valueOf(clientRequest.getUserResponseTimeOutInSeconds()));
@@ -75,9 +81,9 @@ public class SignatureRequestModelUtils {
             result.setAdditionalServiceResponses(processAdditionalServiceResponses(response));
         } else {
             throw new MIDFlowException("Invalid MSS response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureResponse.class.getSimpleName(),
-                                       new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureResponse.class.getSimpleName(),
+                    new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
         return result;
     }
@@ -97,9 +103,9 @@ public class SignatureRequestModelUtils {
             return result;
         } else {
             throw new MIDFlowException("Invalid MSS response received. " +
-                                       "Cannot parse it and convert it to a valid " +
-                                       SignatureTracking.class.getSimpleName(),
-                                       new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
+                    "Cannot parse it and convert it to a valid " +
+                    SignatureTracking.class.getSimpleName(),
+                    new FaultProcessor().processFailure(FailureReason.MID_INVALID_RESPONSE_FAILURE));
         }
     }
 
@@ -131,9 +137,9 @@ public class SignatureRequestModelUtils {
 
     private static List<AdditionalService> createAdditionalServices(SignatureRequest clientRequest) {
         List<AdditionalService> processedAdditionalServices = new ArrayList<>();
-        List<ch.swisscom.mid.client.model.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
-        for (ch.swisscom.mid.client.model.AdditionalService currentAS : requestedAdditionalService) {
-            AdditionalService additionalService = null;
+        List<ch.swisscom.mid.client.model.service.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
+        for (ch.swisscom.mid.client.model.service.AdditionalService currentAS : requestedAdditionalService) {
+            AdditionalService additionalService;
             if (currentAS instanceof UserLangAdditionalService) {
                 AdditionalServiceLanguage additionalServiceLang = new AdditionalServiceLanguage();
                 UserLang userLang = new UserLang();
@@ -145,8 +151,8 @@ public class SignatureRequestModelUtils {
                 GeofencingAdditionalService gfc = (GeofencingAdditionalService) currentAS;
                 AdditionalServiceGeofencing asg = new AdditionalServiceGeofencing();
                 asg.setDescription(currentAS.getUri());
-                if(gfc.isDefined()) {
-                    // If any geo-fencing parameter is set, then we need to create a GeoFencingRequest object
+                if (gfc.isDefined()) {
+                    // If any geofencing parameter is set, then we need to create a GeoFencingRequest object
                     asg.setGeoFencingReqeust(GeoFencingRequest.builder()
                             .countryWhiteList(gfc.getCountryWhiteList())
                             .countryBlackList(gfc.getCountryBlackList())
@@ -159,9 +165,18 @@ public class SignatureRequestModelUtils {
                     asg.setGeoFencingReqeust(null);
                 }
                 additionalService = asg;
+            } else if (currentAS instanceof App2AppAdditionalService) {
+                final App2AppAdditionalService app2SrvModel = (App2AppAdditionalService) currentAS;
+                final AdditionalServiceApp2App app2appSignReq = new AdditionalServiceApp2App();
+                final App2AppRequest app2appReq = new App2AppRequest();
+                app2appReq.setRedirectUri(app2SrvModel.getApp2app().getRedirectUri());
+                app2appSignReq.setDescription(currentAS.getUri());
+                app2appSignReq.setApp2AppRequest(app2appReq);
+                additionalService = app2appSignReq;
             } else {
                 additionalService = new AdditionalService();
                 additionalService.setDescription(currentAS.getUri());
+
             }
             processedAdditionalServices.add(additionalService);
         }
@@ -171,10 +186,13 @@ public class SignatureRequestModelUtils {
     private static List<AdditionalServiceResponse> processAdditionalServiceResponses(MSSSignatureResp response) {
         List<AdditionalServiceResponse> resultList = new ArrayList<>();
         List<ServiceResponse> serviceResponseList = response.getServiceResponses();
+        log.debug("processAdditionalServiceResponses has serviceResponseList=[{}]", serviceResponseList);
         if (serviceResponseList != null) {
             for (ServiceResponse serviceResponse : serviceResponseList) {
+                log.debug("Processing service response with description=[{}]", serviceResponse.getDescription());
+
                 if (DefaultConfiguration.ADDITIONAL_SERVICE_GEOFENCING.equals(serviceResponse.getDescription())
-                    && serviceResponse.getGeofencing() != null) {
+                        && serviceResponse.getGeofencing() != null) {
 
                     Geofencing geofencing = serviceResponse.getGeofencing();
                     GeofencingAdditionalServiceResponse geoResponse = new GeofencingAdditionalServiceResponse();
@@ -189,6 +207,19 @@ public class SignatureRequestModelUtils {
                         geoResponse.setErrorMessage(geofencing.getErrorMessage());
                     }
                     resultList.add(geoResponse);
+                    continue;
+                }
+
+                if (DefaultConfiguration.ADDITIONAL_SERVICE_APP2APP.equals(serviceResponse.getDescription())) {
+
+                    ch.swisscom.mid.client.rest.model.statusresp.App2App app2app = serviceResponse.getApp2app();
+                    final App2AppAdditionalServiceResponse a2aResponse = new App2AppAdditionalServiceResponse();
+
+                    if (serviceResponse.getApp2app() != null) {
+                        a2aResponse.setAuthUri(app2app.getAuthUri());
+                    }
+
+                    resultList.add(a2aResponse);
                 }
             }
         }

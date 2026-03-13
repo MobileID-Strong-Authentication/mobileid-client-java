@@ -388,6 +388,7 @@
                 <xs:element ref="fi:EventID"/>
                 <xs:element ref="fi:NoSpamCode"/>
                 <xs:element ref="fi:UserLang"/>
+                <xs:element ref="fi:App2App"/>
                 <!--            <xs:element ref="fi:DisplayName"/> -->
                 <xs:element ref="mreg:CaseId"/>
                 <xs:element ref="samlp:AttributeQuery"/>
@@ -425,4 +426,12 @@
         </xs:choice>
     </xs:complexType>
 
-</xs:schema> 
+    <xs:element name="App2App">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="RedirectUri" type="xs:string" minOccurs="0" />
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

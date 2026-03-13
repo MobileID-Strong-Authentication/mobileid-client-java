@@ -18,12 +18,9 @@ package ch.swisscom.mid.client.samples;
 import ch.swisscom.mid.client.MIDClient;
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.impl.MIDClientImpl;
-import ch.swisscom.mid.client.model.GeofencingAdditionalService;
-import ch.swisscom.mid.client.model.SignatureProfiles;
-import ch.swisscom.mid.client.model.SignatureRequest;
-import ch.swisscom.mid.client.model.SignatureResponse;
-import ch.swisscom.mid.client.model.StatusCode;
-import ch.swisscom.mid.client.model.UserLanguage;
+import ch.swisscom.mid.client.model.*;
+import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
+import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
 
 import static ch.swisscom.mid.client.samples.Utils.prettyPrintTheException;
 
@@ -42,11 +39,12 @@ public class AsyncSignature {
         request.getMobileUser().setMsisdn("41790000000");
         request.setSignatureProfile(SignatureProfiles.DEFAULT_PROFILE);
         request.addAdditionalService(new GeofencingAdditionalService());
+        request.addAdditionalService(new App2AppAdditionalService("mobileid://auth?mobile_auth_redirect_uri"));
 
         try {
             SignatureResponse response = client.requestAsyncSignature(request);
             while (response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
-                   response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) {
+                    response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) {
                 System.out.println("Pending: " + response);
                 response = client.pollForSignatureStatus(response.getTracking());
                 Thread.sleep(1000);
