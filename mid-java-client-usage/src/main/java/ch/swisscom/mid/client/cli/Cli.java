@@ -230,7 +230,7 @@ public class Cli {
                     response = midClient.requestAsyncSignature(request);
                     logClient.info("isApp2AppFlowResponse: [{}]", isApp2AppFlowResponse(response));
                     while ((response.getStatus().getStatusCode() == StatusCode.REQUEST_OK ||
-                            response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION) && !isApp2AppFlowResponse(response)) {
+                            response.getStatus().getStatusCode() == StatusCode.OUTSTANDING_TRANSACTION)) {
                         //noinspection BusyWait
                         Thread.sleep(5000);
                         response = midClient.pollForSignatureStatus(response.getTracking());
