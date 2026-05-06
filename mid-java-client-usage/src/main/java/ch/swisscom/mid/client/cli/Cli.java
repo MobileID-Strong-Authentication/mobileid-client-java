@@ -12,7 +12,7 @@ import ch.swisscom.mid.client.impl.SignatureValidatorImpl;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
-import ch.swisscom.mid.client.model.service.GeofencingAdditionalService;
+import ch.swisscom.mid.client.model.GeofencingAdditionalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.lang3.StringUtils;

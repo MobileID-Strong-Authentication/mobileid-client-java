@@ -21,7 +21,7 @@ import ch.swisscom.mid.client.config.TrafficObserver;
 import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
-import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
+import ch.swisscom.mid.client.model.GeofencingAdditionalServiceResponse;
 import ch.swisscom.mid.ts102204.as.v1.GeoFencing;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import fi.ficom.mss.ts102204.v1_0.ServiceResponses;

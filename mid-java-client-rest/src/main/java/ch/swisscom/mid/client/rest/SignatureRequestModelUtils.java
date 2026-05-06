@@ -137,8 +137,8 @@ public class SignatureRequestModelUtils {
 
     private static List<AdditionalService> createAdditionalServices(SignatureRequest clientRequest) {
         List<AdditionalService> processedAdditionalServices = new ArrayList<>();
-        List<ch.swisscom.mid.client.model.service.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
-        for (ch.swisscom.mid.client.model.service.AdditionalService currentAS : requestedAdditionalService) {
+        List<ch.swisscom.mid.client.model.AdditionalService> requestedAdditionalService = clientRequest.getAdditionalServices();
+        for (ch.swisscom.mid.client.model.AdditionalService currentAS : requestedAdditionalService) {
             AdditionalService additionalService;
             if (currentAS instanceof UserLangAdditionalService) {
                 AdditionalServiceLanguage additionalServiceLang = new AdditionalServiceLanguage();

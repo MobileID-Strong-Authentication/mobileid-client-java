@@ -21,7 +21,7 @@ import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.impl.Loggers;
 import ch.swisscom.mid.client.model.*;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalServiceResponse;
-import ch.swisscom.mid.client.model.service.GeofencingAdditionalServiceResponse;
+import ch.swisscom.mid.client.model.GeofencingAdditionalServiceResponse;
 import ch.swisscom.mid.client.rest.model.statusreq.MSSStatusReq;
 import ch.swisscom.mid.client.rest.model.statusreq.MSSStatusRequest;
 import ch.swisscom.mid.client.rest.model.statusresp.Geofencing;

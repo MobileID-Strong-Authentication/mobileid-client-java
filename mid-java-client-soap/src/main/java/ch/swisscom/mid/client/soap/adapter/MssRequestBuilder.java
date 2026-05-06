@@ -17,9 +17,9 @@ package ch.swisscom.mid.client.soap.adapter;
 
 import ch.swisscom.mid.client.config.ClientConfiguration;
 import ch.swisscom.mid.client.model.*;
-import ch.swisscom.mid.client.model.service.AdditionalService;
+import ch.swisscom.mid.client.model.AdditionalService;
 import ch.swisscom.mid.client.model.service.App2AppAdditionalService;
-import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
+import ch.swisscom.mid.client.model.UserLangAdditionalService;
 import ch.swisscom.mid.client.utils.Utils;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptExtensionType;
 import ch.swisscom.ts102204.ext.v1_0.ReceiptMessagingModeType;
