@@ -34,6 +34,7 @@
 package ch.swisscom.mid.client.model.service;
 
 import ch.swisscom.mid.client.config.DefaultConfiguration;
+import ch.swisscom.mid.client.model.AdditionalService;
 import ch.swisscom.mid.client.model.App2App;
 
 public class App2AppAdditionalService extends AdditionalService {

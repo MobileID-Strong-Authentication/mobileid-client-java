@@ -17,8 +17,6 @@ package ch.swisscom.mid.client.model;
 
 import ch.swisscom.mid.client.config.DefaultConfiguration;
 import ch.swisscom.mid.client.config.TrafficObserver;
-import ch.swisscom.mid.client.model.service.AdditionalService;
-import ch.swisscom.mid.client.model.service.UserLangAdditionalService;
 
 import java.util.ArrayList;
 import java.util.List;
