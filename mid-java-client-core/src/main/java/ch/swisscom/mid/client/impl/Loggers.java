@@ -29,6 +29,8 @@ public class Loggers {
     public static final String REQUEST_RESPONSE = "ch.swisscom.mid.client.requestResponse";
     public static final String FULL_REQUEST_RESPONSE = "ch.swisscom.mid.client.fullRequestResponse";
     public static final String SIGNATURE_VALIDATOR = "ch.swisscom.mid.signatureValidator";
+    public static final String STATUS_QUERY_MODEL_UTILS = "ch.swisscom.mid.client.rest.statusQueryModelUtils";
+    public static final String SIGN_REQ_MODEL_UTILS = "ch.swisscom.mid.client.rest.signatureRequestModelUtils";
 
     // ----------------------------------------------------------------------------------------------------
 

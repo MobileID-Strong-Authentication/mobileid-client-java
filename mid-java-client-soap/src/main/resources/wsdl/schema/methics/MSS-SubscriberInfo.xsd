@@ -19,7 +19,7 @@
     <element name="SubscriberInfo">
         <complexType>
             <sequence>
-                <element name="Detail" type="tns:SubscriberInfoDetail" 
+                <element name="Detail" type="tns:SubscriberInfoDetail"
                          minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
         </complexType>
@@ -41,5 +41,4 @@
             <attribute name="errormessage" type="string"/>
         </complexType>
     </element>
-
 </schema>

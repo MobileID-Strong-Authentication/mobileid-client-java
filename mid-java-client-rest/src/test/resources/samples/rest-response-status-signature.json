@@ -1,41 +1,47 @@
 {
-    "MSS_StatusResp": {
-        "AP_Info": {
-            "AP_ID": "mid://test.swisscom.ch",
-            "AP_TransID": "ID-ee3aaa79-efd5-4828-8708-5e7b2c6cecf0",
-            "Instant": "2020-12-02T15:19:25.512Z"
-        },
-        "MSSP_Info": {
-            "Instant": "2020-12-02T15:19:25.879Z",
-            "MSSP_ID": {
-                "URI": "http://mid.swisscom.ch/"
-            }
-        },
-        "MSS_Signature": {
-            "Base64Signature": "TG9yZW0gSXBzdW0gaXMgc2ltcGx5IGR1bW15IHRleHQgb2YgdGhlIHByaW50aW5nIGFuZCB0eXBlc2V0dGluZyBpbmR1c3RyeS4gTG9yZW0gSXBzdW0gaGFzIGJlZW4gdGhlIGluZHVzdHJ5J3Mgc3RhbmRhcmQgZHVtbXkgdGV4dCBldmVyIHNpbmNlIHRoZSAxNTAwcywgd2hlbiBhbiB1bmtub3duIHByaW50ZXIgdG9vayBhIGdhbGxleSBvZiB0eXBlIGFuZCBzY3JhbWJsZWQgaXQgdG8gbWFrZSBhIHR5cGUgc3BlY2ltZW4gYm9vay4gSXQgaGFzIHN1cnZpdmVkIG5vdCBvbmx5IGZpdmUgY2VudHVyaWVzLCBidXQgYWxzbyB0aGUgbGVhcCBpbnRvIGVsZWN0cm9uaWMgdHlwZXNldHRpbmcsIHJlbWFpbmluZyBlc3NlbnRpYWxseSB1bmNoYW5nZWQuIEl0IHdhcyBwb3B1bGFyaXNlZCBpbiB0aGUgMTk2MHMgd2l0aCB0aGUgcmVsZWFzZSBvZiBMZXRyYXNldCBzaGVldHMgY29udGFpbmluZyBMb3JlbSBJcHN1bSBwYXNzYWdlcywgYW5kIG1vcmUgcmVjZW50bHkgd2l0aCBkZXNrdG9wIHB1Ymxpc2hpbmcgc29mdHdhcmUgbGlrZSBBbGR1cyBQYWdlTWFrZXIgaW5jbHVkaW5nIHZlcnNpb25zIG9mIExvcmVtIElwc3VtLg=="
-        },
-        "MajorVersion": "1",
-        "MinorVersion": "1",
-        "MobileUser": {
-            "MSISDN": "41000092102"
-        },
-        "ServiceResponses": [
-            {
-                "Description": "http://mid.swisscom.ch/as#geofencing",
-                "Geofencing": {
-                    "Accuracy": "10",
-                    "Country": "RO",
-                    "DeviceConfidence": "0.5",
-                    "LocationConfidence": "1.0",
-                    "Timestamp": "2021-01-01T11:00:00.000+01:00"
-                }
-            }
-        ],
-        "Status": {
-            "StatusCode": {
-                "Value": "500"
-            },
-            "StatusMessage": "SIGNATURE"
+  "MSS_StatusResp": {
+    "AP_Info": {
+      "AP_ID": "mid://test.swisscom.ch",
+      "AP_TransID": "ID-ee3aaa79-efd5-4828-8708-5e7b2c6cecf0",
+      "Instant": "2020-12-02T15:19:25.512Z"
+    },
+    "MSSP_Info": {
+      "Instant": "2020-12-02T15:19:25.879Z",
+      "MSSP_ID": {
+        "URI": "http://mid.swisscom.ch/"
+      }
+    },
+    "MSS_Signature": {
+      "Base64Signature": "TG9yZW0gSXBzdW0gaXMgc2ltcGx5IGR1bW15IHRleHQgb2YgdGhlIHByaW50aW5nIGFuZCB0eXBlc2V0dGluZyBpbmR1c3RyeS4gTG9yZW0gSXBzdW0gaGFzIGJlZW4gdGhlIGluZHVzdHJ5J3Mgc3RhbmRhcmQgZHVtbXkgdGV4dCBldmVyIHNpbmNlIHRoZSAxNTAwcywgd2hlbiBhbiB1bmtub3duIHByaW50ZXIgdG9vayBhIGdhbGxleSBvZiB0eXBlIGFuZCBzY3JhbWJsZWQgaXQgdG8gbWFrZSBhIHR5cGUgc3BlY2ltZW4gYm9vay4gSXQgaGFzIHN1cnZpdmVkIG5vdCBvbmx5IGZpdmUgY2VudHVyaWVzLCBidXQgYWxzbyB0aGUgbGVhcCBpbnRvIGVsZWN0cm9uaWMgdHlwZXNldHRpbmcsIHJlbWFpbmluZyBlc3NlbnRpYWxseSB1bmNoYW5nZWQuIEl0IHdhcyBwb3B1bGFyaXNlZCBpbiB0aGUgMTk2MHMgd2l0aCB0aGUgcmVsZWFzZSBvZiBMZXRyYXNldCBzaGVldHMgY29udGFpbmluZyBMb3JlbSBJcHN1bSBwYXNzYWdlcywgYW5kIG1vcmUgcmVjZW50bHkgd2l0aCBkZXNrdG9wIHB1Ymxpc2hpbmcgc29mdHdhcmUgbGlrZSBBbGR1cyBQYWdlTWFrZXIgaW5jbHVkaW5nIHZlcnNpb25zIG9mIExvcmVtIElwc3VtLg=="
+    },
+    "MajorVersion": "1",
+    "MinorVersion": "1",
+    "MobileUser": {
+      "MSISDN": "41000092102"
+    },
+    "ServiceResponses": [
+      {
+        "Description": "http://mid.swisscom.ch/as#geofencing",
+        "Geofencing": {
+          "Accuracy": "10",
+          "Country": "RO",
+          "DeviceConfidence": "0.5",
+          "LocationConfidence": "1.0",
+          "Timestamp": "2021-01-01T11:00:00.000+01:00"
         }
+      },
+      {
+        "Description": "http://mid.swisscom.ch/as#app2app",
+        "App2App": {
+          "AuthUri": "mobileid://auth?mobile_auth_redirect_uri=myapp%3A%2F%2Fapp.open%23access_\ntoken%3DABCD&amp;session_token=32ffc297-0YLukZtgoRVz_wbJJfLnViViEhzk9aXM8\ndkHoOnhqf158&amp;user_id=32ffc297-ac33-4be2-b3f4-42588502ea0f"
+        }
+      }
+    ],
+    "Status": {
+      "StatusCode": {
+        "Value": "500"
+      },
+      "StatusMessage": "SIGNATURE"
     }
+  }
 }

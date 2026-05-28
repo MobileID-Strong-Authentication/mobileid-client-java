@@ -32,6 +32,7 @@ public class DefaultConfiguration {
     public static final String ADDITIONAL_SERVICE_USER_LANG_URI = "http://mss.ficom.fi/TS102204/v1.0.0#userLang";
     public static final String ADDITIONAL_SERVICE_SIGNATURE_VALIDATION_URI = "http://uri.etsi.org/TS102204/v1.1.2#validate";
     public static final String ADDITIONAL_SERVICE_GEOFENCING = "http://mid.swisscom.ch/as#geofencing";
+    public static final String ADDITIONAL_SERVICE_APP2APP = "http://mid.swisscom.ch/as#app2app";
 
     public static final String SIGNATURE_REQUEST_MAJOR_VERSION = "1";
     public static final String SIGNATURE_REQUEST_MINOR_VERSION = "2";

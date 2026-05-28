@@ -18,19 +18,21 @@
 
 package ch.swisscom.mid.client.model;
 
-import ch.swisscom.mid.client.config.DefaultConfiguration;
+public class App2App {
+    private String redirectUri;
 
-public class UserLangAdditionalService extends AdditionalService {
-
-    private final UserLanguage userLanguage;
-
-    public UserLangAdditionalService(UserLanguage userLanguage) {
-        super(DefaultConfiguration.ADDITIONAL_SERVICE_USER_LANG_URI);
-        this.userLanguage = userLanguage;
+    public String getRedirectUri() {
+        return redirectUri;
     }
 
-    public UserLanguage getUserLanguage() {
-        return userLanguage;
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
     }
 
+    @Override
+    public String toString() {
+        return "App2App{" +
+                "redirectUri='" + redirectUri + '\'' +
+                '}';
+    }
 }

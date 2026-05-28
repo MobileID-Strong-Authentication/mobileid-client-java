@@ -27,6 +27,9 @@ Arguments:
 
     -geofencing                                         - For sign operation. Request additional geofencing data
 
+    -app2app="myapp://example"                          - For sign operation (async only). Request App2App service which allows an Application Provider to automatically switch from
+                                                          their App to the Mobile ID App (and the Mobile ID App to automatically switch back to the originating App)
+
     -validate                                           - For sign operation. Validate the signature once it is successfully acquired
 
     -msisdn=41790000000                                 - The target MSISDN for the chosen operation
@@ -61,6 +64,7 @@ Use cases:
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000
     - ./bin/mid-client.sh -profile-query -msisdn=41790000000 -soap
     - ./bin/mid-client.sh -sign -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -req-timeout=120
+    - ./bin/mid-client.sh -sign -async -msisdn=41790000000 -lang=en -app2app="myapp://example" -dtbs="Do you want to login?" -rest -vv
     - ./bin/mid-client.sh -sign -sync -receipt -msisdn=41790000000 -lang=en -dtbs="Do you want to login?" -soap -vv
     - ./bin/mid-client.sh \
            -config=my-config.properties \
