@@ -15,8 +15,13 @@
  */
 package ch.swisscom.mid.client.soap;
 
+import ch.swisscom.mid.client.MIDClientException;
+import ch.swisscom.mid.client.config.ClientConfiguration;
+import ch.swisscom.mid.client.config.ConfigurationException;
+import ch.swisscom.mid.client.config.ProxyConfiguration;
+import ch.swisscom.mid.client.config.TlsConfiguration;
+import ch.swisscom.mid.client.impl.Loggers;
 import com.sun.xml.ws.developer.JAXWSProperties;
-
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -24,6 +29,12 @@ import org.etsi.uri.ts102204.etsi204_kiuru.MSSSignatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.*;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
+import javax.xml.ws.handler.Handler;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -31,20 +42,6 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.util.List;
 import java.util.function.Supplier;
-
-import javax.net.ssl.*;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Service;
-import javax.xml.ws.handler.Handler;
-
-import ch.swisscom.mid.client.MIDClientException;
-import ch.swisscom.mid.client.config.ClientConfiguration;
-import ch.swisscom.mid.client.config.ConfigurationException;
-import ch.swisscom.mid.client.config.ProxyConfiguration;
-import ch.swisscom.mid.client.config.TlsConfiguration;
-import ch.swisscom.mid.client.impl.Loggers;
 
 public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssService<PortType>> {
 
@@ -69,6 +66,7 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
     private static final String JDK_JAXWS_REQUEST_TIMEOUT = "com.sun.xml.internal.ws.request.timeout";
     private static final String JBOSS_CXF_REQUEST_TIMEOUT = "javax.xml.ws.client.receiveTimeout";
 
+    private static final java.lang.String JAXWS_HOSTNAME_VERIFIER = "com.sun.xml.internal.ws.transport.https.client.hostname.verifier";
     private static final java.lang.String JAXWS_SSL_SOCKET_FACTORY = "com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory";
 
     private static final String MSSP_NAMESPACE = "http://uri.etsi.org/TS102204/etsi204-kiuru.wsdl";
@@ -149,8 +147,10 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
             bindingProvider.getRequestContext().put(JAXWS_SSL_SOCKET_FACTORY, sslSocketFactory);
 
             if (!clientConfiguration.getTls().isHostnameVerification()) {
-                log.warn("MSS Soap client: Hostname verification is disabled in configuration. " +
-                         "This setting is ignored for security reasons. Hostname verification will remain active.");
+                NoopHostnameVerifier noopHostnameVerifier = new NoopHostnameVerifier();
+                bindingProvider.getRequestContext().put(JAXWSProperties.HOSTNAME_VERIFIER, noopHostnameVerifier);
+                bindingProvider.getRequestContext().put(JAXWS_HOSTNAME_VERIFIER, noopHostnameVerifier);
+                log.warn("MSS Soap client: Hostname verification is disabled in configuration.");
             }
 
             String serviceBaseUrl = serviceUrlSupplier.get();
@@ -298,4 +298,11 @@ public class MssServiceFactory<PortType> extends BasePooledObjectFactory<MssServ
         }
     }
 
+    // ----------------------------------------------------------------------------------------------------
+    private static class NoopHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostName, SSLSession session) {
+            return true;
+        }
+    }
 }
